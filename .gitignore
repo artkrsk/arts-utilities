@@ -1,0 +1,54 @@
+# Ignore OS generated files
+.DS_Store
+Thumbs.db
+
+# Ignore log files and databases
+*.log
+*.sql
+*.sqlite
+
+# Ignore node_modules and other dependencies
+node_modules/
+
+# Ignore temporary files
+*.tmp
+*.swp
+*.swo
+*.bak
+*.orig
+
+# Ignore IDE specific files
+.vscode/
+.idea/
+*.code-workspace
+
+# Ignore Composer dependencies
+composer.lock
+composer.phar
+
+# Ignore npm/yarn dependencies
+package-lock.json
+yarn.lock
+
+# Ignore PHPStorm specific files
+/.idea
+/.phpstorm.meta.php
+
+# Ignore Snyk specific files
+.snyk
+
+# Ignore other unnecessary files
+*.zip
+*.tar.gz
+*.rar
+*.7z
+*.bak
+*.backup
+*.tmp
+*.temp
+*.log
+*.cache
+*.session
+*.pid
+*.seed
+*.pid.lock
