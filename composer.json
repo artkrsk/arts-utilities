@@ -1,0 +1,39 @@
+{
+  "name": "arts/utilities",
+  "description": "A comprehensive collection of utility methods for WordPress theme and plugin development, with a focus on Elementor integration.",
+  "type": "library",
+  "version": "1.0.0",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Artem Semkin",
+      "email": "me@artemsemkin.com"
+    }
+  ],
+  "require": {
+    "php": ">=7.2"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^9.6",
+    "yoast/phpunit-polyfills": "^4.0",
+    "brain/monkey": "^2.6",
+    "antecedent/patchwork": "^2.1"
+  },
+  "config": {
+    "allow-plugins": {
+      "composer/installers": true
+    },
+    "optimize-autoloader": true,
+    "sort-packages": true
+  },
+  "autoload": {
+    "psr-4": {
+      "Arts\\Utilities\\": "src/php/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "__tests__/php/"
+    }
+  }
+}

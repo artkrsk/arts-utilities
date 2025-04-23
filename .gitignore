@@ -1,54 +1,94 @@
-# Ignore OS generated files
-.DS_Store
-Thumbs.db
+# Composer
+/vendor/
+composer.lock
 
-# Ignore log files and databases
-*.log
-*.sql
-*.sqlite
+# PHPUnit
+.phpunit.result.cache
+coverage/
 
-# Ignore node_modules and other dependencies
-node_modules/
-
-# Ignore temporary files
-*.tmp
+# Editor directories and files
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
 *.swp
 *.swo
-*.bak
-*.orig
 
-# Ignore IDE specific files
-.vscode/
-.idea/
-*.code-workspace
+# Environment
+.env
+.env.backup
+.env.local
 
-# Ignore Composer dependencies
-composer.lock
-composer.phar
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
 
-# Ignore npm/yarn dependencies
-package-lock.json
+# Node (if using npm scripts)
+/node_modules/
+npm-debug.log
+yarn-error.log
+
+# Build output
+/dist
+/build
+/out
+/.next
+/.nuxt
+
+# Dependencies
+/.pnp
+.pnp.js
 yarn.lock
+package-lock.json
+.yarn-integrity
 
-# Ignore PHPStorm specific files
-/.idea
-/.phpstorm.meta.php
+# Testing
+/coverage
+/.nyc_output
+/cypress/videos/
+/cypress/screenshots/
 
-# Ignore Snyk specific files
-.snyk
+# Environment files
+.env.*
+!.env.example
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
-# Ignore other unnecessary files
-*.zip
-*.tar.gz
-*.rar
-*.7z
+# Logs and debugging
+yarn-debug.log*
+debug.log
+*.log
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# Cache directories
+.cache
+.temp
+.tmp
+.eslintcache
+.stylelintcache
+
+# Temporary files
 *.bak
-*.backup
 *.tmp
 *.temp
-*.log
-*.cache
-*.session
-*.pid
-*.seed
-*.pid.lock
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+
+# Project specific
+/dist
+/coverage-report
+
+# Building system
+__builder__

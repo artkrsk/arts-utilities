@@ -1,0 +1,55 @@
+{
+  "name": "@arts/utilities",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "A collection of useful PHP and JS utility functions for developing a WordPress theme",
+  "license": "MIT",
+  "private": true,
+  "sideEffects": false,
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "engines": {
+    "node": ">=23.0.0"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@eslint/js": "^9.25.1",
+    "@types/node": "^22.14.1",
+    "@vitest/coverage-v8": "^3.1.2",
+    "@vitest/ui": "3.1.2",
+    "cypress": "^14.3.2",
+    "depcheck": "^1.4.7",
+    "eslint": "^9.25.1",
+    "eslint-config-prettier": "^10.1.2",
+    "jsdom": "^26.1.0",
+    "npm-check-updates": "^18.0.0",
+    "prettier": "^3.5.3",
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.31.0",
+    "vitest": "^3.1.2"
+  },
+  "scripts": {
+    "dev": "node __builder__/src/scripts/dev.js",
+    "dev:cy": "npm run dev & cypress open",
+    "build": "node __builder__/src/scripts/build.js",
+    "build:prod": "NODE_ENV=production node __builder__/src/scripts/build-production.js",
+    "test": "node __builder__/src/scripts/test.js",
+    "test:coverage": "node __builder__/src/scripts/test-coverage.js",
+    "test:ci": "npm run test && npm run cypress:e2e",
+    "lint": "node __builder__/src/scripts/lint.js",
+    "types": "node __builder__/src/scripts/types.js",
+    "format": "node __builder__/src/scripts/format.js",
+    "analyze": "ANALYZE=true node __builder__/src/scripts/build.js",
+    "cypress": "node __builder__/src/scripts/cypress.js",
+    "cypress:e2e": "node __builder__/src/scripts/cypress.js e2e",
+    "cypress:components": "node __builder__/src/scripts/cypress.js component",
+    "deps:check": "npx npm-check-updates",
+    "deps:update": "npx npm-check-updates -u && pnpm install",
+    "deps:clean": "node __builder__/src/scripts/clean-deps.js"
+  }
+}
