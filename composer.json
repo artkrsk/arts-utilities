@@ -2,7 +2,6 @@
   "name": "arts/utilities",
   "description": "A comprehensive collection of utility methods for WordPress theme and plugin development, with a focus on Elementor integration.",
   "type": "library",
-  "version": "1.0.0",
   "license": "MIT",
   "authors": [
     {
