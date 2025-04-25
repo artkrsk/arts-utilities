@@ -3,7 +3,6 @@
 composer.lock
 
 # PHPUnit
-.phpunit.result.cache
 coverage/
 
 # Editor directories and files
@@ -85,6 +84,7 @@ next-env.d.ts
 ._*
 .Spotlight-V100
 .Trashes
+.phpunit.result.cache
 
 # Project specific
 /dist
