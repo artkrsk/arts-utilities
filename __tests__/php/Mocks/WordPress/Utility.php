@@ -180,3 +180,38 @@ if ( ! function_exists( 'wp_check_filetype' ) ) {
 		);
 	}
 }
+
+// Functions needed for URL class tests
+if ( ! function_exists( 'wp_normalize_path' ) ) {
+	function wp_normalize_path( $path ) {
+		global $MOCK_DATA;
+		return $MOCK_DATA['normalize_path'] ?? $path;
+	}
+}
+
+if ( ! function_exists( 'get_template_directory' ) ) {
+	function get_template_directory() {
+		global $MOCK_DATA;
+		return $MOCK_DATA['template_directory'] ?? '/var/www/html/wp-content/themes/default';
+	}
+}
+
+if ( ! function_exists( 'get_template_directory_uri' ) ) {
+	function get_template_directory_uri() {
+		global $MOCK_DATA;
+		return $MOCK_DATA['template_directory_uri'] ?? 'https://example.com/wp-content/themes/default';
+	}
+}
+
+if ( ! function_exists( 'plugin_dir_url' ) ) {
+	function plugin_dir_url( $file ) {
+		global $MOCK_DATA;
+		return $MOCK_DATA['plugin_dir_url'] ?? 'https://example.com/wp-content/plugins/default/';
+	}
+}
+
+// Define WP_PLUGIN_DIR if not already defined
+if ( ! defined( 'WP_PLUGIN_DIR' ) ) {
+	global $MOCK_DATA;
+	define( 'WP_PLUGIN_DIR', $MOCK_DATA['wp_plugin_dir'] ?? '/var/www/html/wp-content/plugins' );
+}

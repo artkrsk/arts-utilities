@@ -69,4 +69,40 @@ trait URL {
 
 		return $license_args_url;
 	}
+
+	/**
+	 * Gets the URL for the directory containing a file.
+	 *
+	 * Determines whether the file is in a plugin or theme context and
+	 * returns the appropriate URL path to its containing directory.
+	 *
+	 * @since 1.0.1
+	 *
+	 * @param string $file Path to the file (defaults to current file).
+	 * @return string URL to the directory containing the file.
+	 */
+	public static function get_directory_url( $file = __FILE__ ) {
+		// Get the absolute path to the current file
+		$current_file_path = wp_normalize_path( $file );
+
+		// Get the absolute path and URI of the theme
+		$theme_directory = wp_normalize_path( get_template_directory() );
+		$theme_uri       = get_template_directory_uri();
+
+		// Check if we're in a plugin
+		if ( strpos( $current_file_path, WP_PLUGIN_DIR ) !== false ) {
+			return plugin_dir_url( $file );
+		}
+
+		// We're in a theme - calculate the relative path
+		if ( strpos( $current_file_path, $theme_directory ) !== false ) {
+			// Get path relative to theme
+			$relative_path = str_replace( $theme_directory, '', dirname( $current_file_path ) );
+			// Build URL
+			return trailingslashit( $theme_uri . $relative_path );
+		}
+
+		// Fallback - direct parent directory
+		return trailingslashit( dirname( plugin_dir_url( $file ) ) );
+	}
 }
