@@ -17,6 +17,55 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 trait Theme {
 	/**
+	 * Cached current theme object.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @var \WP_Theme|null
+	 */
+	private static $current_theme = null;
+
+	/**
+	 * Cached parent theme object.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @var \WP_Theme|null
+	 */
+	private static $parent_theme = null;
+
+	/**
+	 * Get the current theme object.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return \WP_Theme The current theme object.
+	 */
+	private static function get_current_theme() {
+		if ( null === self::$current_theme ) {
+			self::$current_theme = wp_get_theme();
+		}
+
+		return self::$current_theme;
+	}
+
+	/**
+	 * Get the parent theme object.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return \WP_Theme|false The parent theme object or false if no parent theme exists.
+	 */
+	private static function get_parent_theme() {
+		if ( null === self::$parent_theme ) {
+			$current_theme      = self::get_current_theme();
+			self::$parent_theme = $current_theme->parent();
+		}
+
+		return self::$parent_theme;
+	}
+
+	/**
 	 * Get the version of the parent theme.
 	 *
 	 * Retrieves the version from the parent theme if available,
@@ -27,17 +76,61 @@ trait Theme {
 	 * @return string The version of the parent theme.
 	 */
 	public static function get_parent_theme_version() {
-		$current_theme = wp_get_theme();
+		$current_theme = self::get_current_theme();
 		$theme_version = $current_theme->get( 'Version' );
 
-		// Try to get the parent theme object
-		$parent_theme = $current_theme->parent();
-
 		// Use parent theme version if available
+		$parent_theme = self::get_parent_theme();
 		if ( $parent_theme ) {
 			$theme_version = $parent_theme->get( 'Version' );
 		}
 
 		return $theme_version;
+	}
+
+	/**
+	 * Get the slug of the parent theme.
+	 *
+	 * Retrieves the stylesheet (directory name) from the parent theme if available,
+	 * otherwise returns the current theme's stylesheet.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return string The slug of the parent theme.
+	 */
+	public static function get_parent_theme_slug() {
+		$current_theme = self::get_current_theme();
+		$theme_slug    = $current_theme->get_stylesheet();
+
+		// Use parent theme slug if available
+		$parent_theme = self::get_parent_theme();
+		if ( $parent_theme ) {
+			$theme_slug = $parent_theme->get_stylesheet();
+		}
+
+		return $theme_slug;
+	}
+
+	/**
+	 * Get the name of the parent theme.
+	 *
+	 * Retrieves the name from the parent theme if available,
+	 * otherwise returns the current theme's name.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return string The name of the parent theme.
+	 */
+	public static function get_parent_theme_name() {
+		$current_theme = self::get_current_theme();
+		$theme_name    = $current_theme->get( 'Name' );
+
+		// Use parent theme name if available
+		$parent_theme = self::get_parent_theme();
+		if ( $parent_theme ) {
+			$theme_name = $parent_theme->get( 'Name' );
+		}
+
+		return $theme_name;
 	}
 }
