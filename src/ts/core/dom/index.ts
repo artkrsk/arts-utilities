@@ -1,1 +1,2 @@
-export * from './DOMService';
+export * from './DOMService'
+export * from './ElementUtils'
