@@ -35,6 +35,18 @@ trait Theme {
 	private static $parent_theme = null;
 
 	/**
+	 * Reset the cached theme objects.
+	 *
+	 * Primarily used for testing purposes.
+	 *
+	 * @since 1.0.0
+	 */
+	public static function reset_theme_cache() {
+		self::$current_theme = null;
+		self::$parent_theme  = null;
+	}
+
+	/**
 	 * Get the current theme object.
 	 *
 	 * @since 1.0.0

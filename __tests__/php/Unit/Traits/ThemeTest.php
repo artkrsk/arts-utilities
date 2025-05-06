@@ -30,6 +30,9 @@ class ThemeTest extends TestCase {
 		global $MOCK_DATA;
 		$MOCK_DATA = array();
 
+		 // Reset theme cache to ensure clean state for each test
+		TestThemeUtilities::reset_theme_cache();
+
 		// Create instance of TestThemeUtilities
 		$this->utilities = new TestThemeUtilities();
 	}
@@ -47,15 +50,22 @@ class ThemeTest extends TestCase {
 
 		$this->assertEquals( '2.0.0', TestThemeUtilities::get_parent_theme_version() );
 
-		// Test with child theme but no parent theme
+		// Reset theme cache between test scenarios
+		TestThemeUtilities::reset_theme_cache();
+
+		// Reset the parent theme flag to false
+		$MOCK_DATA['wp_theme_parent'] = false;
+
+		// Test with only the current theme (no parent theme)
 		$MOCK_DATA['wp_theme_version'] = '1.0.0';
-		$MOCK_DATA['wp_theme_parent']  = false;
 
 		$this->assertEquals( '1.0.0', TestThemeUtilities::get_parent_theme_version() );
 
+		// Reset theme cache between test scenarios
+		TestThemeUtilities::reset_theme_cache();
+
 		// Test with no theme version
 		$MOCK_DATA['wp_theme_version'] = '';
-		$MOCK_DATA['wp_theme_parent']  = false;
 
 		$this->assertEquals( '', TestThemeUtilities::get_parent_theme_version() );
 	}
