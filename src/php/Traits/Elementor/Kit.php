@@ -135,6 +135,43 @@ trait Kit {
 	}
 
 	/**
+	 * Get kit settings from Elementor.
+	 *
+	 * If Elementor is not loaded, it falls back to retrieving the option value of the given option name.
+	 *
+	 * @since 1.0.6
+	 *
+	 * @param string|null $option_name    The name of the option to retrieve. If null, retrieves all settings.
+	 * @param mixed       $fallback_value The value to return if the option is not found. Default is null.
+	 * @param bool        $return_size    Whether to return the 'size' or 'url' if the value is an array. Default is true.
+	 *
+	 * @return mixed The kit setting value or the fallback value.
+	 */
+	public static function get_kit_setting_or_option( $option_name = null, $fallback_value = null, $return_size = true ) {
+		if ( ! self::is_elementor_plugin_active() || ! \Elementor\Plugin::$instance->kits_manager ) {
+			$option_value = get_option( $option_name, $fallback_value );
+
+			if ( $option_value !== $fallback_value ) {
+				return $option_value;
+			}
+
+			return $fallback_value;
+		}
+
+		$value = \Elementor\Plugin::$instance->kits_manager->get_current_settings( $option_name );
+
+		if ( isset( $value ) ) {
+			if ( $return_size && is_array( $value ) ) {
+				$value = self::extract_value_from_option_array( $value );
+			}
+
+			return $value;
+		}
+
+		return $fallback_value;
+	}
+
+	/**
 	 * Update Elementor kit settings based on the given option and value.
 	 *
 	 * @since 1.0.0
