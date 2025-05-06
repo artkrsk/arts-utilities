@@ -1,6 +1,7 @@
 export * from './constants'
 export * from './data'
 export * from './dom'
+export * from './elementor'
 export * from './events'
 export * from './interfaces'
 export * from './logger'
