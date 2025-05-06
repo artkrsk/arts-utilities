@@ -177,6 +177,16 @@ namespace Elementor {
 			$MOCK_DATA['updated_kit_value']  = $value;
 			return true;
 		}
+
+		/**
+		 * Get the active kit ID.
+		 *
+		 * @return int The active kit ID or 0 if not found.
+		 */
+		public function get_active_id() {
+			global $MOCK_DATA;
+			return $MOCK_DATA['kit_active_id'] ?? 0;
+		}
 	}
 
 	class Experiments {

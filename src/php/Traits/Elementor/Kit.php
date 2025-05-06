@@ -191,6 +191,46 @@ trait Kit {
 	}
 
 	/**
+	 * Get the URL to the Elementor Site Settings editor.
+	 *
+	 * Generates a URL to access the Elementor Site Settings editor with an optional active tab.
+	 * Returns an empty string if Elementor is not active or no recently edited posts found.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $tab_id Optional. The tab ID to activate in the Site Settings. Default empty string.
+	 * @return string The URL to the Elementor Site Settings editor or an empty string if not available.
+	 */
+	public static function get_elementor_editor_site_settings_url( $tab_id = '' ) {
+		// Check if Elementor is active
+		if ( ! class_exists( '\Elementor\Plugin' ) || ! class_exists( '\Elementor\Utils' ) ) {
+			return '';
+		}
+
+		$recent_edited_post = \Elementor\Utils::get_recently_edited_posts_query(
+			array(
+				'posts_per_page' => 1,
+			)
+		);
+
+		if ( $recent_edited_post->post_count ) {
+			$posts   = $recent_edited_post->get_posts();
+			$post_id = reset( $posts )->ID;
+			$kit_id  = \Elementor\Plugin::$instance->kits_manager->get_active_id();
+
+			$url = admin_url( 'post.php?post=' . $post_id . '&action=elementor&active-document=' . $kit_id );
+
+			if ( ! empty( $tab_id ) ) {
+				$url .= '&active-tab=' . sanitize_text_field( $tab_id );
+			}
+
+			return esc_url( $url );
+		}
+
+		return '';
+	}
+
+	/**
 	 * Extract a specific value from an option array.
 	 *
 	 * Checks if the provided value is an array and attempts to extract
