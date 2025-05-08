@@ -100,38 +100,48 @@ export const convertSettings = (
         result[jsKey] = settings[elementorMapping]
       }
     }
-    // Complex mapping with condition and value
-    else if (typeof elementorMapping === 'object') {
-      // Check if this is a conditional mapping
-      if ('condition' in elementorMapping) {
-        // Set property to false if condition is not met
-        if (!settings[elementorMapping['condition']]) {
+    // Complex mapping (object)
+    else if (typeof elementorMapping === 'object' && elementorMapping !== null) {
+      // Handle conditional mapping: if a 'condition' is specified and not met,
+      // set the result for this key to false and skip further processing for this item.
+      if ('condition' in elementorMapping && typeof elementorMapping.condition === 'string') {
+        if (!settings[elementorMapping.condition]) {
           result[jsKey] = false
-          return
+          return // Equivalent to 'continue' for the forEach loop
         }
       }
 
-      // Handle simple value field
-      if ('value' in elementorMapping && typeof elementorMapping['value'] === 'string') {
-        const value = settings[elementorMapping['value']]
+      // If the mapping object has a 'value' property, it defines how to extract/transform the value.
+      if ('value' in elementorMapping) {
+        const valueProperty = elementorMapping.value // This is TComplexElementorMapping['value']
 
-        // Extract size for values with "size" property when return_size is true
-        if (
-          elementorMapping['return_size'] === true &&
-          value &&
-          typeof value === 'object' &&
-          value.size !== undefined
-        ) {
-          result[jsKey] = value.size
-        } else {
-          result[jsKey] = value
+        if (typeof valueProperty === 'string') {
+          const settingValue = settings[valueProperty]
+          // If 'return_size' is true (and part of elementorMapping), extract .size
+          if (
+            elementorMapping.return_size === true &&
+            settingValue &&
+            typeof settingValue === 'object' &&
+            settingValue.size !== undefined
+          ) {
+            result[jsKey] = settingValue.size
+          } else {
+            result[jsKey] = settingValue
+          }
+        } else if (typeof valueProperty === 'object' && valueProperty !== null) {
+          // If 'value' is an object, it's a TValueMapping; process with processComplexValue.
+          result[jsKey] = processComplexValue(valueProperty as TValueMapping, settings)
         }
+        // If 'value' exists but isn't string/object (e.g. null), result[jsKey] remains undefined based on current logic.
       }
-      // Handle complex nested object
-      else if ('value' in elementorMapping && typeof elementorMapping['value'] === 'object') {
-        result[jsKey] = processComplexValue(elementorMapping['value'], settings)
+      // If the mapping object does not have a 'value' property, it's treated as a nested TSettingsMap.
+      else {
+        // This handles structures like 'lenisOptions', which are direct nested maps.
+        // Assumes any 'condition' (if present) was met to reach this point.
+        result[jsKey] = convertSettings(settings, elementorMapping as TSettingsMap)
       }
     }
+    // Other types for elementorMapping (e.g. number, boolean, or null if not caught by `elementorMapping !== null`) are implicitly ignored.
   })
 
   return result
