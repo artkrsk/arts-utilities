@@ -9,3 +9,8 @@ export type TMappingValue = Record<string, any> & {
 }
 export type TSettingsMap = Record<string, string | TMappingValue>
 export type TValueMapping = string | Record<string, string | Record<string, any>>
+/**
+ * Callback invoked when Elementor settings change
+ * @param options The updated options object
+ */
+export type TSettingsChangeCallback = (options: Record<string, string>) => Promise<void>
