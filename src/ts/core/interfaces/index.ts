@@ -1,3 +1,4 @@
+export * from './IBrowserService'
 export * from './IDebounce'
 export * from './IDeepMerge'
 export * from './IDOMService'
