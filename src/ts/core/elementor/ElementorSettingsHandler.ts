@@ -21,7 +21,7 @@ function isElementorSettingEvent(event: Event): event is IElementorSettingChange
  * Handles dynamic setting changes from Elementor editor
  */
 export class ElementorSettingsHandler {
-  private options: Record<string, string>
+  private options: Record<any, string>
   private callback: TSettingsChangeCallback
   private isChanging = false
 
@@ -29,7 +29,7 @@ export class ElementorSettingsHandler {
    * Creates a settings handler instance
    * @param callback Function to call when settings change
    */
-  constructor(callback: TSettingsChangeCallback, options: Record<string, string>) {
+  constructor(callback: TSettingsChangeCallback, options: Record<any, string>) {
     this.callback = callback
     this.options = options
   }
