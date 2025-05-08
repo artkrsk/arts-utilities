@@ -1,6 +1,7 @@
 // Define types for Elementor settings and mappings
 export type TElementorSettings = Record<string, any>
-// Removing unused ValueWithSize type
+export type TElementorSettingValue = string | number | boolean
+export type TElementorSetting = string
 export type TMappingValue = Record<string, any> & {
   value?: string | Record<string, any>
   return_size?: boolean
