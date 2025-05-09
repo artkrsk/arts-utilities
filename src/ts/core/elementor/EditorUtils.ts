@@ -1,5 +1,14 @@
 import type { TElementorSettings, TSettingsMap, TValueMapping } from '../types'
 
+declare global {
+  interface Window {
+    elementorFrontend?: {
+      isEditMode: () => boolean
+    }
+    elementor?: Object
+  }
+}
+
 /**
  * Extracts keys from an object recursively
  * @param obj - The object to extract keys from
@@ -164,4 +173,43 @@ export const getLiveSettings = (
 
   // Combine extracted keys with additional settings and remove duplicates
   return [...new Set([...keys, ...additionalSettings])]
+}
+
+// Track if we're already waiting for Elementor initialization
+let elementorInitPromise: Promise<boolean> | null = null
+
+/**
+ * Async function that resolves when Elementor editor is loaded
+ * @returns Promise that resolves to boolean indicating if in Elementor editor
+ */
+export const elementorEditorLoaded = async (): Promise<boolean> => {
+  // If Elementor is already initialized, check immediately
+  if (typeof window !== 'undefined' && window.elementorFrontend) {
+    return window.elementorFrontend.isEditMode()
+  }
+
+  // If window is undefined, we're not in a browser
+  if (typeof window === 'undefined') {
+    return false
+  }
+
+  // If we're already waiting for initialization, return the existing promise
+  if (elementorInitPromise) {
+    return elementorInitPromise
+  }
+
+  // Create a new promise waiting for initialization
+  elementorInitPromise = new Promise<boolean>((resolve) => {
+    // Listen for initialization
+    window.addEventListener('elementor/frontend/init', () => {
+      elementorInitPromise = null
+      if (window.elementorFrontend) {
+        resolve(window.elementorFrontend.isEditMode())
+      } else {
+        resolve(false)
+      }
+    })
+  })
+
+  return elementorInitPromise
 }
