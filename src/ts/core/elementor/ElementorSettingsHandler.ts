@@ -1,15 +1,14 @@
 import type { IElementorSettingChangedEvent } from '../interfaces'
-import { getLiveSettings, convertSettings } from '.'
 import type { TSettingsChangeCallback } from '../types'
+import { getLiveSettings, convertSettings } from '.'
 
 /**
  * Type guard to check if an event is an Elementor setting changed event
  * @param event The event to check
  */
-function isElementorSettingEvent(event: Event): event is IElementorSettingChangedEvent {
+function isElementorSettingEvent(event: CustomEvent): event is IElementorSettingChangedEvent {
   return (
-    event instanceof CustomEvent &&
-    'detail' in event &&
+    event &&
     event.detail &&
     typeof event.detail === 'object' &&
     'settings' in event.detail &&
@@ -38,20 +37,26 @@ export class ElementorSettingsHandler {
    * Attach event listener for Elementor setting changes
    */
   public attach(): void {
-    window.addEventListener('arts/elementor_extension/editor/setting_changed', this.handleEvent)
+    window.addEventListener(
+      'arts/elementor_extension/editor/setting_changed',
+      this.handleEvent as EventListener
+    )
   }
 
   /**
    * Detach event listener
    */
   public detach(): void {
-    window.removeEventListener('arts/elementor_extension/editor/setting_changed', this.handleEvent)
+    window.removeEventListener(
+      'arts/elementor_extension/editor/setting_changed',
+      this.handleEvent as EventListener
+    )
   }
 
   /**
    * Initial event handler that checks and processes the event
    */
-  private handleEvent = (event: Event): void => {
+  private handleEvent = (event: CustomEvent): void => {
     if (!isElementorSettingEvent(event)) {
       return
     }

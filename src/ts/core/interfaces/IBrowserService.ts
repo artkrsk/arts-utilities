@@ -18,16 +18,6 @@ export interface IBrowserService {
   getViewportHeight: () => number
 
   /**
-   * Get the current user agent
-   */
-  getUserAgent: () => string
-
-  /**
-   * Check if the browser supports a specific feature
-   */
-  supportsFeature: (featureName: string) => boolean
-
-  /**
    * Check if the page is loaded in an iframe
    */
   isInIframe: () => boolean

@@ -42,61 +42,6 @@ class BrowserServiceClass {
   }
 
   /**
-   * Get the current user agent
-   * @returns The user agent string
-   */
-  static getUserAgent(): string {
-    try {
-      return navigator.userAgent
-    } catch (_error) {
-      return ''
-    }
-  }
-
-  /**
-   * Check if the browser supports a specific feature
-   * @param featureName The name of the feature to check
-   * @returns True if the feature is supported
-   */
-  static supportsFeature(featureName: string): boolean {
-    try {
-      // Check for CSS features
-      if (featureName.startsWith('css-')) {
-        const cssFeature = featureName.substring(4)
-        return CSS.supports(cssFeature)
-      }
-
-      // Handle specific feature cases
-      switch (featureName) {
-        case 'geolocation':
-          return 'geolocation' in navigator
-        case 'websockets':
-          return 'WebSocket' in window
-        case 'webworkers':
-          return 'Worker' in window
-        case 'localstorage':
-          return 'localStorage' in window
-        case 'sessionstorage':
-          return 'sessionStorage' in window
-        case 'webgl':
-          try {
-            const canvas = document.createElement('canvas')
-            return !!(
-              window.WebGLRenderingContext &&
-              (canvas.getContext('webgl') || canvas.getContext('experimental-webgl'))
-            )
-          } catch (e) {
-            return false
-          }
-        default:
-          return false
-      }
-    } catch (_error) {
-      return false
-    }
-  }
-
-  /**
    * Check if the page is loaded in an iframe
    * @returns True if the page is loaded in an iframe
    */
@@ -115,7 +60,5 @@ export const BrowserService: IBrowserService = {
   matchMedia: BrowserServiceClass.matchMedia,
   getViewportWidth: BrowserServiceClass.getViewportWidth,
   getViewportHeight: BrowserServiceClass.getViewportHeight,
-  getUserAgent: BrowserServiceClass.getUserAgent,
-  supportsFeature: BrowserServiceClass.supportsFeature,
   isInIframe: BrowserServiceClass.isInIframe
 }
