@@ -106,6 +106,10 @@ class DOMServiceClass {
     return document.documentElement
   }
 
+  public static getBodyElement(): HTMLElement {
+    return document.body
+  }
+
   /**
    * Add class to element
    *
@@ -170,6 +174,7 @@ export const DOMService: IDOMService = {
   matches: DOMServiceClass.matches,
   contains: DOMServiceClass.contains,
   getDocumentElement: DOMServiceClass.getDocumentElement,
+  getBodyElement: DOMServiceClass.getBodyElement,
   addClass: DOMServiceClass.addClass,
   removeClass: DOMServiceClass.removeClass,
   toggleClass: DOMServiceClass.toggleClass
