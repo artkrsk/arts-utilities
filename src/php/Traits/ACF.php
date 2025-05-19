@@ -93,6 +93,23 @@ trait ACF {
 	}
 
 	/**
+	 * Proxy for `acf_add_options_page()` function from ACF.
+	 *
+	 * @since 1.0.10
+	 *
+	 * @param array $page The options page settings.
+	 *
+	 * @return bool|int The ID of the options page or false if not found.
+	 */
+	public static function acf_add_options_page( $page = '' ) {
+		if ( self::acf_function_exists( 'acf_add_options_page' ) ) {
+			return acf_add_options_page( $page );
+		} else {
+			return false;
+		}
+	}
+
+	/**
 	 * Retrieves the available ACF fields and values for a given post.
 	 *
 	 * @since 1.0.0
