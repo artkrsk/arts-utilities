@@ -165,6 +165,25 @@ class DOMServiceClass {
       return false
     }
   }
+
+  /**
+   * Find the closest ancestor of the element that matches the selector.
+   *
+   * @param element Element to start the search from
+   * @param selector CSS selector to match
+   * @returns Closest ancestor element or null if not found
+   */
+  public static closest(element: TElement, selector: string): TElement | null {
+    if (!element || !selector) {
+      return null
+    }
+
+    try {
+      return element.closest(selector) as TElement | null
+    } catch (_error) {
+      return null
+    }
+  }
 }
 
 export const DOMService: IDOMService = {
@@ -177,5 +196,6 @@ export const DOMService: IDOMService = {
   getBodyElement: DOMServiceClass.getBodyElement,
   addClass: DOMServiceClass.addClass,
   removeClass: DOMServiceClass.removeClass,
-  toggleClass: DOMServiceClass.toggleClass
+  toggleClass: DOMServiceClass.toggleClass,
+  closest: DOMServiceClass.closest
 }
