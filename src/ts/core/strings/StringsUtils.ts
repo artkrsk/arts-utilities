@@ -106,3 +106,40 @@ export const normalizeURL = (url: string): string => {
 
   return normalized
 }
+
+/**
+ * Parses a string of class names and returns an array of clean class names.
+ * Handles space-separated class names, removes leading dots, and trims whitespace.
+ *
+ * @param classInput - The string containing class names to parse (defaults to empty string).
+ * @returns An array of clean class names without leading dots.
+ *
+ * @example
+ * ```typescript
+ * // Example 1: Parse basic space-separated class names
+ * const basicClasses = Utilities.parseClassNames('header nav active');
+ * // Result: ['header', 'nav', 'active']
+ *
+ * // Example 2: Parse class names with leading dots (CSS selector format)
+ * const selectorClasses = Utilities.parseClassNames('.btn .btn-primary .disabled');
+ * // Result: ['btn', 'btn-primary', 'disabled']
+ *
+ * // Example 3: Parse mixed format with extra whitespace
+ * const messyClasses = Utilities.parseClassNames('  .container   main-content   .active  ');
+ * // Result: ['container', 'main-content', 'active']
+ * ```
+ */
+export const parseClassNames = (classInput: string = ''): string[] => {
+  if (typeof classInput !== 'string' || classInput.trim().length === 0) {
+    return []
+  }
+
+  // Handle space-separated class names
+  const classes = classInput.split(' ').filter(Boolean)
+
+  // Process each class name (remove leading dots, trim whitespace)
+  return classes.map((className) => {
+    className = className.trim()
+    return className.startsWith('.') ? className.substring(1) : className
+  })
+}
