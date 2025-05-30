@@ -1,13 +1,15 @@
 import type { TElementorSettings, TSettingsMap, TValueMapping } from '../types'
 
-declare global {
-  interface Window {
-    elementorFrontend?: {
-      isEditMode: () => boolean
-    }
-    elementor?: Object
+// Local interface declaration for this file only
+interface LocalWindow extends Window {
+  elementorFrontend?: {
+    isEditMode: () => boolean
   }
+  elementor?: Object
 }
+
+// Type assertion helper for accessing the extended window
+const getWindow = (): LocalWindow => window as LocalWindow
 
 /**
  * Extracts keys from an object recursively
@@ -184,8 +186,8 @@ let elementorInitPromise: Promise<boolean> | null = null
  */
 export const elementorEditorLoaded = async (): Promise<boolean> => {
   // If Elementor is already initialized, check immediately
-  if (typeof window !== 'undefined' && window.elementorFrontend) {
-    return window.elementorFrontend.isEditMode()
+  if (typeof window !== 'undefined' && getWindow().elementorFrontend) {
+    return getWindow().elementorFrontend!.isEditMode()
   }
 
   // If window is undefined, we're not in a browser
@@ -203,8 +205,8 @@ export const elementorEditorLoaded = async (): Promise<boolean> => {
     // Listen for initialization
     window.addEventListener('elementor/frontend/init', () => {
       elementorInitPromise = null
-      if (window.elementorFrontend) {
-        resolve(window.elementorFrontend.isEditMode())
+      if (getWindow().elementorFrontend) {
+        resolve(getWindow().elementorFrontend!.isEditMode())
       } else {
         resolve(false)
       }
