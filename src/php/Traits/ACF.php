@@ -110,6 +110,25 @@ trait ACF {
 	}
 
 	/**
+	 * Proxy for `get_sub_field()` function from ACF.
+	 *
+	 * @since 1.0.14
+	 *
+	 * @param string $selector     The field name or field key.
+	 * @param bool   $format_value Optional. Whether to apply formatting logic. Defaults to true.
+	 * @param bool   $escape_html  Optional. Whether to escape HTML. Defaults to false.
+	 *
+	 * @return mixed|false The value of the sub field or false if not found.
+	 */
+	public static function acf_get_sub_field( $selector, $format_value = true, $escape_html = false ) {
+		if ( self::acf_function_exists( 'get_sub_field' ) ) {
+			return get_sub_field( $selector, $format_value, $escape_html );
+		} else {
+			return false;
+		}
+	}
+
+	/**
 	 * Retrieves the available ACF fields and values for a given post.
 	 *
 	 * @since 1.0.0
