@@ -1,3 +1,4 @@
+import { isHTMLElement } from '../../dom'
 import type { IResize, IResizeCallbacks } from '../../interfaces'
 
 /**
@@ -114,7 +115,7 @@ export class Resize implements IResize {
     for (let index = 0; index < this.elements.length; index++) {
       const element = this.elements[index]
 
-      if (!element || !(element instanceof HTMLElement)) {
+      if (!element || !isHTMLElement(element)) {
         continue
       }
 
