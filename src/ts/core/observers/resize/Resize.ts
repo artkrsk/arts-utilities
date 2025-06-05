@@ -115,7 +115,7 @@ export class Resize implements IResize {
     for (let index = 0; index < this.elements.length; index++) {
       const element = this.elements[index]
 
-      if (!element || !isHTMLElement(element)) {
+      if (!isHTMLElement(element)) {
         continue
       }
 
