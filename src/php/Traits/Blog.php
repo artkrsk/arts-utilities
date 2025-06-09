@@ -63,4 +63,40 @@ trait Blog {
 
 		return self::print_attributes( $attributes, false );
 	}
+
+	/**
+	 * Modify category archive links to wrap post count in a span element.
+	 *
+	 * This method can be used as a callback for the 'wp_list_categories' filter
+	 * to wrap category post counts in span elements for better styling control.
+	 *
+	 * @since 1.0.16
+	 *
+	 * @param string $links The category archive links.
+	 * @return string Modified category archive links with post count wrapped in a span.
+	 */
+	public static function cat_count_span( $links ) {
+		$links = str_replace( '</a> (', '</a><span>', $links );
+		$links = str_replace( ')', '</span>', $links );
+
+		return $links;
+	}
+
+	/**
+	 * Modify archive links to wrap post count in a span element.
+	 *
+	 * This method can be used as a callback for the 'get_archives_link' filter
+	 * to wrap archive post counts in span elements for better styling control.
+	 *
+	 * @since 1.0.16
+	 *
+	 * @param string $links The archive links.
+	 * @return string Modified archive links with post count wrapped in a span.
+	 */
+	public static function archive_count_span( $links ) {
+		$links = str_replace( '</a>&nbsp;(', '</a><span>', $links );
+		$links = str_replace( ')', '</span>', $links );
+
+		return $links;
+	}
 }
