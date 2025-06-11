@@ -74,7 +74,7 @@ export class LoggerClass implements ILogger {
     const scopedLogger = new LoggerClass()
     scopedLogger.configure({
       ...this.config,
-      prefix: `[${scope}]: `
+      prefix: `[${scope}]:`
     })
     return scopedLogger
   }
