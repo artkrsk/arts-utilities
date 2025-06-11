@@ -1,16 +1,16 @@
-import type { ILogger, ILoggerConfig } from "../interfaces";
-import { LogLevel } from "../constants";
+import type { ILogger, ILoggerConfig } from '../interfaces'
+import { LogLevel } from '../constants'
 
 /**
  * Centralized logger for the component manager
  */
 export class LoggerClass implements ILogger {
-  private static instance: LoggerClass;
+  private static instance: LoggerClass
   private config: ILoggerConfig = {
     enabled: true,
     level: LogLevel.DEBUG,
-    prefix: "[PREFIX]",
-  };
+    prefix: '[PREFIX]'
+  }
 
   private constructor() {}
 
@@ -19,16 +19,16 @@ export class LoggerClass implements ILogger {
    */
   public static getInstance(): LoggerClass {
     if (!LoggerClass.instance) {
-      LoggerClass.instance = new LoggerClass();
+      LoggerClass.instance = new LoggerClass()
     }
-    return LoggerClass.instance;
+    return LoggerClass.instance
   }
 
   /**
    * Configure logger
    */
   public configure(config: Partial<ILoggerConfig>): void {
-    this.config = { ...this.config, ...config };
+    this.config = { ...this.config, ...config }
   }
 
   /**
@@ -36,7 +36,7 @@ export class LoggerClass implements ILogger {
    */
   public error(message: string, ...args: any[]): void {
     if (this.config.enabled && this.config.level >= LogLevel.ERROR) {
-      console.error(`${this.config.prefix} [ERROR] ${message}`, ...args);
+      console.error(`${this.config.prefix} [ERROR] ${message}`, ...args)
     }
   }
 
@@ -45,7 +45,7 @@ export class LoggerClass implements ILogger {
    */
   public warn(message: string, ...args: any[]): void {
     if (this.config.enabled && this.config.level >= LogLevel.WARN) {
-      console.warn(`${this.config.prefix} [WARN] ${message}`, ...args);
+      console.warn(`${this.config.prefix} [WARN] ${message}`, ...args)
     }
   }
 
@@ -54,7 +54,7 @@ export class LoggerClass implements ILogger {
    */
   public info(message: string, ...args: any[]): void {
     if (this.config.enabled && this.config.level >= LogLevel.INFO) {
-      console.info(`${this.config.prefix} [INFO] ${message}`, ...args);
+      console.info(`${this.config.prefix} [INFO] ${message}`, ...args)
     }
   }
 
@@ -63,7 +63,7 @@ export class LoggerClass implements ILogger {
    */
   public debug(message: string, ...args: any[]): void {
     if (this.config.enabled && this.config.level >= LogLevel.DEBUG) {
-      console.debug(`${this.config.prefix} [DEBUG] ${message}`, ...args);
+      console.debug(`${this.config.prefix} [DEBUG] ${message}`, ...args)
     }
   }
 
@@ -71,14 +71,14 @@ export class LoggerClass implements ILogger {
    * Create a scoped logger for a specific service
    */
   public scope(scope: string): ILogger {
-    const scopedLogger = new LoggerClass();
+    const scopedLogger = new LoggerClass()
     scopedLogger.configure({
       ...this.config,
-      prefix: `${this.config.prefix}:${scope}`,
-    });
-    return scopedLogger;
+      prefix: `[${scope}]: `
+    })
+    return scopedLogger
   }
 }
 
 // Create and export default logger instance
-export const Logger: ILogger = LoggerClass.getInstance();
+export const Logger: ILogger = LoggerClass.getInstance()
