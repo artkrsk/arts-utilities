@@ -143,3 +143,111 @@ export const parseClassNames = (classInput: string = ''): string[] => {
     return className.startsWith('.') ? className.substring(1) : className
   })
 }
+
+/**
+ * Parses a color string (rgb/rgba/hex format) and extracts the color and alpha values.
+ * Returns the color as an rgb string and the alpha as a separate value.
+ *
+ * @param colorString - The color string to parse (rgb, rgba, or hex format)
+ * @returns Object containing the color (rgb string) and alpha value, or null if parsing fails
+ *
+ * @example
+ * ```typescript
+ * // Example 1: Parse RGB color
+ * const rgbResult = parseColorString('rgb(255, 128, 0)');
+ * // Result: { color: 'rgb(255, 128, 0)', alpha: 1.0 }
+ *
+ * // Example 2: Parse RGBA color with alpha
+ * const rgbaResult = parseColorString('rgba(255, 128, 0, 0.5)');
+ * // Result: { color: 'rgb(255, 128, 0)', alpha: 0.5 }
+ *
+ * // Example 3: Parse RGBA with spaces
+ * const spacedResult = parseColorString('rgba( 255 , 128 , 0 , 0.75 )');
+ * // Result: { color: 'rgb(255, 128, 0)', alpha: 0.75 }
+ *
+ * // Example 4: Parse HEX color (3-digit)
+ * const hexResult3 = parseColorString('#f80');
+ * // Result: { color: 'rgb(255, 136, 0)', alpha: 1.0 }
+ *
+ * // Example 5: Parse HEX color (6-digit)
+ * const hexResult6 = parseColorString('#ff8800');
+ * // Result: { color: 'rgb(255, 136, 0)', alpha: 1.0 }
+ *
+ * // Example 6: Parse HEX color (8-digit with alpha)
+ * const hexResult8 = parseColorString('#ff880080');
+ * // Result: { color: 'rgb(255, 136, 0)', alpha: 0.5 }
+ *
+ * // Example 7: Invalid color string
+ * const invalidResult = parseColorString('hsl(120, 100%, 50%)');
+ * // Result: null
+ *
+ * // Example 8: Use in conditional logic
+ * const parsed = parseColorString(userColorInput);
+ * if (parsed) {
+ *   element.style.backgroundColor = parsed.color;
+ *   element.style.opacity = parsed.alpha.toString();
+ * }
+ * ```
+ */
+export const parseColorString = (colorString: string): { color: string; alpha: number } | null => {
+  if (typeof colorString !== 'string' || colorString.trim() === '') {
+    return null
+  }
+
+  // Separate regex for rgb and rgba to enforce proper format
+  const rgbRegex = /^rgb\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)$/
+  const rgbaRegex = /^rgba\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d*\.?\d*)\s*\)$/
+  const hexRegex = /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/
+
+  // Try RGB format
+  let match = colorString.match(rgbRegex)
+  if (match) {
+    const [, r, g, b] = match
+    const color = `rgb(${r}, ${g}, ${b})`
+    return { color, alpha: 1.0 }
+  }
+
+  // Try RGBA format
+  match = colorString.match(rgbaRegex)
+  if (match) {
+    const [, r, g, b, a] = match
+    const color = `rgb(${r}, ${g}, ${b})`
+    const alpha = a ? parseFloat(a) : 0
+    return { color, alpha }
+  }
+
+  // Try HEX format
+  match = colorString.match(hexRegex)
+  if (match && match[1]) {
+    const hex = match[1]
+    let r = 0
+    let g = 0
+    let b = 0
+    let alpha = 1.0
+
+    if (hex.length === 3) {
+      // 3-digit hex: #rgb -> #rrggbb
+      r = parseInt(hex.charAt(0) + hex.charAt(0), 16)
+      g = parseInt(hex.charAt(1) + hex.charAt(1), 16)
+      b = parseInt(hex.charAt(2) + hex.charAt(2), 16)
+    } else if (hex.length === 6) {
+      // 6-digit hex: #rrggbb
+      r = parseInt(hex.substring(0, 2), 16)
+      g = parseInt(hex.substring(2, 4), 16)
+      b = parseInt(hex.substring(4, 6), 16)
+    } else if (hex.length === 8) {
+      // 8-digit hex: #rrggbbaa
+      r = parseInt(hex.substring(0, 2), 16)
+      g = parseInt(hex.substring(2, 4), 16)
+      b = parseInt(hex.substring(4, 6), 16)
+      alpha = parseInt(hex.substring(6, 8), 16) / 255
+    } else {
+      return null
+    }
+
+    const color = `rgb(${r}, ${g}, ${b})`
+    return { color, alpha }
+  }
+
+  return null
+}
