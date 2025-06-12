@@ -214,6 +214,16 @@ describe('StringsUtils', () => {
       })
     })
 
+    it('should handle RGBA with empty alpha value', () => {
+      // Test case where alpha capture group matches but is empty string
+      // This covers the `a ? parseFloat(a) : 0` ternary where a is falsy
+      const result = parseColorString('rgba(255, 128, 0, )')
+      expect(result).toEqual({
+        color: 'rgb(255, 128, 0)',
+        alpha: 0
+      })
+    })
+
     it('should handle boundary RGB values', () => {
       const result1 = parseColorString('rgb(0, 0, 0)')
       expect(result1).toEqual({

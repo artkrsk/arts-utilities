@@ -42,6 +42,9 @@ describe('ResizeUtils', () => {
 
       expect(result).toHaveProperty('clear')
       expect(typeof result.clear).toBe('function')
+
+      // Call the cleanup function to ensure 100% function coverage
+      result.clear()
     })
 
     it('should return cleanup object when invalid callback provided', () => {
@@ -50,6 +53,9 @@ describe('ResizeUtils', () => {
 
       expect(result).toHaveProperty('clear')
       expect(typeof result.clear).toBe('function')
+
+      // Call the cleanup function to ensure 100% function coverage
+      result.clear()
     })
 
     it('should setup event listeners when valid callback provided', () => {
