@@ -195,4 +195,202 @@ describe('DOMService', () => {
       }
     })
   })
+
+  describe('toggleClass', () => {
+    it('should toggle class on element', () => {
+      // Initially no 'test' class
+      expect(childElement.classList.contains('test')).toBe(false)
+
+      // Toggle on
+      const result1 = DOMService.toggleClass(childElement, 'test')
+      expect(result1).toBe(true)
+      expect(childElement.classList.contains('test')).toBe(true)
+
+      // Toggle off
+      const result2 = DOMService.toggleClass(childElement, 'test')
+      expect(result2).toBe(false)
+      expect(childElement.classList.contains('test')).toBe(false)
+    })
+
+    it('should force add class when force is true', () => {
+      expect(childElement.classList.contains('forced')).toBe(false)
+
+      const result1 = DOMService.toggleClass(childElement, 'forced', true)
+      expect(result1).toBe(true)
+      expect(childElement.classList.contains('forced')).toBe(true)
+
+      // Force true again - should remain true
+      const result2 = DOMService.toggleClass(childElement, 'forced', true)
+      expect(result2).toBe(true)
+      expect(childElement.classList.contains('forced')).toBe(true)
+    })
+
+    it('should force remove class when force is false', () => {
+      childElement.classList.add('to-remove')
+      expect(childElement.classList.contains('to-remove')).toBe(true)
+
+      const result1 = DOMService.toggleClass(childElement, 'to-remove', false)
+      expect(result1).toBe(false)
+      expect(childElement.classList.contains('to-remove')).toBe(false)
+
+      // Force false again - should remain false
+      const result2 = DOMService.toggleClass(childElement, 'to-remove', false)
+      expect(result2).toBe(false)
+      expect(childElement.classList.contains('to-remove')).toBe(false)
+    })
+
+    it('should return false for invalid arguments', () => {
+      // @ts-ignore - Testing with invalid args
+      const result1 = DOMService.toggleClass(null, 'test')
+      expect(result1).toBe(false)
+
+      const result2 = DOMService.toggleClass(childElement, '')
+      expect(result2).toBe(false)
+
+      // @ts-ignore - Testing with invalid args
+      const result3 = DOMService.toggleClass(childElement, null)
+      expect(result3).toBe(false)
+    })
+  })
+
+  describe('toggleClasses', () => {
+    it('should toggle multiple space-separated classes', () => {
+      // Initially no classes
+      expect(childElement.classList.contains('class1')).toBe(false)
+      expect(childElement.classList.contains('class2')).toBe(false)
+      expect(childElement.classList.contains('class3')).toBe(false)
+
+      // Toggle multiple classes on
+      const results1 = DOMService.toggleClasses(childElement, 'class1 class2 class3')
+      expect(results1).toEqual([true, true, true])
+      expect(childElement.classList.contains('class1')).toBe(true)
+      expect(childElement.classList.contains('class2')).toBe(true)
+      expect(childElement.classList.contains('class3')).toBe(true)
+
+      // Toggle them off
+      const results2 = DOMService.toggleClasses(childElement, 'class1 class2 class3')
+      expect(results2).toEqual([false, false, false])
+      expect(childElement.classList.contains('class1')).toBe(false)
+      expect(childElement.classList.contains('class2')).toBe(false)
+      expect(childElement.classList.contains('class3')).toBe(false)
+    })
+
+    it('should handle CSS selector format with dots', () => {
+      // Test with dot-prefixed class names
+      const results = DOMService.toggleClasses(childElement, '.btn .btn-primary .active')
+      expect(results).toEqual([true, true, true])
+      expect(childElement.classList.contains('btn')).toBe(true)
+      expect(childElement.classList.contains('btn-primary')).toBe(true)
+      expect(childElement.classList.contains('active')).toBe(true)
+    })
+
+    it('should handle mixed format with extra whitespace', () => {
+      const results = DOMService.toggleClasses(
+        childElement,
+        '  .container   main-content   .active  '
+      )
+      expect(results).toEqual([true, true, true])
+      expect(childElement.classList.contains('container')).toBe(true)
+      expect(childElement.classList.contains('main-content')).toBe(true)
+      expect(childElement.classList.contains('active')).toBe(true)
+    })
+
+    it('should force add all classes when force is true', () => {
+      // Add one class manually first
+      childElement.classList.add('class2')
+
+      const results = DOMService.toggleClasses(childElement, 'class1 class2 class3', true)
+      expect(results).toEqual([true, true, true])
+      expect(childElement.classList.contains('class1')).toBe(true)
+      expect(childElement.classList.contains('class2')).toBe(true)
+      expect(childElement.classList.contains('class3')).toBe(true)
+    })
+
+    it('should force remove all classes when force is false', () => {
+      // Add classes manually first
+      childElement.classList.add('class1', 'class2', 'class3')
+
+      const results = DOMService.toggleClasses(childElement, 'class1 class2 class3', false)
+      expect(results).toEqual([false, false, false])
+      expect(childElement.classList.contains('class1')).toBe(false)
+      expect(childElement.classList.contains('class2')).toBe(false)
+      expect(childElement.classList.contains('class3')).toBe(false)
+    })
+
+    it('should return empty array for invalid arguments', () => {
+      // @ts-ignore - Testing with invalid args
+      const result1 = DOMService.toggleClasses(null, 'test')
+      expect(result1).toEqual([])
+
+      const result2 = DOMService.toggleClasses(childElement, '')
+      expect(result2).toEqual([])
+
+      // @ts-ignore - Testing with invalid args
+      const result3 = DOMService.toggleClasses(childElement, null)
+      expect(result3).toEqual([])
+    })
+
+    it('should handle empty string input', () => {
+      const results = DOMService.toggleClasses(childElement, '   ')
+      expect(results).toEqual([])
+    })
+
+    it('should handle single class name', () => {
+      const results = DOMService.toggleClasses(childElement, 'single-class')
+      expect(results).toEqual([true])
+      expect(childElement.classList.contains('single-class')).toBe(true)
+    })
+
+    it('should handle errors gracefully', () => {
+      // Create a mock element that throws an error on classList.toggle
+      const mockElement = {
+        classList: {
+          toggle: () => {
+            throw new Error('Test error')
+          }
+        }
+      }
+
+      // @ts-ignore - Testing with mock element
+      const results = DOMService.toggleClasses(mockElement, 'test1 test2')
+      expect(results).toEqual([false, false])
+    })
+
+    it('should work with existing classes', () => {
+      // Start with some existing classes
+      childElement.classList.add('existing1', 'existing3')
+
+      const results = DOMService.toggleClasses(childElement, 'existing1 new-class existing3')
+      expect(results).toEqual([false, true, false]) // existing1: off, new-class: on, existing3: off
+      expect(childElement.classList.contains('existing1')).toBe(false)
+      expect(childElement.classList.contains('new-class')).toBe(true)
+      expect(childElement.classList.contains('existing3')).toBe(false)
+    })
+  })
+
+  describe('closest', () => {
+    it('should find the closest ancestor matching the selector', () => {
+      // Add ancestor class to rootElement (which is already a parent of childElement)
+      rootElement.classList.add('ancestor')
+
+      const element = DOMService.closest(childElement, '.ancestor')
+      expect(element).toBe(rootElement)
+    })
+
+    it('should return null if no ancestor matches', () => {
+      const element = DOMService.closest(childElement, '.non-existent')
+      expect(element).toBeNull()
+    })
+
+    it('should return null if selector is empty', () => {
+      const element = DOMService.closest(childElement, '')
+      expect(element).toBeNull()
+    })
+
+    it('should handle errors gracefully', () => {
+      // @ts-ignore - Force error with invalid selector
+      const element = DOMService.closest(childElement, '###')
+      expect(element).toBeNull()
+    })
+  })
 })

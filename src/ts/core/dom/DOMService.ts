@@ -1,5 +1,6 @@
 import type { TScope, TElement } from '../types'
 import type { IDOMService } from '../interfaces'
+import { parseClassNames } from '../strings/StringsUtils'
 
 /**
  * Service for DOM operations, makes testing easier by allowing mocking
@@ -167,6 +168,34 @@ class DOMServiceClass {
   }
 
   /**
+   * Toggle multiple classes on element
+   *
+   * @param element Element to toggle classes on
+   * @param classNames Space-separated class names to toggle (supports CSS selector format with dots)
+   * @param force Optional boolean that forces all classes to be added or removed
+   * @returns Array of booleans indicating if each class is present after toggle
+   */
+  public static toggleClasses(element: TElement, classNames: string, force?: boolean): boolean[] {
+    if (!element || !classNames) {
+      return []
+    }
+
+    const classes = parseClassNames(classNames)
+    const results: boolean[] = []
+
+    for (const className of classes) {
+      try {
+        const result = element.classList.toggle(className, force)
+        results.push(result)
+      } catch (_error) {
+        results.push(false)
+      }
+    }
+
+    return results
+  }
+
+  /**
    * Find the closest ancestor of the element that matches the selector.
    *
    * @param element Element to start the search from
@@ -197,5 +226,6 @@ export const DOMService: IDOMService = {
   addClass: DOMServiceClass.addClass,
   removeClass: DOMServiceClass.removeClass,
   toggleClass: DOMServiceClass.toggleClass,
+  toggleClasses: DOMServiceClass.toggleClasses,
   closest: DOMServiceClass.closest
 }

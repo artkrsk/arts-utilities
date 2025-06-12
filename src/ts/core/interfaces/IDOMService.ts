@@ -55,6 +55,11 @@ export interface IDOMService {
   toggleClass: (element: TElement, className: string, force?: boolean) => boolean
 
   /**
+   * Toggle multiple classes on element
+   */
+  toggleClasses: (element: TElement, classNames: string, force?: boolean) => boolean[]
+
+  /**
    * Find the closest ancestor of the element that matches the selector.
    */
   closest: (element: TElement, selector: string) => TElement | null
