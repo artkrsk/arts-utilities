@@ -40,10 +40,46 @@ function extractFromObject(obj: any, keys: string[]): void {
 }
 
 /**
- * Helper function to process complex nested values
- * @param valueMapping - The value mapping object or string
- * @param settings - The Elementor settings object
- * @returns Processed values
+ * Processes complex nested value mappings between Elementor settings and component options.
+ * Handles various mapping patterns including simple strings, nested objects, size extraction,
+ * and conditional value processing.
+ *
+ * @param valueMapping - The mapping configuration (string for simple mapping, object for complex)
+ * @param settings - The raw Elementor settings object
+ * @returns Processed value(s) according to the mapping configuration
+ *
+ * @example
+ * ```typescript
+ * // Example 1: Simple string mapping
+ * const settings = { color: '#ff0000' };
+ * const result = processComplexValue('color', settings);
+ * // Result: '#ff0000'
+ *
+ * // Example 2: Size value extraction
+ * const settings = { margin: { size: 20, unit: 'px' } };
+ * const result = processComplexValue({
+ *   value: 'margin'
+ * }, settings);
+ * // Result: 20 (just the size value)
+ *
+ * // Example 3: Full value with unit
+ * const result = processComplexValue({
+ *   value: 'margin',
+ *   return_size: false
+ * }, settings);
+ * // Result: '20px' (formatted with unit)
+ *
+ * // Example 4: Nested object mapping
+ * const settings = {
+ *   desktop_margin: { size: 20, unit: 'px' },
+ *   mobile_margin: { size: 10, unit: 'px' }
+ * };
+ * const result = processComplexValue({
+ *   desktop: { value: 'desktop_margin' },
+ *   mobile: { value: 'mobile_margin' }
+ * }, settings);
+ * // Result: { desktop: 20, mobile: 10 }
+ * ```
  */
 export const processComplexValue = (
   valueMapping: TValueMapping,
@@ -92,10 +128,67 @@ export const processComplexValue = (
 }
 
 /**
- * Converts Elementor settings to a format usable by JavaScript
- * @param settings - The Elementor settings object
- * @param settingsMap - Mapping of JS keys to Elementor keys
- * @returns Converted settings object
+ * Converts raw Elementor settings to a component-friendly configuration object.
+ * This is the main function for transforming Elementor's flat setting structure
+ * into organized, typed configuration objects that components can consume.
+ *
+ * Features:
+ * - Handles conditional settings (only include if condition is met)
+ * - Supports complex nested value extraction
+ * - Processes responsive settings (desktop/tablet/mobile)
+ * - Extracts size values from Elementor dimension objects
+ * - Provides fallback handling for missing settings
+ *
+ * @param settings - Raw Elementor settings object from the editor
+ * @param settingsMap - Configuration mapping object defining how to transform settings
+ * @returns Converted settings object ready for component consumption
+ *
+ * @example
+ * ```typescript
+ * // Example 1: Basic setting conversion
+ * const elementorSettings = {
+ *   show_dots: 'yes',
+ *   dot_color: '#ffffff',
+ *   slides_count: '3'
+ * };
+ *
+ * const settingsMap = {
+ *   showDots: 'show_dots',
+ *   dotColor: 'dot_color',
+ *   slidesCount: 'slides_count'
+ * };
+ *
+ * const result = convertSettings(elementorSettings, settingsMap);
+ * // Result: { showDots: 'yes', dotColor: '#ffffff', slidesCount: '3' }
+ *
+ * // Example 2: Conditional settings
+ * const settingsMap = {
+ *   autoplay: 'enable_autoplay',
+ *   autoplaySpeed: {
+ *     condition: 'enable_autoplay',
+ *     value: 'autoplay_speed'
+ *   }
+ * };
+ * // autoplaySpeed only included if enable_autoplay is truthy
+ *
+ * // Example 3: Responsive settings
+ * const settingsMap = {
+ *   columns: {
+ *     desktop: 'columns',
+ *     tablet: 'columns_tablet',
+ *     mobile: 'columns_mobile'
+ *   }
+ * };
+ * // Creates nested object: { columns: { desktop: 4, tablet: 2, mobile: 1 } }
+ *
+ * // Example 4: Size extraction from Elementor dimensions
+ * const elementorSettings = {
+ *   item_spacing: { size: 20, unit: 'px' }
+ * };
+ * const settingsMap = {
+ *   spacing: { value: 'item_spacing' } // Extracts just the size (20)
+ * };
+ * ```
  */
 export const convertSettings = (
   settings: TElementorSettings,

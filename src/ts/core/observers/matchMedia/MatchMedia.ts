@@ -1,7 +1,43 @@
 import type { IMatchMedia, IMatchMediaCallbacks } from '../../interfaces'
 
 /**
- * Wraps the window.matchMedia API to execute callbacks on media query changes.
+ * Enhanced wrapper around the window.matchMedia API that provides reliable media query
+ * monitoring with callback execution. Handles both modern and legacy browser APIs.
+ *
+ * This class is particularly useful for:
+ * - Responsive design breakpoint detection
+ * - Device capability detection (hover, pointer precision)
+ * - Orientation change handling
+ * - Dynamic layout adjustments based on viewport changes
+ *
+ * @example
+ * ```typescript
+ * // Example 1: Basic breakpoint monitoring
+ * const desktopQuery = new MatchMedia({
+ *   condition: '(min-width: 1024px)',
+ *   callbackMatch: () => console.log('Desktop layout active'),
+ *   callbackNoMatch: () => console.log('Mobile/tablet layout active')
+ * });
+ *
+ * // Example 2: Device capability detection
+ * const touchDevice = new MatchMedia({
+ *   condition: '(hover: none) and (pointer: coarse)',
+ *   callbackMatch: () => enableTouchInteractions(),
+ *   callbackNoMatch: () => enableMouseInteractions()
+ * });
+ *
+ * // Example 3: Orientation monitoring
+ * const orientationQuery = new MatchMedia({
+ *   condition: '(orientation: landscape)',
+ *   callbackMatch: () => adjustForLandscape(),
+ *   callbackNoMatch: () => adjustForPortrait()
+ * });
+ *
+ * // Example 4: Cleanup when component unmounts
+ * const query = new MatchMedia({ condition: '(max-width: 768px)' });
+ * // Later...
+ * query.destroy(); // Remove listeners and cleanup
+ * ```
  */
 export class MatchMedia implements IMatchMedia {
   /** The MediaQueryList instance, or null if unavailable/destroyed. */
@@ -11,7 +47,10 @@ export class MatchMedia implements IMatchMedia {
   /** The CSS media query condition string. */
   private condition: string
 
-  /** Handles the media query change event. */
+  /**
+   * Handles the media query change event.
+   * Supports both MediaQueryListEvent (modern) and MediaQueryList (legacy) APIs.
+   */
   private handleChange = (event: MediaQueryListEvent | MediaQueryList) => {
     const matches = 'matches' in event ? event.matches : this.mediaQuery?.matches
 
@@ -23,10 +62,11 @@ export class MatchMedia implements IMatchMedia {
   }
 
   /**
-   * Creates a MatchMedia instance.
-   * @param condition - The CSS media query string.
-   * @param callbackMatch - Function to call when the query matches.
-   * @param callbackNoMatch - Function to call when the query stops matching.
+   * Creates a new MatchMedia instance for monitoring a specific media query.
+   *
+   * @param condition - CSS media query string to monitor (e.g., '(min-width: 768px)')
+   * @param callbackMatch - Function called when the media query starts matching
+   * @param callbackNoMatch - Function called when the media query stops matching
    */
   constructor({
     condition,
@@ -53,8 +93,9 @@ export class MatchMedia implements IMatchMedia {
   }
 
   /**
-   * Initializes the MediaQueryList and attaches listeners.
-   * Checks the initial state.
+   * Initializes the MediaQueryList and attaches event listeners.
+   * Automatically checks the initial state and triggers appropriate callbacks.
+   * Prevents double initialization for safety.
    */
   public init() {
     // Prevent re-initialization
@@ -75,7 +116,20 @@ export class MatchMedia implements IMatchMedia {
   }
 
   /**
-   * Removes event listeners and cleans up the instance.
+   * Removes all event listeners and cleans up the MediaQueryList instance.
+   * Call this method when the component or feature using MatchMedia is destroyed
+   * to prevent memory leaks.
+   *
+   * @example
+   * ```typescript
+   * const breakpointWatcher = new MatchMedia({
+   *   condition: '(min-width: 768px)',
+   *   callbackMatch: () => console.log('Desktop mode')
+   * });
+   *
+   * // Later, when component unmounts or feature is disabled
+   * breakpointWatcher.destroy();
+   * ```
    */
   public destroy() {
     this.detachEvents()
@@ -83,7 +137,10 @@ export class MatchMedia implements IMatchMedia {
   }
 
   /**
-   * Creates and returns a MediaQueryList object, or null if unavailable.
+   * Creates and returns a MediaQueryList object with comprehensive error handling.
+   * Validates the environment and media query syntax before creation.
+   *
+   * @returns MediaQueryList instance or null if creation fails
    */
   private addMatchMedia(): MediaQueryList | null {
     // Environment check
@@ -100,7 +157,8 @@ export class MatchMedia implements IMatchMedia {
   }
 
   /**
-   * Checks the initial state of the media query and calls the appropriate callback.
+   * Evaluates the current state of the media query and executes the appropriate callback.
+   * This method is called immediately after initialization to handle the initial state.
    */
   private checkInitialState() {
     if (!this.mediaQuery) {
@@ -113,6 +171,8 @@ export class MatchMedia implements IMatchMedia {
 
   /**
    * Attaches the change event listener to the MediaQueryList.
+   * Supports both modern (addEventListener) and legacy (addListener) APIs
+   * for maximum browser compatibility.
    */
   private attachEvents() {
     if (!this.mediaQuery) {
@@ -129,7 +189,9 @@ export class MatchMedia implements IMatchMedia {
   }
 
   /**
-   * Detaches the change event listener from the MediaQueryList.
+   * Removes the change event listener from the MediaQueryList.
+   * Supports both modern (removeEventListener) and legacy (removeListener) APIs
+   * for clean teardown across all browsers.
    */
   private detachEvents() {
     if (!this.mediaQuery) {
