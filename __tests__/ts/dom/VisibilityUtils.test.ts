@@ -163,6 +163,16 @@ describe('VisibilityUtils', () => {
       const result = elementIsVisibleInViewport(mockElement)
       expect(result).toBe(true)
     })
+
+    it('should correctly detect partial visibility when element left edge is outside but right edge is inside', () => {
+      // Element that starts before the left edge of viewport but ends inside it
+      const mockElement = {
+        getBoundingClientRect: vi.fn(() => createMockRect(100, -50, 200, 50))
+      } as unknown as Element
+
+      const result = elementIsVisibleInViewport(mockElement, { partiallyVisible: true })
+      expect(result).toBe(true) // Right edge is inside viewport, so partially visible
+    })
   })
 
   describe('elementIsVisible', () => {

@@ -196,6 +196,85 @@ describe('DOMService', () => {
     })
   })
 
+  describe('getDocumentElement', () => {
+    it('should return document.documentElement', () => {
+      const result = DOMService.getDocumentElement()
+      expect(result).toBe(document.documentElement)
+    })
+  })
+
+  describe('getBodyElement', () => {
+    it('should return document.body', () => {
+      const result = DOMService.getBodyElement()
+      expect(result).toBe(document.body)
+    })
+  })
+
+  describe('addClass', () => {
+    it('should add class to element', () => {
+      expect(childElement.classList.contains('new-class')).toBe(false)
+      
+      DOMService.addClass(childElement, 'new-class')
+      expect(childElement.classList.contains('new-class')).toBe(true)
+    })
+
+    it('should handle null element gracefully', () => {
+      // @ts-ignore - Testing with invalid args
+      expect(() => DOMService.addClass(null, 'test')).not.toThrow()
+    })
+
+    it('should handle empty className gracefully', () => {
+      expect(() => DOMService.addClass(childElement, '')).not.toThrow()
+    })
+
+    it('should handle errors gracefully', () => {
+      // Create a mock element that throws an error on classList.add
+      const mockElement = {
+        classList: {
+          add: () => {
+            throw new Error('Test error')
+          }
+        }
+      }
+
+      // @ts-ignore - Testing with mock element
+      expect(() => DOMService.addClass(mockElement, 'test')).not.toThrow()
+    })
+  })
+
+  describe('removeClass', () => {
+    it('should remove class from element', () => {
+      childElement.classList.add('to-remove')
+      expect(childElement.classList.contains('to-remove')).toBe(true)
+      
+      DOMService.removeClass(childElement, 'to-remove')
+      expect(childElement.classList.contains('to-remove')).toBe(false)
+    })
+
+    it('should handle null element gracefully', () => {
+      // @ts-ignore - Testing with invalid args
+      expect(() => DOMService.removeClass(null, 'test')).not.toThrow()
+    })
+
+    it('should handle empty className gracefully', () => {
+      expect(() => DOMService.removeClass(childElement, '')).not.toThrow()
+    })
+
+    it('should handle errors gracefully', () => {
+      // Create a mock element that throws an error on classList.remove
+      const mockElement = {
+        classList: {
+          remove: () => {
+            throw new Error('Test error')
+          }
+        }
+      }
+
+      // @ts-ignore - Testing with mock element
+      expect(() => DOMService.removeClass(mockElement, 'test')).not.toThrow()
+    })
+  })
+
   describe('toggleClass', () => {
     it('should toggle class on element', () => {
       // Initially no 'test' class
@@ -250,6 +329,21 @@ describe('DOMService', () => {
       // @ts-ignore - Testing with invalid args
       const result3 = DOMService.toggleClass(childElement, null)
       expect(result3).toBe(false)
+    })
+
+    it('should handle errors gracefully', () => {
+      // Create a mock element that throws an error on classList.toggle
+      const mockElement = {
+        classList: {
+          toggle: () => {
+            throw new Error('Test error')
+          }
+        }
+      }
+
+      // @ts-ignore - Testing with mock element
+      const result = DOMService.toggleClass(mockElement, 'test')
+      expect(result).toBe(false)
     })
   })
 
