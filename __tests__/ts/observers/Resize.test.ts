@@ -442,5 +442,29 @@ describe('Resize', () => {
       expect(mockResizeObserver.observe).toHaveBeenCalledTimes(1)
       expect(mockResizeObserver.observe).toHaveBeenCalledWith(validElement)
     })
+
+    it('should return early from observeElements when instance is null', () => {
+      const callback = vi.fn()
+
+      // Create instance without auto-initialization
+      const instance = new Resize({
+        elements: [], // Start with empty elements to prevent auto-init
+        callbackResize: callback
+      })
+
+      // Set elements but ensure instance is null
+      ;(instance as any).elements = [document.createElement('div')]
+      ;(instance as any).instance = null // Explicitly set instance to null
+
+      // Spy on the observe method to ensure it's not called
+      const observeSpy = vi.fn()
+      mockResizeObserver.observe = observeSpy
+
+      // Call the private observeElements method
+      ;(instance as any).observeElements()
+
+      // Observe should not have been called since instance is null
+      expect(observeSpy).not.toHaveBeenCalled()
+    })
   })
 })

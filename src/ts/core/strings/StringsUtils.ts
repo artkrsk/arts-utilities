@@ -235,14 +235,12 @@ export const parseColorString = (colorString: string): { color: string; alpha: n
       r = parseInt(hex.substring(0, 2), 16)
       g = parseInt(hex.substring(2, 4), 16)
       b = parseInt(hex.substring(4, 6), 16)
-    } else if (hex.length === 8) {
+    } else {
       // 8-digit hex: #rrggbbaa
       r = parseInt(hex.substring(0, 2), 16)
       g = parseInt(hex.substring(2, 4), 16)
       b = parseInt(hex.substring(4, 6), 16)
       alpha = parseInt(hex.substring(6, 8), 16) / 255
-    } else {
-      return null
     }
 
     const color = `rgb(${r}, ${g}, ${b})`
