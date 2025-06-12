@@ -1,4 +1,4 @@
-import type { IElementVisibilityOptions } from '../interfaces'
+import type { IElementVisibilityOptions, IFullscreenRectOptions } from '../interfaces'
 
 /**
  * Checks if an element is visible within the viewport boundaries.
@@ -97,4 +97,62 @@ export const elementIsVisible = (element: Element | null): boolean => {
   const opacity = parseFloat(computedStyle.getPropertyValue('opacity'))
 
   return visibility === 'visible' && opacity > 0
+}
+
+/**
+ * Checks if an element represents a fullscreen element by comparing its dimensions and position
+ * to the window's viewport. Useful for detecting fullscreen overlays, modals, or video elements.
+ *
+ * @param element - The element to check for fullscreen dimensions
+ * @param options - Configuration options for fullscreen detection
+ * @returns Boolean indicating if the element represents a fullscreen element, or false if element is null/undefined
+ *
+ * @example
+ * ```typescript
+ * // Example 1: Check if element fills entire viewport
+ * const element = document.getElementById('video-player');
+ * const isFullscreen = isElementFullscreen(element);
+ * // Result: true if element covers the entire viewport
+ *
+ * // Example 2: Check with custom tolerance
+ * const isFullscreenWithTolerance = isElementFullscreen(element, {
+ *   tolerance: 5
+ * });
+ * // Result: true if element is within 5px of fullscreen
+ *
+ * // Example 3: Disable rounding for precise measurements
+ * const isPreciselyFullscreen = isElementFullscreen(element, {
+ *   shouldRound: false,
+ *   tolerance: 0
+ * });
+ * // Result: true only if exact fullscreen dimensions
+ *
+ * // Example 4: Handle null element safely
+ * const maybeElement = document.querySelector('.nonexistent');
+ * const isFullscreen = isElementFullscreen(maybeElement);
+ * // Result: false (safe handling of null element)
+ * ```
+ */
+export const isElementFullscreen = (
+  element: Element | null,
+  options: IFullscreenRectOptions = {}
+): boolean => {
+  if (!element) {
+    return false
+  }
+
+  const rect = element.getBoundingClientRect()
+  const { shouldRound = true, tolerance = 2 } = options
+
+  const width = shouldRound ? Math.round(rect.width) : rect.width
+  const height = shouldRound ? Math.round(rect.height) : rect.height
+  const top = shouldRound ? Math.round(rect.top) : rect.top
+  const left = shouldRound ? Math.round(rect.left) : rect.left
+
+  const isWidthMatch = Math.abs(width - window.innerWidth) <= tolerance
+  const isHeightMatch = Math.abs(height - window.innerHeight) <= tolerance
+  const isTopMatch = Math.abs(top) <= tolerance
+  const isLeftMatch = Math.abs(left) <= tolerance
+
+  return isWidthMatch && isHeightMatch && isTopMatch && isLeftMatch
 }

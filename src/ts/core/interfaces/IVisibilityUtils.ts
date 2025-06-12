@@ -16,6 +16,23 @@ export interface IElementVisibilityOptions {
 }
 
 /**
+ * Options for configuring fullscreen rectangle detection
+ */
+export interface IFullscreenRectOptions {
+  /**
+   * Whether to round dimensions and position values before comparison
+   * @default true
+   */
+  shouldRound?: boolean
+
+  /**
+   * Tolerance in pixels for fullscreen detection
+   * @default 2
+   */
+  tolerance?: number
+}
+
+/**
  * Interface for element visibility utility functions
  */
 export interface IVisibilityUtils {
@@ -38,4 +55,20 @@ export interface IVisibilityUtils {
    * @returns Boolean indicating if element is visible, or false if element is null
    */
   elementIsVisible: (element: Element | null) => boolean
+
+  /**
+   * Checks if a rectangle represents a fullscreen element
+   *
+   * @param rect - The DOMRect or rect-like object to check
+   * @param options - Configuration options for fullscreen detection
+   * @returns Boolean indicating if the rectangle represents a fullscreen element
+   */
+  isFullscreenRect: (
+    rect:
+      | DOMRect
+      | DOMRectReadOnly
+      | { width: number; height: number; top: number; left: number }
+      | null,
+    options?: IFullscreenRectOptions
+  ) => boolean
 }
