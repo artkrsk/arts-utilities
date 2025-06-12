@@ -1,4 +1,4 @@
-// import ArtsAssetsManager from '../'
+import {} from '../'
 
 // declare global {
 //   interface Window {

@@ -9,7 +9,7 @@ export class LoggerClass implements ILogger {
   private config: ILoggerConfig = {
     enabled: true,
     level: LogLevel.DEBUG,
-    prefix: '[PREFIX]'
+    prefix: ''
   }
 
   private constructor() {}
@@ -74,7 +74,7 @@ export class LoggerClass implements ILogger {
     const scopedLogger = new LoggerClass()
     scopedLogger.configure({
       ...this.config,
-      prefix: `[${scope}]:`
+      prefix: `${this.config.prefix}:${scope}`
     })
     return scopedLogger
   }

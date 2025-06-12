@@ -1,2 +1,2 @@
-export * from "./DeepMerge";
-export * from "./JSONParse";
+export * from './DeepMerge'
+export * from './JSONParse'

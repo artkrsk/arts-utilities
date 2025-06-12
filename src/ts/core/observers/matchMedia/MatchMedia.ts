@@ -1,4 +1,4 @@
-import { IMatchMedia, IMatchMediaCallbacks } from '../../interfaces'
+import type { IMatchMedia, IMatchMediaCallbacks } from '../../interfaces'
 
 /**
  * Wraps the window.matchMedia API to execute callbacks on media query changes.

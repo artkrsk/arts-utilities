@@ -1,5 +1,5 @@
-import { isHTMLElement } from '../../dom'
 import type { IResize, IResizeCallbacks } from '../../interfaces'
+import { isHTMLElement } from '../../dom'
 
 /**
  * Wraps the ResizeObserver API to execute callbacks when elements are resized.

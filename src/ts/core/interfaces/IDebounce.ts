@@ -10,5 +10,5 @@ export interface IDebounce {
    * @param wait - Number of milliseconds to delay
    * @returns Debounced function
    */
-  <T extends (...args: any[]) => any>(fn: T, wait: number): T;
+  <T extends (...args: any[]) => any>(fn: T, wait: number): T
 }
