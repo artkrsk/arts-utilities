@@ -98,6 +98,10 @@ class DOMServiceClass {
     }
   }
 
+  public static getDocument(): Document {
+    return document
+  }
+
   /**
    * Gets the document element
    *
