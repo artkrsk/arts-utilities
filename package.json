@@ -1,6 +1,6 @@
 {
   "name": "@arts/utilities",
-  "version": "1.0.17",
+  "version": "1.0.18",
   "type": "module",
   "description": "A collection of useful PHP and JS utility functions for developing a WordPress theme",
   "license": "MIT",
@@ -18,13 +18,13 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "@eslint/js": "^9.28.0",
+    "@eslint/js": "^9.29.0",
     "@types/node": "^24.0.1",
     "@vitest/coverage-v8": "^3.2.3",
     "@vitest/ui": "3.2.3",
     "cypress": "^14.4.1",
     "depcheck": "^1.4.7",
-    "eslint": "^9.28.0",
+    "eslint": "^9.29.0",
     "eslint-config-prettier": "^10.1.5",
     "jsdom": "^26.1.0",
     "npm-check-updates": "^18.0.1",
