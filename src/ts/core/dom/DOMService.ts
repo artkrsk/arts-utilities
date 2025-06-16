@@ -225,6 +225,7 @@ export const DOMService: IDOMService = {
   getAttribute: DOMServiceClass.getAttribute,
   matches: DOMServiceClass.matches,
   contains: DOMServiceClass.contains,
+  getDocument: DOMServiceClass.getDocument,
   getDocumentElement: DOMServiceClass.getDocumentElement,
   getBodyElement: DOMServiceClass.getBodyElement,
   addClass: DOMServiceClass.addClass,

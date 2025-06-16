@@ -210,6 +210,15 @@ export interface IDOMService {
   getDocumentElement: () => HTMLElement
 
   /**
+   * Gets the document object.
+   * Provides consistent access to the global document object for DOM operations.
+   *
+   * @returns The global document object
+   *
+   */
+  getDocument: () => Document
+
+  /**
    * Gets the document's body element.
    * Provides consistent access to the body element for global operations.
    *
