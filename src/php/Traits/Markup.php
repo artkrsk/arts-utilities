@@ -165,6 +165,58 @@ trait Markup {
 	}
 
 	/**
+	 * Add classes to an array of HTML attributes.
+	 *
+	 * This method adds one or more classes to the 'class' attribute of the provided
+	 * attributes array. If the 'class' attribute already exists, it merges the new
+	 * classes with the existing ones.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array        $attributes Associative array of HTML attributes.
+	 * @param string|array $classes    One or more classes to add.
+	 *
+	 * @return array Modified attributes with added classes.
+	 */
+	public static function add_classes_to_attributes( $attributes, $classes ) {
+		// Validate attributes parameter
+		if ( ! is_array( $attributes ) ) {
+			$attributes = array();
+		}
+
+		// Normalize classes to array
+		if ( is_string( $classes ) ) {
+			$classes = explode( ' ', trim( $classes ) );
+		} elseif ( ! is_array( $classes ) ) {
+			$classes = array();
+		}
+
+		// Filter out empty strings
+		$classes = array_filter( $classes, 'strlen' );
+
+		if ( empty( $classes ) ) {
+			return $attributes;
+		}
+
+		// Handle existing class attribute
+		$existing_classes = array();
+		if ( isset( $attributes['class'] ) ) {
+			if ( is_string( $attributes['class'] ) ) {
+				$existing_classes = explode( ' ', trim( $attributes['class'] ) );
+			} elseif ( is_array( $attributes['class'] ) ) {
+				$existing_classes = $attributes['class'];
+			}
+			// Filter out empty strings from existing classes
+			$existing_classes = array_filter( $existing_classes, 'strlen' );
+		}
+
+		// Merge and assign
+		$attributes['class'] = array_merge( $existing_classes, $classes );
+
+		return $attributes;
+	}
+
+	/**
 	 * Get post terms classes.
 	 *
 	 * This method retrieves the terms associated with the post's taxonomies
