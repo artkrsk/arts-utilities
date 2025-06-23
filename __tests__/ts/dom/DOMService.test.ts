@@ -196,6 +196,13 @@ describe('DOMService', () => {
     })
   })
 
+  describe('getDocument', () => {
+    it('should return document', () => {
+      const result = DOMService.getDocument()
+      expect(result).toBe(document)
+    })
+  })
+
   describe('getDocumentElement', () => {
     it('should return document.documentElement', () => {
       const result = DOMService.getDocumentElement()
@@ -213,7 +220,7 @@ describe('DOMService', () => {
   describe('addClass', () => {
     it('should add class to element', () => {
       expect(childElement.classList.contains('new-class')).toBe(false)
-      
+
       DOMService.addClass(childElement, 'new-class')
       expect(childElement.classList.contains('new-class')).toBe(true)
     })
@@ -246,7 +253,7 @@ describe('DOMService', () => {
     it('should remove class from element', () => {
       childElement.classList.add('to-remove')
       expect(childElement.classList.contains('to-remove')).toBe(true)
-      
+
       DOMService.removeClass(childElement, 'to-remove')
       expect(childElement.classList.contains('to-remove')).toBe(false)
     })

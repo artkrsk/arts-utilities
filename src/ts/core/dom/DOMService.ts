@@ -98,6 +98,11 @@ class DOMServiceClass {
     }
   }
 
+  /**
+   * Gets the document object
+   *
+   * @returns The global document object
+   */
   public static getDocument(): Document {
     return document
   }
