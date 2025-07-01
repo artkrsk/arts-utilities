@@ -1,6 +1,7 @@
 export * from './IBrowserService'
 export * from './IDebounce'
 export * from './IDeepMerge'
+export * from './IDispatchEvent'
 export * from './IDOMService'
 export * from './IElementorSettingChangedEvent'
 export * from './IIntersection'

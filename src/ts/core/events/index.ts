@@ -1,4 +1,5 @@
 export * from './Debounce'
+export * from './DispatchEvent'
 export * from './ResizeUtils'
 export * from './PreventDefault'
 export * from './PreventKeyboard'
