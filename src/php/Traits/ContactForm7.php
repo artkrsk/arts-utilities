@@ -26,12 +26,19 @@ trait ContactForm7 {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param int  $post_id The post ID of the Contact Form 7 form.
-	 * @param bool $echo    Optional. Whether to echo the form HTML. Defaults to true.
+	 * @param int   $post_id The post ID of the Contact Form 7 form.
+	 * @param array $options Optional. Array of options for form rendering. Defaults to array with 'html_id', 'html_name', 'html_title', 'html_class', and 'output' keys.
+	 * @param bool  $echo    Optional. Whether to echo the form HTML. Defaults to true.
 	 *
 	 * @return string|void The form HTML if $echo is false, void otherwise.
 	 */
-	public static function render_contact_form_7( $post_id, $echo = true ) {
+	public static function render_contact_form_7( $post_id, $options = array(
+		'html_id'    => '',
+		'html_name'  => '',
+		'html_title' => '',
+		'html_class' => '',
+		'output'     => 'form',
+	), $echo = true ) {
 		if ( ! function_exists( 'wpcf7_contact_form' ) ) {
 			return;
 		}
@@ -39,9 +46,9 @@ trait ContactForm7 {
 		$contact_form = wpcf7_contact_form( $post_id );
 		if ( $contact_form ) {
 			if ( $echo ) {
-				echo $contact_form->form_html();
+				echo $contact_form->form_html( $options );
 			} else {
-				return $contact_form->form_html();
+				return $contact_form->form_html( $options );
 			}
 		}
 	}
