@@ -19,6 +19,7 @@ class Utilities {
 	use Traits\ACF;
 	use Traits\Blog;
 	use Traits\Conditions;
+	use Traits\ContactForm7;
 	use Traits\Elementor;
 	use Traits\Fonts;
 	use Traits\Frontend;
