@@ -244,18 +244,26 @@ trait Query {
 	/**
 	 * Retrieves categories of posts based on the specified mode.
 	 *
+	 * @deprecated 2.0.0 Use get_posts_terms() instead.
 	 * @since 1.0.0
-	 *
-	 * @param string $mode The mode of retrieval. Can be 'all' to get all categories or 'current_page' to get categories of posts displayed on the current page.
-	 * @param array  $args Optional. An array of arguments to modify the query. Default empty array.
-	 *   @type string $post_type      The post type to query. Default 'post'.
-	 *   @type int    $posts_per_page The number of posts per page. Default null.
-	 *   @type string $orderby        The field to order by. Default null.
-	 *   @type string $order          The order direction. Default null.
-	 *
-	 * @return array An array of categories with their details.
 	 */
 	public static function get_posts_categories( $mode = 'all', $args = array() ) {
+		// Forward to the new method
+		return self::get_posts_terms( $mode, $args, 'category' );
+	}
+
+	/**
+	 * Retrieves terms (categories/tags) of posts based on the specified mode.
+	 *
+	 * @since 1.0.24
+	 *
+	 * @param string $mode The mode of retrieval.
+	 * @param array  $args Optional arguments.
+	 * @param string $taxonomy The taxonomy to retrieve. Default 'category'.
+	 *
+	 * @return array An array of terms with their details.
+	 */
+	public static function get_posts_terms( $mode = 'all', $args = array(), $taxonomy = 'category' ) {
 		$result = array();
 
 		$defaults = array(
@@ -279,11 +287,12 @@ trait Query {
 			$sync_global_query_vars = array(
 				'paged',
 				'cat',
+				'tag_id',
+				'tag',
 			);
 
 			foreach ( $sync_global_query_vars as $var ) {
 				$value = get_query_var( $var );
-
 				if ( $value ) {
 					$query_args[ $var ] = $value;
 				}
@@ -293,52 +302,39 @@ trait Query {
 		$loop = new \WP_Query( $query_args );
 
 		if ( $loop->have_posts() ) {
-			// collect categories based on the posts
-			// displayed on the current page
 			if ( $mode === 'current_page' ) {
 				while ( $loop->have_posts() ) {
 					$loop->the_post();
+					$terms = get_the_terms( get_the_ID(), $taxonomy );
 
-					$categories = get_the_category();
-
-					if ( ! empty( $categories ) ) {
-						foreach ( $categories as $category ) {
-
-							// don't add duplicate category, but increase the total counter
-							if ( array_key_exists( $category->term_id, $result ) ) {
-								$result[ $category->term_id ]['total'] += 1;
+					if ( ! empty( $terms ) ) {
+						foreach ( $terms as $term ) {
+							if ( array_key_exists( $term->term_id, $result ) ) {
+								$result[ $term->term_id ]['total'] += 1;
 							} else {
-								$result[ $category->term_id ] = array(
-									'id'      => $category->term_id,
-									'name'    => $category->name,
-									'slug'    => $category->slug,
+								$result[ $term->term_id ] = array(
+									'id'      => $term->term_id,
+									'name'    => $term->name,
+									'slug'    => $term->slug,
 									'total'   => 1,
-									'current' => is_category( $category->term_id ),
+									'current' => ( $taxonomy === 'category' && is_category( $term->term_id ) ) || ( $taxonomy === 'post_tag' && is_tag( $term->term_id ) ),
 								);
 							}
 						}
 					}
 				}
 			} else {
-				// collect all posts categories
-				$posts_terms = get_terms(
-					array(
-						'taxonomy' => 'category',
-					)
-				);
+				$posts_terms = get_terms( array( 'taxonomy' => $taxonomy ) );
 
 				if ( ! empty( $posts_terms ) ) {
-					foreach ( $posts_terms as $category ) {
-						array_push(
-							$result,
-							array(
-								'id'      => $category->term_id,
-								'slug'    => $category->slug,
-								'name'    => $category->name,
-								'url'     => get_category_link( $category->term_id ),
-								'total'   => $category->count,
-								'current' => is_category( $category->term_id ),
-							)
+					foreach ( $posts_terms as $term ) {
+						$result[] = array(
+							'id'      => $term->term_id,
+							'slug'    => $term->slug,
+							'name'    => $term->name,
+							'url'     => get_term_link( $term->term_id, $taxonomy ),
+							'total'   => $term->count,
+							'current' => ( $taxonomy === 'category' && is_category( $term->term_id ) ) || ( $taxonomy === 'post_tag' && is_tag( $term->term_id ) ),
 						);
 					}
 				}
