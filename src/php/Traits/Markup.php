@@ -330,6 +330,116 @@ trait Markup {
 	}
 
 	/**
+	 * Get link attributes from link data array.
+	 *
+	 * This method accepts an array with link data and returns HTML attributes
+	 * for anchor tags including href, target, and rel attributes.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array $link_data {
+	 *     Optional. Link data array.
+	 *
+	 *     @type string $url         The URL for the link. Default empty string.
+	 *     @type bool   $is_external Whether the link is external. Default false.
+	 *     @type bool   $nofollow    Whether to add nofollow rel attribute. Default false.
+	 * }
+	 *
+	 * @return array Array of HTML attributes for the link.
+	 */
+	public static function get_link_attributes( $link_data = array() ) {
+		$defaults = array(
+			'url'         => '',
+			'is_external' => false,
+			'nofollow'    => false,
+		);
+
+		$link_data  = wp_parse_args( $link_data, $defaults );
+		$attributes = array();
+
+		// Validate URL
+		if ( ! is_string( $link_data['url'] ) || empty( trim( $link_data['url'] ) ) ) {
+			return $attributes;
+		}
+
+		$url                = trim( $link_data['url'] );
+		$attributes['href'] = $url;
+
+		// Handle external links
+		if ( is_bool( $link_data['is_external'] ) && $link_data['is_external'] ) {
+			$attributes['target'] = '_blank';
+			$attributes['rel']    = 'noopener';
+		}
+
+		// Handle nofollow
+		if ( is_bool( $link_data['nofollow'] ) && $link_data['nofollow'] ) {
+			if ( isset( $attributes['rel'] ) ) {
+				$attributes['rel'] .= ' nofollow';
+			} else {
+				$attributes['rel'] = 'nofollow';
+			}
+		}
+
+		return $attributes;
+	}
+
+	/**
+	 * Add link attributes to an existing attributes array.
+	 *
+	 * This method merges link attributes generated from link data with existing
+	 * HTML attributes array. If the URL is invalid, returns original attributes.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array $attributes Existing HTML attributes array.
+	 * @param array $link_data  Link data array (same format as get_link_attributes).
+	 *
+	 * @return array Modified attributes array with link attributes added.
+	 */
+	public static function add_link_attributes( $attributes = array(), $link_data = array() ) {
+		// Validate attributes parameter
+		if ( ! is_array( $attributes ) ) {
+			$attributes = array();
+		}
+
+		// Get link attributes
+		$link_attributes = self::get_link_attributes( $link_data );
+
+		// If no valid link attributes, return original
+		if ( empty( $link_attributes ) ) {
+			return $attributes;
+		}
+
+		// Merge with existing attributes
+		return array_merge( $attributes, $link_attributes );
+	}
+
+	/**
+	 * Print an HTML tag, automatically choosing 'a' tag for valid links.
+	 *
+	 * This method checks if the provided attributes contain a valid href attribute.
+	 * If so, it prints an 'a' tag; otherwise, it prints the specified fallback tag.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array  $attributes   HTML attributes array.
+	 * @param string $fallback_tag Optional. Fallback tag to use if no valid link. Default 'div'.
+	 * @param bool   $echo         Optional. Whether to echo the tag. Default true.
+	 *
+	 * @return string|null The HTML tag if $echo is false, otherwise null.
+	 */
+	public static function print_tag_link( $attributes = array(), $fallback_tag = 'div', $echo = true ) {
+		// Check if we have a valid link
+		$has_valid_link = isset( $attributes['href'] ) &&
+						  is_string( $attributes['href'] ) &&
+						  ! empty( trim( $attributes['href'] ) );
+
+		$tag = $has_valid_link ? 'a' : $fallback_tag;
+
+		return self::print_html_tag( $tag, $echo );
+	}
+
+	/**
 	 * Print a validated and escaped HTML tag.
 	 *
 	 * @since 1.0.0
