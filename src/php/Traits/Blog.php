@@ -48,7 +48,7 @@ trait Blog {
 			'class' => array( 'page-numbers' ),
 		);
 
-		if ( is_string( $attributes['class'] ) ) {
+		if ( isset( $attributes['class'] ) && is_string( $attributes['class'] ) ) {
 			// Convert string to array
 			$attributes['class'] = explode( ' ', $attributes['class'] );
 		}
