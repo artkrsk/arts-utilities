@@ -64,6 +64,7 @@ trait Markup {
 		$defaults = array(
 			'name'         => 'MyComponent',
 			'options'      => array(),
+			'dependencies' => array(),
 			'hasAnimation' => false,
 		);
 
@@ -93,6 +94,11 @@ trait Markup {
 			if ( is_array( $args['options'] ) && ! empty( $args['options'] ) ) {
 				$attribute_component_options                = esc_attr( apply_filters( 'arts/utilities/markup/add_component_attributes/attribute_options', 'data-arts-component-options' ) );
 				$attributes[ $attribute_component_options ] = wp_json_encode( $args['options'] );
+			}
+
+			if ( is_array( $args['dependencies'] ) && ! empty( $args['dependencies'] ) ) {
+				$attribute_component_dependencies                = esc_attr( apply_filters( 'arts/utilities/markup/add_component_attributes/attribute_dependencies', 'data-arts-component-dependencies' ) );
+				$attributes[ $attribute_component_dependencies ] = wp_json_encode( $args['dependencies'] );
 			}
 
 			if ( $args['hasAnimation'] ) {
@@ -335,7 +341,7 @@ trait Markup {
 	 * This method accepts an array with link data and returns HTML attributes
 	 * for anchor tags including href, target, and rel attributes.
 	 *
-	 * @since 1.0.0
+	 * @since 1.0.25
 	 *
 	 * @param array $link_data {
 	 *     Optional. Link data array.
@@ -389,7 +395,7 @@ trait Markup {
 	 * This method merges link attributes generated from link data with existing
 	 * HTML attributes array. If the URL is invalid, returns original attributes.
 	 *
-	 * @since 1.0.0
+	 * @since 1.0.25
 	 *
 	 * @param array $attributes Existing HTML attributes array.
 	 * @param array $link_data  Link data array (same format as get_link_attributes).
@@ -420,7 +426,7 @@ trait Markup {
 	 * This method checks if the provided attributes contain a valid href attribute.
 	 * If so, it prints an 'a' tag; otherwise, it prints the specified fallback tag.
 	 *
-	 * @since 1.0.0
+	 * @since 1.0.25
 	 *
 	 * @param array  $attributes   HTML attributes array.
 	 * @param string $fallback_tag Optional. Fallback tag to use if no valid link. Default 'div'.
