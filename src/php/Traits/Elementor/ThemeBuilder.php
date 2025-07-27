@@ -57,4 +57,26 @@ trait ThemeBuilder {
 
 		return $post_id;
 	}
+
+	/**
+	 * Determines if a fallback template should be shown for a specific Elementor location
+	 *
+	 * @param string $location The Elementor theme location name
+	 * @param bool   $require_elementor_inactive Whether to only show fallback when Elementor is inactive
+	 *
+	 * @since 1.0.27
+	 *
+	 * @return bool True if fallback should be shown, false otherwise
+	 */
+	public static function should_display_fallback_template( $location, $require_elementor_inactive = false ) {
+		// Basic check if Elementor is handling this location
+		$elementor_not_handling = ! function_exists( 'elementor_theme_do_location' ) || ! elementor_theme_do_location( $location );
+
+		// Additional check if we require Elementor to be completely inactive
+		if ( $require_elementor_inactive ) {
+			return $elementor_not_handling && ! self::is_elementor_plugin_active();
+		}
+
+		return $elementor_not_handling;
+	}
 }
