@@ -68,7 +68,7 @@ trait ThemeBuilder {
 	 *
 	 * @return bool True if fallback should be shown, false otherwise
 	 */
-	public static function should_display_fallback_template( $location, $require_elementor_inactive = false ) {
+	public static function should_display_fallback_template( $location, $require_elementor_inactive = true ) {
 		// Basic check if Elementor is handling this location
 		$elementor_not_handling = ! function_exists( 'elementor_theme_do_location' ) || ! elementor_theme_do_location( $location );
 
