@@ -133,6 +133,191 @@ describe('preventKeyboard', () => {
     expect(mockEvent.preventDefault).not.toHaveBeenCalled()
   })
 
+  describe('input field detection and allowance', () => {
+    let mockInput: HTMLInputElement
+    let mockTextarea: HTMLTextAreaElement
+    let mockDiv: HTMLDivElement
+
+    beforeEach(() => {
+      // Create mock DOM elements
+      mockInput = document.createElement('input')
+      mockTextarea = document.createElement('textarea')
+      mockDiv = document.createElement('div')
+    })
+
+    it('should NOT prevent navigation keys in text input fields', () => {
+      const textInputTypes = ['text', 'password', 'email', 'search', 'tel', 'url', 'number']
+
+      textInputTypes.forEach((type) => {
+        mockInput.type = type
+        mockEvent.target = mockInput
+        mockEvent.keyCode = 32 // Space key
+        mockEvent.key = ' '
+
+        preventKeyboard(mockEvent)
+
+        expect(mockEvent.preventDefault).not.toHaveBeenCalled()
+
+        // Reset for next iteration
+        mockEvent.preventDefault.mockClear()
+      })
+    })
+
+    it('should prevent navigation keys in non-text input fields', () => {
+      const nonTextInputTypes = ['button', 'checkbox', 'radio', 'submit', 'reset', 'file', 'hidden']
+
+      nonTextInputTypes.forEach((type) => {
+        mockInput.type = type
+        mockEvent.target = mockInput
+        mockEvent.keyCode = 32 // Space key
+        mockEvent.key = ' '
+
+        preventKeyboard(mockEvent)
+
+        expect(mockEvent.preventDefault).toHaveBeenCalledTimes(1)
+
+        // Reset for next iteration
+        mockEvent.preventDefault.mockClear()
+      })
+    })
+
+    it('should NOT prevent navigation keys in textarea elements', () => {
+      mockEvent.target = mockTextarea
+      mockEvent.keyCode = 32 // Space key
+      mockEvent.key = ' '
+
+      preventKeyboard(mockEvent)
+
+      expect(mockEvent.preventDefault).not.toHaveBeenCalled()
+    })
+
+    it('should NOT prevent navigation keys in contenteditable elements', () => {
+      mockDiv.setAttribute('contenteditable', 'true')
+      mockEvent.target = mockDiv
+      mockEvent.keyCode = 32 // Space key
+      mockEvent.key = ' '
+
+      preventKeyboard(mockEvent)
+
+      expect(mockEvent.preventDefault).not.toHaveBeenCalled()
+    })
+
+    it('should prevent navigation keys in non-contenteditable elements', () => {
+      mockDiv.setAttribute('contenteditable', 'false')
+      mockEvent.target = mockDiv
+      mockEvent.keyCode = 32 // Space key
+      mockEvent.key = ' '
+
+      preventKeyboard(mockEvent)
+
+      expect(mockEvent.preventDefault).toHaveBeenCalledTimes(1)
+    })
+
+    it('should handle null target', () => {
+      mockEvent.target = null
+      mockEvent.keyCode = 32 // Space key
+      mockEvent.key = ' '
+
+      preventKeyboard(mockEvent)
+
+      expect(mockEvent.preventDefault).toHaveBeenCalledTimes(1)
+    })
+
+    it('should handle undefined target', () => {
+      mockEvent.target = undefined
+      mockEvent.keyCode = 32 // Space key
+      mockEvent.key = ' '
+
+      preventKeyboard(mockEvent)
+
+      expect(mockEvent.preventDefault).toHaveBeenCalledTimes(1)
+    })
+
+    it('should handle elements with uppercase tag names', () => {
+      // Simulate element with uppercase tagName (some browsers might do this)
+      const mockElement = {
+        tagName: 'INPUT',
+        type: 'text'
+      } as any
+
+      mockEvent.target = mockElement
+      mockEvent.keyCode = 32 // Space key
+      mockEvent.key = ' '
+
+      preventKeyboard(mockEvent)
+
+      expect(mockEvent.preventDefault).not.toHaveBeenCalled()
+    })
+  })
+
+  describe('modern event.key support', () => {
+    const modernNavigationKeys = [
+      { key: ' ', name: 'Space' },
+      { key: 'PageUp', name: 'Page Up' },
+      { key: 'PageDown', name: 'Page Down' },
+      { key: 'End', name: 'End' },
+      { key: 'Home', name: 'Home' },
+      { key: 'ArrowLeft', name: 'Arrow Left' },
+      { key: 'ArrowUp', name: 'Arrow Up' },
+      { key: 'ArrowRight', name: 'Arrow Right' },
+      { key: 'ArrowDown', name: 'Arrow Down' }
+    ]
+
+    modernNavigationKeys.forEach(({ key, name }) => {
+      it(`should prevent default for modern ${name} key using event.key`, () => {
+        mockEvent.key = key
+        mockEvent.keyCode = undefined // No legacy keyCode
+
+        preventKeyboard(mockEvent)
+
+        expect(mockEvent.preventDefault).toHaveBeenCalledTimes(1)
+      })
+    })
+
+    it('should NOT prevent non-navigation keys using event.key', () => {
+      const nonNavigationKeys = ['Enter', 'Escape', 'Tab', 'a', 'A', '1', 'F1', 'Shift']
+
+      nonNavigationKeys.forEach((key) => {
+        mockEvent.key = key
+        mockEvent.keyCode = undefined
+
+        preventKeyboard(mockEvent)
+
+        expect(mockEvent.preventDefault).not.toHaveBeenCalled()
+
+        // Reset for next iteration
+        mockEvent.preventDefault.mockClear()
+      })
+    })
+
+    it('should work when both event.key and keyCode are present and match', () => {
+      mockEvent.key = ' '
+      mockEvent.keyCode = 32
+
+      preventKeyboard(mockEvent)
+
+      expect(mockEvent.preventDefault).toHaveBeenCalledTimes(1)
+    })
+
+    it('should work when only event.key matches (no keyCode)', () => {
+      mockEvent.key = 'ArrowUp'
+      mockEvent.keyCode = undefined
+
+      preventKeyboard(mockEvent)
+
+      expect(mockEvent.preventDefault).toHaveBeenCalledTimes(1)
+    })
+
+    it('should work when only keyCode matches (no event.key)', () => {
+      mockEvent.key = undefined
+      mockEvent.keyCode = 38 // Arrow Up
+
+      preventKeyboard(mockEvent)
+
+      expect(mockEvent.preventDefault).toHaveBeenCalledTimes(1)
+    })
+  })
+
   it('should handle event that throws error on preventDefault', () => {
     const errorEvent = {
       keyCode: 32, // Space key
