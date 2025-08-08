@@ -1,3 +1,5 @@
+import type { TMediaType, TVideoEmbedOptions } from '../types'
+
 /**
  * Configuration options for media loading behavior with performance and reliability controls.
  * Provides fine-grained control over media loading timeouts and optimization strategies.
@@ -181,4 +183,51 @@ export interface IMediaUtils {
    * ```
    */
   loadMedia: (element: HTMLElement | null, options?: ILoadMediaOptions) => Promise<HTMLElement>
+}
+
+// Media Detection and Video URL Processing Interfaces
+
+/**
+ * Function signature for detecting media type from file URL extensions.
+ * Analyzes URL pathname to determine if it's an image, video, or unknown file type.
+ *
+ * @param url - The file URL to analyze
+ * @returns The detected media type or null if unknown/invalid
+ */
+export interface IGetMediaType {
+  (url: string): TMediaType
+}
+
+/**
+ * Function signature for comprehensive media detection including streaming platforms.
+ * Checks URL patterns for streaming services first, then falls back to file extension detection.
+ *
+ * @param url - The URL to analyze
+ * @returns The detected media type or null if unknown/invalid
+ */
+export interface IDetectMediaFromURL {
+  (url: string): TMediaType
+}
+
+/**
+ * Function signature for extracting video IDs from streaming platform URLs.
+ * Parses YouTube and Vimeo URLs to extract the unique video identifier.
+ *
+ * @param url - The video URL to extract ID from
+ * @returns The extracted video ID or null if not found/unsupported
+ */
+export interface IExtractVideoID {
+  (url: string): string | null
+}
+
+/**
+ * Function signature for generating embed URLs for video platforms.
+ * Converts regular video URLs to their embeddable equivalents with optional parameters.
+ *
+ * @param url - The original video URL
+ * @param options - Embed configuration options
+ * @returns The embed URL or original URL if not a supported video platform
+ */
+export interface IGenerateEmbedURL {
+  (url: string, options?: TVideoEmbedOptions): string
 }
