@@ -1,4 +1,5 @@
 export * from './IBrowserService'
+export * from './IDataAttributes'
 export * from './IDebounce'
 export * from './IDeepMerge'
 export * from './IDispatchEvent'
