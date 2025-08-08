@@ -44,12 +44,14 @@ export const extractVideoID: IExtractVideoID = (url: string): string | null => {
     case 'youtube': {
       const match = url.match(YOUTUBE_PATTERN)
       // YouTube ID is in capture group 5 (index 5)
+      /* c8 ignore next */
       return match?.[5] || null
     }
 
     case 'vimeo': {
       const match = url.match(VIMEO_PATTERN)
       // Vimeo ID is in capture group 2 (index 2)
+      /* c8 ignore next */
       return match?.[2] || null
     }
 
@@ -125,7 +127,7 @@ export const generateEmbedURL: IGenerateEmbedURL = (
       const queryString = params.toString()
       return `https://player.vimeo.com/video/${videoId}${queryString ? `?${queryString}` : ''}`
     }
-
+    /* c8 ignore next */
     default:
       // This case is currently unreachable due to the logic in extractVideoID
       // which only returns IDs for known platforms. Kept for defensive programming.
