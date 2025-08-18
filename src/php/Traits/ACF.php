@@ -129,6 +129,25 @@ trait ACF {
 	}
 
 	/**
+	 * Proxy for `update_field()` function from ACF.
+	 *
+	 * @since 1.0.30
+	 *
+	 * @param string $selector The field name or field key.
+	 * @param mixed  $value    The new value to save.
+	 * @param int    $post_id  Optional. The post ID where the value is saved. Defaults to the current post.
+	 *
+	 * @return bool Whether the field was updated successfully or false if not found.
+	 */
+	public static function acf_update_field( $selector, $value, $post_id = false ) {
+		if ( self::acf_function_exists( 'update_field' ) ) {
+			return update_field( $selector, $value, $post_id );
+		} else {
+			return false;
+		}
+	}
+
+	/**
 	 * Retrieves the available ACF fields and values for a given post.
 	 *
 	 * @since 1.0.0
