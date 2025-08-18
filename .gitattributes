@@ -2,6 +2,7 @@
 
 # Development configuration
 *.code-workspace export-ignore
+*.sh export-ignore
 .npmrc export-ignore
 .gitignore export-ignore
 .git export-ignore
