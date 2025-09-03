@@ -136,7 +136,21 @@ trait Query {
 			$page_title    = get_the_date( 'Y' );
 			$page_subtitle = $strings['year'];
 		} elseif ( is_home() ) {
-			$page_title = wp_title( '', false );
+			$posts_page_id = get_option( 'page_for_posts' );
+			if ( $posts_page_id ) {
+				$page_title = get_the_title( $posts_page_id );
+
+				if ( isset( $acf_fields['subtitle'] ) ) {
+					$page_subtitle = self::acf_get_field( $acf_fields['subtitle'], $posts_page_id );
+				}
+
+				if ( isset( $acf_fields['description'] ) ) {
+					$page_description = self::acf_get_field( $acf_fields['description'], $posts_page_id );
+				}
+			} else {
+				// Fallback for when no static posts page is set
+				$page_title = $strings['blog'];
+			}
 		} elseif ( is_search() ) {
 			$page_title = $strings['search'];
 		} else {
