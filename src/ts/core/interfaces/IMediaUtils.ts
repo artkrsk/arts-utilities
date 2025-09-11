@@ -223,9 +223,13 @@ export interface IExtractVideoID {
 /**
  * Function signature for generating embed URLs for video platforms.
  * Converts regular video URLs to their embeddable equivalents with optional parameters.
+ * Supports privacy-enhanced embedding through youtube-nocookie.com and Vimeo's dnt parameter.
  *
  * @param url - The original video URL
  * @param options - Embed configuration options
+ * @param options.autoplay - Whether to enable autoplay
+ * @param options.enablejsapi - Whether to enable JavaScript API (YouTube only)
+ * @param options.privacy - Whether to use privacy-enhanced embedding
  * @returns The embed URL or original URL if not a supported video platform
  */
 export interface IGenerateEmbedURL {

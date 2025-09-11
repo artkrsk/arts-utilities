@@ -21,7 +21,8 @@ export type TMediaType = 'image' | 'video' | 'audio' | 'youtube' | 'vimeo' | nul
  * ```typescript
  * const embedOptions: TVideoEmbedOptions = {
  *   autoplay: true,
- *   enablejsapi: true
+ *   enablejsapi: true,
+ *   privacy: true
  * }
  * ```
  */
@@ -30,4 +31,6 @@ export interface TVideoEmbedOptions {
   autoplay?: boolean
   /** Whether to enable JS API for YouTube (default: true) */
   enablejsapi?: boolean
+  /** Whether to use privacy-enhanced embedding (default: false) - Uses youtube-nocookie.com for YouTube and dnt=1 for Vimeo */
+  privacy?: boolean
 }

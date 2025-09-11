@@ -63,12 +63,13 @@ export const extractVideoID: IExtractVideoID = (url: string): string | null => {
 /**
  * Generates an embed URL for YouTube or Vimeo videos.
  * Converts various video URL formats to their embeddable equivalents.
- * Provides configuration options for autoplay and JavaScript API access.
+ * Provides configuration options for autoplay, JavaScript API access, and privacy-enhanced embedding.
  *
  * @param url - The original video URL
  * @param options - Embed configuration options
  * @param options.autoplay - Whether to enable autoplay (default: false)
  * @param options.enablejsapi - Whether to enable JS API for YouTube (default: true)
+ * @param options.privacy - Whether to use privacy-enhanced embedding (default: false)
  * @returns The embed URL or original URL if not a supported video platform
  *
  * @example
@@ -81,9 +82,17 @@ export const extractVideoID: IExtractVideoID = (url: string): string | null => {
  * generateEmbedURL('https://youtu.be/abc123', { autoplay: true })
  * // returns 'https://www.youtube.com/embed/abc123?autoplay=1&enablejsapi=1'
  *
+ * // YouTube with privacy-enhanced embedding
+ * generateEmbedURL('https://youtube.com/watch?v=abc123', { privacy: true })
+ * // returns 'https://www.youtube-nocookie.com/embed/abc123?enablejsapi=1'
+ *
  * // Vimeo with autoplay
  * generateEmbedURL('https://vimeo.com/123456789', { autoplay: true })
  * // returns 'https://player.vimeo.com/video/123456789?autoplay=1'
+ *
+ * // Vimeo with privacy-enhanced embedding
+ * generateEmbedURL('https://vimeo.com/123456789', { privacy: true })
+ * // returns 'https://player.vimeo.com/video/123456789?dnt=1'
  *
  * // Disable YouTube JS API
  * generateEmbedURL('https://youtube.com/watch?v=abc123', { enablejsapi: false })
@@ -102,7 +111,7 @@ export const generateEmbedURL: IGenerateEmbedURL = (
     return url
   }
 
-  const { autoplay = false, enablejsapi = true } = options
+  const { autoplay = false, enablejsapi = true, privacy = false } = options
   const videoId = extractVideoID(url)
   const mediaType = detectMediaFromURL(url)
 
@@ -117,12 +126,14 @@ export const generateEmbedURL: IGenerateEmbedURL = (
       if (enablejsapi) params.set('enablejsapi', '1')
 
       const queryString = params.toString()
-      return `https://www.youtube.com/embed/${videoId}${queryString ? `?${queryString}` : ''}`
+      const domain = privacy ? 'www.youtube-nocookie.com' : 'www.youtube.com'
+      return `https://${domain}/embed/${videoId}${queryString ? `?${queryString}` : ''}`
     }
 
     case 'vimeo': {
       const params = new URLSearchParams()
       if (autoplay) params.set('autoplay', '1')
+      if (privacy) params.set('dnt', '1')
 
       const queryString = params.toString()
       return `https://player.vimeo.com/video/${videoId}${queryString ? `?${queryString}` : ''}`

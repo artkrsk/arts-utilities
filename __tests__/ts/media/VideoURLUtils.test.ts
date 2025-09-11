@@ -127,6 +127,31 @@ describe('VideoURLUtils', () => {
         expect(result).toBe('https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1')
       })
 
+      it('should generate privacy-enhanced YouTube embed URLs', () => {
+        const result = generateEmbedURL('https://youtube.com/watch?v=dQw4w9WgXcQ', {
+          privacy: true
+        })
+        expect(result).toBe('https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ?enablejsapi=1')
+      })
+
+      it('should generate privacy-enhanced YouTube embed URLs with autoplay', () => {
+        const result = generateEmbedURL('https://youtube.com/watch?v=dQw4w9WgXcQ', {
+          privacy: true,
+          autoplay: true
+        })
+        expect(result).toBe(
+          'https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ?autoplay=1&enablejsapi=1'
+        )
+      })
+
+      it('should generate privacy-enhanced YouTube embed URLs without JS API', () => {
+        const result = generateEmbedURL('https://youtube.com/watch?v=dQw4w9WgXcQ', {
+          privacy: true,
+          enablejsapi: false
+        })
+        expect(result).toBe('https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ')
+      })
+
       it('should work with YouTube short URLs', () => {
         const result = generateEmbedURL('https://youtu.be/dQw4w9WgXcQ')
         expect(result).toBe('https://www.youtube.com/embed/dQw4w9WgXcQ?enablejsapi=1')
@@ -142,6 +167,19 @@ describe('VideoURLUtils', () => {
       it('should generate Vimeo embed URLs with autoplay', () => {
         const result = generateEmbedURL('https://vimeo.com/123456789', { autoplay: true })
         expect(result).toBe('https://player.vimeo.com/video/123456789?autoplay=1')
+      })
+
+      it('should generate privacy-enhanced Vimeo embed URLs', () => {
+        const result = generateEmbedURL('https://vimeo.com/123456789', { privacy: true })
+        expect(result).toBe('https://player.vimeo.com/video/123456789?dnt=1')
+      })
+
+      it('should generate privacy-enhanced Vimeo embed URLs with autoplay', () => {
+        const result = generateEmbedURL('https://vimeo.com/123456789', {
+          privacy: true,
+          autoplay: true
+        })
+        expect(result).toBe('https://player.vimeo.com/video/123456789?autoplay=1&dnt=1')
       })
 
       it('should ignore enablejsapi for Vimeo', () => {
@@ -198,6 +236,18 @@ describe('VideoURLUtils', () => {
           autoplay: true
         })
         expect(result).toBe('https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&enablejsapi=1')
+      })
+
+      it('should handle privacy option only', () => {
+        const youtubeResult = generateEmbedURL('https://youtube.com/watch?v=dQw4w9WgXcQ', {
+          privacy: true
+        })
+        expect(youtubeResult).toBe(
+          'https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ?enablejsapi=1'
+        )
+
+        const vimeoResult = generateEmbedURL('https://vimeo.com/123456789', { privacy: true })
+        expect(vimeoResult).toBe('https://player.vimeo.com/video/123456789?dnt=1')
       })
     })
   })
