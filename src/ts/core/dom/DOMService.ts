@@ -284,6 +284,41 @@ class DOMServiceClass {
       return null
     }
   }
+
+  /**
+   * Create a new HTML element with the specified tag name.
+   *
+   * @param tagName Tag name of the element to create
+   */
+  public static createElement(tagName: string): HTMLElement {
+    if (!tagName) {
+      throw new Error('Tag name is required')
+    }
+
+    try {
+      return document.createElement(tagName)
+    } catch (_error) {
+      throw new Error(`Failed to create element with tag name: ${tagName}`)
+    }
+  }
+
+  /**
+   * Append a child element to a parent element.
+   *
+   * @param parent Parent element to append to
+   * @param child Child element to append
+   */
+  public static appendChild(parent: TElement, child: TElement): TElement {
+    if (!parent || !child) {
+      throw new Error('Both parent and child elements are required')
+    }
+
+    try {
+      return parent.appendChild(child) as TElement
+    } catch (_error) {
+      throw new Error('Failed to append child element')
+    }
+  }
 }
 
 export const DOMService: IDOMService = {
@@ -302,5 +337,7 @@ export const DOMService: IDOMService = {
   removeClass: DOMServiceClass.removeClass,
   toggleClass: DOMServiceClass.toggleClass,
   toggleClasses: DOMServiceClass.toggleClasses,
-  closest: DOMServiceClass.closest
+  closest: DOMServiceClass.closest,
+  createElement: DOMServiceClass.createElement,
+  appendChild: DOMServiceClass.appendChild
 }

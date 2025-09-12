@@ -778,4 +778,325 @@ describe('DOMService', () => {
       expect(element).toBeNull()
     })
   })
+
+  describe('createElement', () => {
+    it('should create a new element with the specified tag name', () => {
+      const div = DOMService.createElement('div')
+      expect(div).toBeInstanceOf(HTMLDivElement)
+      expect(div.tagName).toBe('DIV')
+    })
+
+    it('should create different types of elements', () => {
+      const span = DOMService.createElement('span')
+      expect(span).toBeInstanceOf(HTMLSpanElement)
+      expect(span.tagName).toBe('SPAN')
+
+      const button = DOMService.createElement('button')
+      expect(button).toBeInstanceOf(HTMLButtonElement)
+      expect(button.tagName).toBe('BUTTON')
+
+      const input = DOMService.createElement('input')
+      expect(input).toBeInstanceOf(HTMLInputElement)
+      expect(input.tagName).toBe('INPUT')
+
+      const img = DOMService.createElement('img')
+      expect(img).toBeInstanceOf(HTMLImageElement)
+      expect(img.tagName).toBe('IMG')
+
+      const a = DOMService.createElement('a')
+      expect(a).toBeInstanceOf(HTMLAnchorElement)
+      expect(a.tagName).toBe('A')
+    })
+
+    it('should create elements that can be configured immediately', () => {
+      const link = DOMService.createElement('a')
+      DOMService.setAttribute(link, 'href', 'https://example.com')
+      DOMService.setAttribute(link, 'target', '_blank')
+
+      expect(link.getAttribute('href')).toBe('https://example.com')
+      expect(link.getAttribute('target')).toBe('_blank')
+    })
+
+    it('should create form elements with proper types', () => {
+      const form = DOMService.createElement('form')
+      expect(form).toBeInstanceOf(HTMLFormElement)
+
+      const fieldset = DOMService.createElement('fieldset')
+      expect(fieldset).toBeInstanceOf(HTMLFieldSetElement)
+
+      const legend = DOMService.createElement('legend')
+      expect(legend).toBeInstanceOf(HTMLLegendElement)
+
+      const label = DOMService.createElement('label')
+      expect(label).toBeInstanceOf(HTMLLabelElement)
+
+      const textarea = DOMService.createElement('textarea')
+      expect(textarea).toBeInstanceOf(HTMLTextAreaElement)
+
+      const select = DOMService.createElement('select')
+      expect(select).toBeInstanceOf(HTMLSelectElement)
+
+      const option = DOMService.createElement('option')
+      expect(option).toBeInstanceOf(HTMLOptionElement)
+    })
+
+    it('should create semantic HTML elements', () => {
+      const article = DOMService.createElement('article')
+      expect(article).toBeInstanceOf(HTMLElement)
+      expect(article.tagName).toBe('ARTICLE')
+
+      const header = DOMService.createElement('header')
+      expect(header).toBeInstanceOf(HTMLElement)
+      expect(header.tagName).toBe('HEADER')
+
+      const footer = DOMService.createElement('footer')
+      expect(footer).toBeInstanceOf(HTMLElement)
+      expect(footer.tagName).toBe('FOOTER')
+
+      const nav = DOMService.createElement('nav')
+      expect(nav).toBeInstanceOf(HTMLElement)
+      expect(nav.tagName).toBe('NAV')
+
+      const section = DOMService.createElement('section')
+      expect(section).toBeInstanceOf(HTMLElement)
+      expect(section.tagName).toBe('SECTION')
+
+      const main = DOMService.createElement('main')
+      expect(main).toBeInstanceOf(HTMLElement)
+      expect(main.tagName).toBe('MAIN')
+    })
+
+    it('should create list elements', () => {
+      const ul = DOMService.createElement('ul')
+      expect(ul).toBeInstanceOf(HTMLUListElement)
+
+      const ol = DOMService.createElement('ol')
+      expect(ol).toBeInstanceOf(HTMLOListElement)
+
+      const li = DOMService.createElement('li')
+      expect(li).toBeInstanceOf(HTMLLIElement)
+    })
+
+    it('should create table elements', () => {
+      const table = DOMService.createElement('table')
+      expect(table).toBeInstanceOf(HTMLTableElement)
+
+      const thead = DOMService.createElement('thead')
+      expect(thead).toBeInstanceOf(HTMLTableSectionElement)
+
+      const tbody = DOMService.createElement('tbody')
+      expect(tbody).toBeInstanceOf(HTMLTableSectionElement)
+
+      const tfoot = DOMService.createElement('tfoot')
+      expect(tfoot).toBeInstanceOf(HTMLTableSectionElement)
+
+      const tr = DOMService.createElement('tr')
+      expect(tr).toBeInstanceOf(HTMLTableRowElement)
+
+      const td = DOMService.createElement('td')
+      expect(td).toBeInstanceOf(HTMLTableCellElement)
+
+      const th = DOMService.createElement('th')
+      expect(th).toBeInstanceOf(HTMLTableCellElement)
+    })
+
+    it('should throw error for empty tag name', () => {
+      expect(() => DOMService.createElement('')).toThrow('Tag name is required')
+    })
+
+    it('should throw error for invalid tag name', () => {
+      expect(() => DOMService.createElement('invalid-tag-with-###')).toThrow(
+        'Failed to create element with tag name'
+      )
+    })
+  })
+
+  describe('appendChild', () => {
+    it('should append a child element to a parent element', () => {
+      const parent = DOMService.createElement('div')
+      const child = DOMService.createElement('span')
+
+      const result = DOMService.appendChild(parent, child)
+
+      expect(result).toBe(child)
+      expect(parent.children).toHaveLength(1)
+      expect(parent.children[0]).toBe(child)
+      expect(child.parentElement).toBe(parent)
+    })
+
+    it('should append multiple children to the same parent', () => {
+      const parent = DOMService.createElement('div')
+      const child1 = DOMService.createElement('span')
+      const child2 = DOMService.createElement('p')
+      const child3 = DOMService.createElement('button')
+
+      DOMService.appendChild(parent, child1)
+      DOMService.appendChild(parent, child2)
+      DOMService.appendChild(parent, child3)
+
+      expect(parent.children).toHaveLength(3)
+      expect(parent.children[0]).toBe(child1)
+      expect(parent.children[1]).toBe(child2)
+      expect(parent.children[2]).toBe(child3)
+    })
+
+    it('should work with elements from the DOM', () => {
+      const newChild = DOMService.createElement('p')
+      DOMService.html(newChild, 'New paragraph')
+
+      const result = DOMService.appendChild(rootElement, newChild)
+
+      expect(result).toBe(newChild)
+      expect(rootElement.children).toHaveLength(2) // Original child + new child
+      expect(rootElement.children[1]).toBe(newChild)
+      expect(newChild.textContent).toBe('New paragraph')
+    })
+
+    it('should build complex nested structures', () => {
+      const card = DOMService.createElement('div')
+      DOMService.addClass(card, 'card')
+
+      const cardHeader = DOMService.createElement('div')
+      DOMService.addClass(cardHeader, 'card-header')
+      const title = DOMService.createElement('h3')
+      DOMService.html(title, 'Card Title')
+      DOMService.appendChild(cardHeader, title)
+
+      const cardBody = DOMService.createElement('div')
+      DOMService.addClass(cardBody, 'card-body')
+      const content = DOMService.createElement('p')
+      DOMService.html(content, 'Card content goes here.')
+      DOMService.appendChild(cardBody, content)
+
+      DOMService.appendChild(card, cardHeader)
+      DOMService.appendChild(card, cardBody)
+
+      expect(card.children).toHaveLength(2)
+      expect(card.children[0]).toBe(cardHeader)
+      expect(card.children[1]).toBe(cardBody)
+      expect(cardHeader.children[0]).toBe(title)
+      expect(cardBody.children[0]).toBe(content)
+      expect(title.textContent).toBe('Card Title')
+      expect(content.textContent).toBe('Card content goes here.')
+    })
+
+    it('should create forms dynamically', () => {
+      const form = DOMService.createElement('form')
+      const fieldset = DOMService.createElement('fieldset')
+      const legend = DOMService.createElement('legend')
+      DOMService.html(legend, 'User Information')
+      DOMService.appendChild(fieldset, legend)
+
+      const emailField = DOMService.createElement('input')
+      DOMService.setAttribute(emailField, 'type', 'email')
+      DOMService.setAttribute(emailField, 'name', 'email')
+      DOMService.setAttribute(emailField, 'placeholder', 'Enter email')
+      DOMService.appendChild(fieldset, emailField)
+
+      const submitBtn = DOMService.createElement('button')
+      DOMService.setAttribute(submitBtn, 'type', 'submit')
+      DOMService.html(submitBtn, 'Submit')
+      DOMService.appendChild(fieldset, submitBtn)
+
+      DOMService.appendChild(form, fieldset)
+
+      expect(form.children[0]).toBe(fieldset)
+      expect(fieldset.children).toHaveLength(3)
+      expect(fieldset.children[0]).toBe(legend)
+      expect(fieldset.children[1]).toBe(emailField)
+      expect(fieldset.children[2]).toBe(submitBtn)
+      expect(emailField.getAttribute('type')).toBe('email')
+      expect(submitBtn.textContent).toBe('Submit')
+    })
+
+    it('should create navigation menus', () => {
+      const nav = DOMService.createElement('nav')
+      const ul = DOMService.createElement('ul')
+
+      const menuItems = ['Home', 'About', 'Services', 'Contact']
+      menuItems.forEach((item) => {
+        const li = DOMService.createElement('li')
+        const link = DOMService.createElement('a')
+        DOMService.setAttribute(link, 'href', `/${item.toLowerCase()}`)
+        DOMService.html(link, item)
+        DOMService.appendChild(li, link)
+        DOMService.appendChild(ul, li)
+      })
+
+      DOMService.appendChild(nav, ul)
+
+      expect(nav.children[0]).toBe(ul)
+      expect(ul.children).toHaveLength(4)
+
+      const firstLink = ul.children[0].children[0] as HTMLAnchorElement
+      expect(firstLink.href).toContain('/home')
+      expect(firstLink.textContent).toBe('Home')
+
+      const lastLink = ul.children[3].children[0] as HTMLAnchorElement
+      expect(lastLink.href).toContain('/contact')
+      expect(lastLink.textContent).toBe('Contact')
+    })
+
+    it('should work with different element types', () => {
+      const table = DOMService.createElement('table')
+      const thead = DOMService.createElement('thead')
+      const tbody = DOMService.createElement('tbody')
+      const tr = DOMService.createElement('tr')
+      const td = DOMService.createElement('td')
+
+      DOMService.html(td, 'Cell content')
+      DOMService.appendChild(tr, td)
+      DOMService.appendChild(tbody, tr)
+      DOMService.appendChild(table, thead)
+      DOMService.appendChild(table, tbody)
+
+      expect(table.children).toHaveLength(2)
+      expect(table.children[0]).toBe(thead)
+      expect(table.children[1]).toBe(tbody)
+      expect(tbody.children[0]).toBe(tr)
+      expect(tr.children[0]).toBe(td)
+      expect(td.textContent).toBe('Cell content')
+    })
+
+    it('should handle moving elements between parents', () => {
+      const parent1 = DOMService.createElement('div')
+      const parent2 = DOMService.createElement('div')
+      const child = DOMService.createElement('span')
+
+      // Append to first parent
+      DOMService.appendChild(parent1, child)
+      expect(parent1.children).toHaveLength(1)
+      expect(parent2.children).toHaveLength(0)
+      expect(child.parentElement).toBe(parent1)
+
+      // Move to second parent
+      DOMService.appendChild(parent2, child)
+      expect(parent1.children).toHaveLength(0)
+      expect(parent2.children).toHaveLength(1)
+      expect(child.parentElement).toBe(parent2)
+    })
+
+    it('should throw error when parent is null', () => {
+      const child = DOMService.createElement('span')
+      // @ts-ignore - Testing with null parent
+      expect(() => DOMService.appendChild(null, child)).toThrow(
+        'Both parent and child elements are required'
+      )
+    })
+
+    it('should throw error when child is null', () => {
+      const parent = DOMService.createElement('div')
+      // @ts-ignore - Testing with null child
+      expect(() => DOMService.appendChild(parent, null)).toThrow(
+        'Both parent and child elements are required'
+      )
+    })
+
+    it('should throw error when both parent and child are null', () => {
+      // @ts-ignore - Testing with null elements
+      expect(() => DOMService.appendChild(null, null)).toThrow(
+        'Both parent and child elements are required'
+      )
+    })
+  })
 })

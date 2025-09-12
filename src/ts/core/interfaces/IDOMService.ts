@@ -536,4 +536,133 @@ export interface IDOMService {
    * ```
    */
   closest: (element: TElement, selector: string) => TElement | null
+
+  /**
+   * Creates a new HTML element with the specified tag name.
+   * Provides safe element creation with consistent return types.
+   *
+   * @param tagName - The tag name of the element to create
+   * @returns New HTML element of the specified type
+   *
+   * @example
+   * ```typescript
+   * // Basic element creation
+   * const div = dom.createElement('div');
+   * const span = dom.createElement('span');
+   * const button = dom.createElement('button');
+   *
+   * // Create elements with immediate configuration
+   * const link = dom.createElement('a');
+   * dom.setAttribute(link, 'href', 'https://example.com');
+   * dom.setAttribute(link, 'target', '_blank');
+   *
+   * // Create form elements
+   * const input = dom.createElement('input');
+   * dom.setAttribute(input, 'type', 'email');
+   * dom.setAttribute(input, 'name', 'email');
+   * dom.setAttribute(input, 'required', '');
+   *
+   * // Create multimedia elements
+   * const img = dom.createElement('img');
+   * dom.setAttribute(img, 'src', 'image.jpg');
+   * dom.setAttribute(img, 'alt', 'Description');
+   *
+   * // Create structured content
+   * const article = dom.createElement('article');
+   * const header = dom.createElement('header');
+   * const title = dom.createElement('h1');
+   *
+   * dom.html(title, 'Article Title');
+   * dom.appendChild(header, title);
+   * dom.appendChild(article, header);
+   *
+   * // Create lists
+   * const ul = dom.createElement('ul');
+   * const li1 = dom.createElement('li');
+   * const li2 = dom.createElement('li');
+   *
+   * dom.html(li1, 'First item');
+   * dom.html(li2, 'Second item');
+   * dom.appendChild(ul, li1);
+   * dom.appendChild(ul, li2);
+   * ```
+   */
+  createElement: (tagName: string) => HTMLElement
+
+  /**
+   * Appends a child element to a parent element.
+   * Provides safe element appending with error handling.
+   *
+   * @param parent - The parent element to append to
+   * @param child - The child element to append
+   * @returns The appended child element
+   *
+   * @example
+   * ```typescript
+   * // Basic element appending
+   * const container = dom.querySelector(document, '.container');
+   * const newElement = dom.createElement('div');
+   * dom.appendChild(container, newElement);
+   *
+   * // Build complex structures
+   * const card = dom.createElement('div');
+   * dom.addClass(card, 'card');
+   *
+   * const cardHeader = dom.createElement('div');
+   * dom.addClass(cardHeader, 'card-header');
+   * const title = dom.createElement('h3');
+   * dom.html(title, 'Card Title');
+   * dom.appendChild(cardHeader, title);
+   *
+   * const cardBody = dom.createElement('div');
+   * dom.addClass(cardBody, 'card-body');
+   * const content = dom.createElement('p');
+   * dom.html(content, 'Card content goes here.');
+   * dom.appendChild(cardBody, content);
+   *
+   * dom.appendChild(card, cardHeader);
+   * dom.appendChild(card, cardBody);
+   *
+   * // Add to page
+   * const main = dom.querySelector(document, 'main');
+   * dom.appendChild(main, card);
+   *
+   * // Create forms dynamically
+   * const form = dom.createElement('form');
+   * const fieldset = dom.createElement('fieldset');
+   * const legend = dom.createElement('legend');
+   * dom.html(legend, 'User Information');
+   * dom.appendChild(fieldset, legend);
+   *
+   * const emailField = dom.createElement('input');
+   * dom.setAttribute(emailField, 'type', 'email');
+   * dom.setAttribute(emailField, 'name', 'email');
+   * dom.setAttribute(emailField, 'placeholder', 'Enter email');
+   * dom.appendChild(fieldset, emailField);
+   *
+   * const submitBtn = dom.createElement('button');
+   * dom.setAttribute(submitBtn, 'type', 'submit');
+   * dom.html(submitBtn, 'Submit');
+   * dom.appendChild(fieldset, submitBtn);
+   *
+   * dom.appendChild(form, fieldset);
+   *
+   * // Create navigation menus
+   * const nav = dom.createElement('nav');
+   * const ul = dom.createElement('ul');
+   *
+   * const menuItems = ['Home', 'About', 'Services', 'Contact'];
+   * menuItems.forEach(item => {
+   *   const li = dom.createElement('li');
+   *   const link = dom.createElement('a');
+   *   dom.setAttribute(link, 'href', `/${item.toLowerCase()}`);
+   *   dom.html(link, item);
+   *   dom.appendChild(li, link);
+   *   dom.appendChild(ul, li);
+   * });
+   *
+   * dom.appendChild(nav, ul);
+   * ```
+   */
+  appendChild: (parent: TElement, child: TElement) => TElement
 }
