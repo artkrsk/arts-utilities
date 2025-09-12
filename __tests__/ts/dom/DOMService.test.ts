@@ -134,6 +134,54 @@ describe('DOMService', () => {
     })
   })
 
+  describe('hasAttribute', () => {
+    it('should return true for existing attributes', () => {
+      const hasAttribute = DOMService.hasAttribute(childElement, 'data-test')
+      expect(hasAttribute).toBe(true)
+
+      const hasId = DOMService.hasAttribute(childElement, 'id')
+      expect(hasId).toBe(true)
+    })
+
+    it('should return false for non-existent attributes', () => {
+      const hasAttribute = DOMService.hasAttribute(childElement, 'non-existent')
+      expect(hasAttribute).toBe(false)
+    })
+
+    it('should return false when attribute name is empty', () => {
+      const hasAttribute = DOMService.hasAttribute(childElement, '')
+      expect(hasAttribute).toBe(false)
+    })
+
+    it('should return false when attribute name is undefined', () => {
+      const hasAttribute = DOMService.hasAttribute(childElement, undefined)
+      expect(hasAttribute).toBe(false)
+    })
+
+    it('should handle boolean attributes correctly', () => {
+      // Add a boolean attribute
+      const input = document.createElement('input')
+      input.setAttribute('required', '')
+      input.setAttribute('disabled', 'disabled')
+      document.body.appendChild(input)
+
+      expect(DOMService.hasAttribute(input, 'required')).toBe(true)
+      expect(DOMService.hasAttribute(input, 'disabled')).toBe(true)
+      expect(DOMService.hasAttribute(input, 'checked')).toBe(false)
+    })
+
+    it('should handle errors gracefully', () => {
+      try {
+        // @ts-ignore - Testing with invalid args
+        const hasAttribute = DOMService.hasAttribute(null, 'data-test')
+        expect(hasAttribute).toBe(false)
+      } catch (error) {
+        // Should not throw
+        expect(true).toBe(false)
+      }
+    })
+  })
+
   describe('matches', () => {
     it('should return true when element matches selector', () => {
       const matches = DOMService.matches(childElement, '.item')

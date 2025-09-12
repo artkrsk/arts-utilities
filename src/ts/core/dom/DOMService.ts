@@ -63,6 +63,24 @@ class DOMServiceClass {
   }
 
   /**
+   * Check if element has a specified attribute.
+   *
+   * @param element Element to check
+   * @param attributeName Attribute name to check for
+   */
+  public static hasAttribute(element: Element, attributeName?: string): boolean {
+    if (!attributeName) {
+      return false
+    }
+
+    try {
+      return element.hasAttribute(attributeName)
+    } catch (_error) {
+      return false
+    }
+  }
+
+  /**
    * Check if element matches a selector.
    *
    * @param element Element to check
@@ -228,6 +246,7 @@ export const DOMService: IDOMService = {
   querySelector: DOMServiceClass.querySelector,
   querySelectorAll: DOMServiceClass.querySelectorAll,
   getAttribute: DOMServiceClass.getAttribute,
+  hasAttribute: DOMServiceClass.hasAttribute,
   matches: DOMServiceClass.matches,
   contains: DOMServiceClass.contains,
   getDocument: DOMServiceClass.getDocument,

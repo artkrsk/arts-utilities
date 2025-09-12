@@ -124,6 +124,48 @@ export interface IDOMService {
   getAttribute: (element: TElement, attributeName?: string) => string | null
 
   /**
+   * Checks if an element has a specified attribute.
+   * Provides safe attribute existence checking with null handling.
+   *
+   * @param element - The element to check for the attribute
+   * @param attributeName - Name of the attribute to check for
+   * @returns Boolean indicating if the attribute exists on the element
+   *
+   * @example
+   * ```typescript
+   * // Basic attribute existence check
+   * const link = dom.querySelector(document, 'a');
+   * const hasHref = dom.hasAttribute(link, 'href');
+   * const hasTarget = dom.hasAttribute(link, 'target');
+   *
+   * // Data attributes existence
+   * const element = dom.querySelector(document, '.widget');
+   * const hasConfig = dom.hasAttribute(element, 'data-config');
+   * const hasId = dom.hasAttribute(element, 'data-widget-id');
+   *
+   * // Form attributes existence
+   * const input = dom.querySelector(form, 'input');
+   * const isRequired = dom.hasAttribute(input, 'required');
+   * const isDisabled = dom.hasAttribute(input, 'disabled');
+   *
+   * // Conditional logic based on attribute presence
+   * const img = dom.querySelector(document, 'img');
+   * if (dom.hasAttribute(img, 'data-src')) {
+   *   // Handle lazy loading
+   *   const src = dom.getAttribute(img, 'data-src');
+   *   img.src = src;
+   * }
+   *
+   * // Validation before processing
+   * if (dom.hasAttribute(element, 'aria-label')) {
+   *   const label = dom.getAttribute(element, 'aria-label');
+   *   updateAccessibilityInfo(label);
+   * }
+   * ```
+   */
+  hasAttribute: (element: TElement, attributeName?: string) => boolean
+
+  /**
    * Checks if an element matches a given CSS selector.
    * Useful for conditional logic and element classification.
    *
