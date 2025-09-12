@@ -1,4 +1,5 @@
 export * from './DOMService'
+export * from './DOMMediaService'
 export * from './ElementUtils'
 export * from './MediaUtils'
 export * from './VisibilityUtils'
