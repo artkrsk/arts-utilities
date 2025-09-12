@@ -182,6 +182,242 @@ describe('DOMService', () => {
     })
   })
 
+  describe('setAttribute', () => {
+    it('should set attribute on element', () => {
+      DOMService.setAttribute(childElement, 'data-new', 'new-value')
+      expect(childElement.getAttribute('data-new')).toBe('new-value')
+    })
+
+    it('should update existing attribute', () => {
+      expect(childElement.getAttribute('data-test')).toBe('test-value')
+
+      DOMService.setAttribute(childElement, 'data-test', 'updated-value')
+      expect(childElement.getAttribute('data-test')).toBe('updated-value')
+    })
+
+    it('should set boolean attributes with empty string', () => {
+      const input = document.createElement('input')
+      document.body.appendChild(input)
+
+      DOMService.setAttribute(input, 'required', '')
+      expect(input.hasAttribute('required')).toBe(true)
+      expect(input.getAttribute('required')).toBe('')
+
+      DOMService.setAttribute(input, 'disabled', '')
+      expect(input.hasAttribute('disabled')).toBe(true)
+    })
+
+    it('should set accessibility attributes', () => {
+      const button = document.createElement('button')
+      document.body.appendChild(button)
+
+      DOMService.setAttribute(button, 'aria-pressed', 'false')
+      expect(button.getAttribute('aria-pressed')).toBe('false')
+
+      DOMService.setAttribute(button, 'aria-label', 'Toggle menu')
+      expect(button.getAttribute('aria-label')).toBe('Toggle menu')
+    })
+
+    it('should set data attributes', () => {
+      DOMService.setAttribute(childElement, 'data-config', '{"theme": "dark"}')
+      expect(childElement.getAttribute('data-config')).toBe('{"theme": "dark"}')
+
+      DOMService.setAttribute(childElement, 'data-widget-id', '12345')
+      expect(childElement.getAttribute('data-widget-id')).toBe('12345')
+    })
+
+    it('should handle null element gracefully', () => {
+      // @ts-ignore - Testing with null element
+      expect(() => DOMService.setAttribute(null, 'test', 'value')).not.toThrow()
+    })
+
+    it('should handle empty attribute name gracefully', () => {
+      expect(() => DOMService.setAttribute(childElement, '', 'value')).not.toThrow()
+    })
+
+    it('should handle undefined attribute name gracefully', () => {
+      expect(() => DOMService.setAttribute(childElement, undefined, 'value')).not.toThrow()
+    })
+
+    it('should handle undefined value gracefully', () => {
+      expect(() => DOMService.setAttribute(childElement, 'test', undefined)).not.toThrow()
+      // Should not set the attribute when value is undefined
+      expect(childElement.hasAttribute('test')).toBe(false)
+    })
+
+    it('should handle numeric values as strings', () => {
+      DOMService.setAttribute(childElement, 'data-count', '42')
+      expect(childElement.getAttribute('data-count')).toBe('42')
+
+      DOMService.setAttribute(childElement, 'tabindex', '0')
+      expect(childElement.getAttribute('tabindex')).toBe('0')
+    })
+
+    it('should handle special characters in values', () => {
+      const specialValue = 'value with spaces & symbols: <>&"\'`'
+      DOMService.setAttribute(childElement, 'data-special', specialValue)
+      expect(childElement.getAttribute('data-special')).toBe(specialValue)
+    })
+
+    it('should work with different element types', () => {
+      const img = document.createElement('img')
+      const link = document.createElement('a')
+      const input = document.createElement('input')
+
+      document.body.appendChild(img)
+      document.body.appendChild(link)
+      document.body.appendChild(input)
+
+      DOMService.setAttribute(img, 'src', 'image.jpg')
+      DOMService.setAttribute(img, 'alt', 'Test image')
+
+      DOMService.setAttribute(link, 'href', 'https://example.com')
+      DOMService.setAttribute(link, 'target', '_blank')
+
+      DOMService.setAttribute(input, 'type', 'email')
+      DOMService.setAttribute(input, 'placeholder', 'Enter email')
+
+      expect(img.getAttribute('src')).toBe('image.jpg')
+      expect(img.getAttribute('alt')).toBe('Test image')
+      expect(link.getAttribute('href')).toBe('https://example.com')
+      expect(link.getAttribute('target')).toBe('_blank')
+      expect(input.getAttribute('type')).toBe('email')
+      expect(input.getAttribute('placeholder')).toBe('Enter email')
+    })
+
+    it('should handle errors gracefully', () => {
+      // Create a mock element that throws an error on setAttribute
+      const mockElement = {
+        setAttribute: () => {
+          throw new Error('Test error')
+        }
+      }
+
+      // @ts-ignore - Testing with mock element
+      expect(() => DOMService.setAttribute(mockElement, 'test', 'value')).not.toThrow()
+    })
+  })
+
+  describe('html', () => {
+    it('should get HTML content from element', () => {
+      childElement.innerHTML = '<span>Test Content</span>'
+      const content = DOMService.html(childElement)
+      expect(content).toBe('<span>Test Content</span>')
+    })
+
+    it('should set HTML content to element', () => {
+      const newContent = '<p>New Content</p><div>More content</div>'
+      DOMService.html(childElement, newContent)
+      expect(childElement.innerHTML).toBe(newContent)
+    })
+
+    it('should clear content when setting empty string', () => {
+      childElement.innerHTML = '<span>Some content</span>'
+      expect(childElement.innerHTML).toBe('<span>Some content</span>')
+
+      DOMService.html(childElement, '')
+      expect(childElement.innerHTML).toBe('')
+    })
+
+    it('should return empty string when getting content from null element', () => {
+      // @ts-ignore - Testing with null element
+      const content = DOMService.html(null)
+      expect(content).toBe('')
+    })
+
+    it('should return undefined when setting content on null element', () => {
+      // @ts-ignore - Testing with null element
+      const result = DOMService.html(null, '<p>test</p>')
+      expect(result).toBeUndefined()
+    })
+
+    it('should handle complex HTML content', () => {
+      const complexHtml = `
+        <div class="card">
+          <h3>Title</h3>
+          <p>Description with <strong>bold</strong> and <em>italic</em> text.</p>
+          <ul>
+            <li>Item 1</li>
+            <li>Item 2</li>
+          </ul>
+        </div>
+      `
+
+      DOMService.html(childElement, complexHtml)
+      expect(childElement.innerHTML).toBe(complexHtml)
+
+      const retrieved = DOMService.html(childElement)
+      expect(retrieved).toBe(complexHtml)
+    })
+
+    it('should handle getting content with nested elements', () => {
+      // Set up nested structure
+      childElement.innerHTML = ''
+      const wrapper = document.createElement('div')
+      wrapper.className = 'wrapper'
+
+      const title = document.createElement('h2')
+      title.textContent = 'Test Title'
+
+      const paragraph = document.createElement('p')
+      paragraph.innerHTML = 'Text with <a href="#">link</a>'
+
+      wrapper.appendChild(title)
+      wrapper.appendChild(paragraph)
+      childElement.appendChild(wrapper)
+
+      const content = DOMService.html(childElement)
+      expect(content).toContain('<div class="wrapper">')
+      expect(content).toContain('<h2>Test Title</h2>')
+      expect(content).toContain('<a href="#">link</a>')
+    })
+
+    it('should handle errors gracefully when getting content', () => {
+      // Create a mock element that throws an error on innerHTML getter
+      const mockElement = {
+        get innerHTML() {
+          throw new Error('Test error')
+        }
+      }
+
+      // @ts-ignore - Testing with mock element
+      const content = DOMService.html(mockElement)
+      expect(content).toBe('')
+    })
+
+    it('should handle errors gracefully when setting content', () => {
+      // Create a mock element that throws an error on innerHTML setter
+      const mockElement = {
+        set innerHTML(value: string) {
+          throw new Error('Test error')
+        }
+      }
+
+      // @ts-ignore - Testing with mock element
+      const result = DOMService.html(mockElement, '<p>test</p>')
+      expect(result).toBeUndefined()
+    })
+
+    it('should work with different element types', () => {
+      const div = document.createElement('div')
+      const span = document.createElement('span')
+      const section = document.createElement('section')
+
+      document.body.appendChild(div)
+      document.body.appendChild(span)
+      document.body.appendChild(section)
+
+      // Test with different elements
+      DOMService.html(div, '<p>Div content</p>')
+      DOMService.html(span, '<strong>Span content</strong>')
+      DOMService.html(section, '<article>Section content</article>')
+
+      expect(DOMService.html(div)).toBe('<p>Div content</p>')
+      expect(DOMService.html(span)).toBe('<strong>Span content</strong>')
+      expect(DOMService.html(section)).toBe('<article>Section content</article>')
+    })
+  })
+
   describe('matches', () => {
     it('should return true when element matches selector', () => {
       const matches = DOMService.matches(childElement, '.item')

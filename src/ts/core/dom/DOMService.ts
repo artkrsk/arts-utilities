@@ -81,6 +81,50 @@ class DOMServiceClass {
   }
 
   /**
+   * Set attribute value on element.
+   *
+   * @param element Element to set attribute on
+   * @param attributeName Attribute name to set
+   * @param value Attribute value to set
+   */
+  public static setAttribute(element: TElement, attributeName?: string, value?: string): void {
+    if (!element || !attributeName || value === undefined) {
+      return
+    }
+
+    try {
+      element.setAttribute(attributeName, value)
+    } catch (_error) {
+      // Handle error silently
+    }
+  }
+
+  /**
+   * Get or set HTML content of element.
+   *
+   * @param element Element to get or set HTML content for
+   * @param content Optional HTML content to set
+   */
+  public static html(element: TElement, content?: string): string | void {
+    if (!element) {
+      return content === undefined ? '' : undefined
+    }
+
+    try {
+      if (content === undefined) {
+        // Get innerHTML
+        return element.innerHTML
+      } else {
+        // Set innerHTML
+        element.innerHTML = content
+        return undefined
+      }
+    } catch (_error) {
+      return content === undefined ? '' : undefined
+    }
+  }
+
+  /**
    * Check if element matches a selector.
    *
    * @param element Element to check
@@ -247,6 +291,8 @@ export const DOMService: IDOMService = {
   querySelectorAll: DOMServiceClass.querySelectorAll,
   getAttribute: DOMServiceClass.getAttribute,
   hasAttribute: DOMServiceClass.hasAttribute,
+  setAttribute: DOMServiceClass.setAttribute,
+  html: DOMServiceClass.html,
   matches: DOMServiceClass.matches,
   contains: DOMServiceClass.contains,
   getDocument: DOMServiceClass.getDocument,

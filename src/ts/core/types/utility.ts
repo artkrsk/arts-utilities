@@ -71,6 +71,11 @@ export type TSelector = TBrand<string, 'Selector'>
  *   // Safe to use as attribute name since type guarantees validity
  *   return element.hasAttribute(attr)
  * }
+ *
+ * function setAttribute(element: Element, attr: TAttributeName, value: string): void {
+ *   // Safe to use as attribute name since type guarantees validity
+ *   element.setAttribute(attr, value)
+ * }
  * ```
  */
 export type TAttributeName = TBrand<string, 'AttributeName'>

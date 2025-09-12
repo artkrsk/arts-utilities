@@ -166,6 +166,112 @@ export interface IDOMService {
   hasAttribute: (element: TElement, attributeName?: string) => boolean
 
   /**
+   * Sets the value of a specified attribute on an element.
+   * Provides safe attribute setting with null handling and validation.
+   *
+   * @param element - The element to set the attribute on
+   * @param attributeName - Name of the attribute to set
+   * @param value - Value to set for the attribute
+   *
+   * @example
+   * ```typescript
+   * // Basic attribute setting
+   * const link = dom.querySelector(document, 'a');
+   * dom.setAttribute(link, 'href', 'https://example.com');
+   * dom.setAttribute(link, 'target', '_blank');
+   *
+   * // Data attributes
+   * const element = dom.querySelector(document, '.widget');
+   * dom.setAttribute(element, 'data-config', '{"theme": "dark"}');
+   * dom.setAttribute(element, 'data-widget-id', '12345');
+   *
+   * // Form attributes
+   * const input = dom.querySelector(form, 'input[name="email"]');
+   * dom.setAttribute(input, 'placeholder', 'Enter your email');
+   * dom.setAttribute(input, 'required', '');
+   * dom.setAttribute(input, 'aria-describedby', 'email-help');
+   *
+   * // Accessibility attributes
+   * const button = dom.querySelector(document, '.toggle-button');
+   * dom.setAttribute(button, 'aria-pressed', 'false');
+   * dom.setAttribute(button, 'aria-label', 'Toggle navigation menu');
+   *
+   * // Dynamic attribute updates
+   * const progressBar = dom.querySelector(document, '.progress');
+   * dom.setAttribute(progressBar, 'aria-valuenow', progress.toString());
+   * dom.setAttribute(progressBar, 'style', `width: ${progress}%`);
+   *
+   * // Media attributes
+   * const img = dom.querySelector(document, 'img');
+   * dom.setAttribute(img, 'src', imageUrl);
+   * dom.setAttribute(img, 'alt', imageDescription);
+   * dom.setAttribute(img, 'loading', 'lazy');
+   *
+   * // Boolean attributes (use empty string for presence)
+   * const input = dom.querySelector(document, 'input');
+   * dom.setAttribute(input, 'disabled', ''); // Adds disabled attribute
+   * dom.setAttribute(input, 'checked', ''); // Adds checked attribute
+   * ```
+   */
+  setAttribute: (element: TElement, attributeName?: string, value?: string) => void
+
+  /**
+   * Gets or sets the HTML content of an element.
+   * Provides safe innerHTML manipulation with null handling and XSS protection considerations.
+   * When content is provided, sets the innerHTML; when omitted, returns the current innerHTML.
+   *
+   * @param element - The element to get or set HTML content for
+   * @param content - Optional HTML content to set (if omitted, returns current innerHTML)
+   * @returns When setting: void; When getting: string content or empty string if element is null
+   *
+   * @example
+   * ```typescript
+   * // Getting HTML content
+   * const container = dom.querySelector(document, '.content');
+   * const currentHtml = dom.html(container);
+   * console.log('Current content:', currentHtml);
+   *
+   * // Setting HTML content
+   * const newsSection = dom.querySelector(document, '#news');
+   * dom.html(newsSection, '<h2>Breaking News</h2><p>Latest updates...</p>');
+   *
+   * // Dynamic content updates
+   * const messageDiv = dom.querySelector(document, '.message');
+   * dom.html(messageDiv, `<span class="success">✓ Operation completed at ${new Date().toLocaleTimeString()}</span>`);
+   *
+   * // Clear content
+   * const sidebar = dom.querySelector(document, '.sidebar');
+   * dom.html(sidebar, ''); // Clears all content
+   *
+   * // Template rendering
+   * const userCard = dom.querySelector(document, '.user-card');
+   * const userTemplate = `
+   *   <div class="user-avatar">
+   *     <img src="${user.avatar}" alt="${user.name}">
+   *   </div>
+   *   <div class="user-info">
+   *     <h3>${user.name}</h3>
+   *     <p>${user.email}</p>
+   *   </div>
+   * `;
+   * dom.html(userCard, userTemplate);
+   *
+   * // Conditional content
+   * const statusIndicator = dom.querySelector(document, '.status');
+   * if (isOnline) {
+   *   dom.html(statusIndicator, '<span class="online">● Online</span>');
+   * } else {
+   *   dom.html(statusIndicator, '<span class="offline">● Offline</span>');
+   * }
+   *
+   * // Note: Always sanitize user-provided content to prevent XSS attacks
+   * const userInput = sanitizeHtml(rawUserInput);
+   * dom.html(container, userInput);
+   * ```
+   */
+  html: (element: TElement, content?: string) => string | void
+
+  /**
    * Checks if an element matches a given CSS selector.
    * Useful for conditional logic and element classification.
    *
