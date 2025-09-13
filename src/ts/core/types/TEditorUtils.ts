@@ -1,6 +1,9 @@
+import type { Utils } from '@arts/elementor-types'
+
 /**
  * Type representing Elementor widget/element settings as a key-value record.
  * Settings are typically retrieved from Elementor widgets and contain configuration values.
+ * Now using the standardized ElementSettings type from @arts/elementor-types.
  *
  * @example
  * ```typescript
@@ -12,11 +15,12 @@
  * }
  * ```
  */
-export type TElementorSettings = Record<string, any>
+export type TElementorSettings = Utils.ElementSettings
 
 /**
  * Type for individual Elementor setting values.
- * Can be primitives like strings, numbers, or booleans.
+ * Can be primitives like strings, numbers, booleans, or complex objects.
+ * Updated to support all Elementor value types including responsive values, CSS values, etc.
  *
  * @example
  * ```typescript
@@ -24,9 +28,10 @@ export type TElementorSettings = Record<string, any>
  * const colorValue: TElementorSettingValue = '#3498db'
  * const enabledValue: TElementorSettingValue = true
  * const sizeValue: TElementorSettingValue = 24
+ * const cssValue: TElementorSettingValue = { size: 20, unit: 'px' }
  * ```
  */
-export type TElementorSettingValue = string | number | boolean
+export type TElementorSettingValue = any
 
 /**
  * Type for Elementor setting keys/names.
@@ -135,3 +140,57 @@ export type TValueMapping = string | Record<string, string | Record<string, any>
  * @param options The updated options object
  */
 export type TSettingsChangeCallback = (options: Record<string, string>) => Promise<void>
+
+// Additional type aliases for commonly used Elementor types from @arts/elementor-types
+// This provides convenient access to standardized Elementor value types
+
+/**
+ * Type alias for CSS values from @arts/elementor-types
+ * Supports both object notation with size/unit and primitive values
+ */
+export type TCSSValue = Utils.CSSValue
+
+/**
+ * Type alias for responsive CSS values that can have different values per device
+ */
+export type TResponsiveCSSValue = Utils.ResponsiveCSSValue
+
+/**
+ * Type alias for responsive values that can be different per device breakpoint
+ */
+export type TResponsiveValue<T> = Utils.ResponsiveValue<T>
+
+/**
+ * Type alias for dimensions values (padding, margin, etc.)
+ */
+export type TDimensionsValue = Utils.DimensionsValue
+
+/**
+ * Type alias for color values (supports global colors)
+ */
+export type TColorValue = Utils.ColorValue
+
+/**
+ * Type alias for media values (images, videos)
+ */
+export type TMediaValue = Utils.MediaValue
+
+/**
+ * Type alias for icon values
+ */
+export type TIconValue = Utils.IconValue
+
+/**
+ * Type alias for link values
+ */
+export type TLinkValue = Utils.LinkValue
+
+/**
+ * Type alias for typography values
+ */
+export type TTypographyValue = Utils.TypographyValue
+
+/**
+ * Type alias for box shadow values
+ */
+export type TBoxShadowValue = Utils.BoxShadowValue

@@ -6,18 +6,6 @@ import {
   elementorEditorLoaded
 } from '../../../src/ts/core/elementor/EditorUtils'
 
-// Extend Window interface for Elementor
-declare global {
-  interface Window {
-    elementorFrontend?: {
-      isEditMode?: () => boolean
-      elementsHandler: {
-        attachHandler: (name: string, handler: any, options?: any) => void
-      }
-    }
-  }
-}
-
 describe('EditorUtils', () => {
   beforeEach(() => {
     // Clear any global window modifications

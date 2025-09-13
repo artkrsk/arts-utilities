@@ -7,6 +7,10 @@ settings:
 importers:
 
   .:
+    dependencies:
+      '@arts/elementor-types':
+        specifier: ../elementor-types
+        version: link:../elementor-types
     devDependencies:
       '@eslint/js':
         specifier: ^9.35.0

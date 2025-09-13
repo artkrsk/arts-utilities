@@ -1,18 +1,15 @@
-import type { TElementorSettings, TSettingsMap, TValueMapping } from '../types'
+import type { TElementorSettings, TSettingsMap, TValueMapping } from '../types/TEditorUtils'
+import type { ElementorFrontend, ElementorEditor } from '@arts/elementor-types'
+import { isCSSValue } from '@arts/elementor-types'
 
-// Local interface declaration for this file only
-interface LocalWindow extends Window {
-  elementorFrontend?: {
-    isEditMode: () => boolean
-    elementsHandler: {
-      attachHandler: (name: string, handler: any, options?: any) => void
-    }
-  }
-  elementor?: Object
+// Type for the Window object with Elementor properties
+interface ElementorWindow extends Window {
+  elementorFrontend?: ElementorFrontend
+  elementor?: ElementorEditor
 }
 
-// Type assertion helper for accessing the extended window
-const getWindow = (): LocalWindow => window as LocalWindow
+// Helper to get properly typed window
+const getElementorWindow = (): ElementorWindow => window as ElementorWindow
 
 /**
  * Extracts keys from an object recursively
@@ -107,14 +104,14 @@ export const processComplexValue = (
         // Check if we need to extract size or return whole value
         if (mapping['return_size'] === false) {
           // When return_size is explicitly false, use the whole value
-          if (value && typeof value === 'object' && value.size !== undefined && value.unit) {
-            // Format with unit when available (like for scale)
+          if (isCSSValue(value)) {
+            // Format with unit when available using proper type guard
             result[key] = `${value.size}${value.unit}`
           } else {
             result[key] = value
           }
-        } else if (value && typeof value === 'object' && value.size !== undefined) {
-          // Otherwise, return just the size value for objects with size property
+        } else if (isCSSValue(value)) {
+          // Otherwise, return just the size value for CSS value objects
           result[key] = value.size
         } else {
           // Fallback to whole value for simple types
@@ -282,8 +279,8 @@ let elementorInitPromise: Promise<boolean> | null = null
  */
 export const elementorEditorLoaded = async (): Promise<boolean> => {
   // If Elementor is already initialized, check immediately
-  if (typeof window !== 'undefined' && getWindow().elementorFrontend?.elementsHandler) {
-    return getWindow().elementorFrontend!.isEditMode()
+  if (typeof window !== 'undefined' && getElementorWindow().elementorFrontend?.elementsHandler) {
+    return getElementorWindow().elementorFrontend!.isEditMode()
   }
 
   // If window is undefined, we're not in a browser
@@ -301,8 +298,8 @@ export const elementorEditorLoaded = async (): Promise<boolean> => {
     // Listen for initialization
     window.addEventListener('elementor/frontend/init', () => {
       elementorInitPromise = null
-      if (getWindow().elementorFrontend?.elementsHandler) {
-        resolve(getWindow().elementorFrontend!.isEditMode())
+      if (getElementorWindow().elementorFrontend?.elementsHandler) {
+        resolve(getElementorWindow().elementorFrontend!.isEditMode())
       } else {
         resolve(false)
       }

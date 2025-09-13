@@ -1,8 +1,12 @@
 import { vi, beforeAll, afterAll } from 'vitest'
+import type { ElementorFrontend, ElementorEditor } from '@arts/elementor-types'
 
-// Extend DOM interfaces
+// Extend DOM interfaces with proper Elementor types
 declare global {
-  // interface Window {}
+  interface Window {
+    elementorFrontend?: ElementorFrontend
+    elementor?: ElementorEditor
+  }
 }
 
 // Silence console errors during tests
