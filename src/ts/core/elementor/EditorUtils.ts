@@ -4,6 +4,9 @@ import type { TElementorSettings, TSettingsMap, TValueMapping } from '../types'
 interface LocalWindow extends Window {
   elementorFrontend?: {
     isEditMode: () => boolean
+    elementsHandler: {
+      attachHandler: (name: string, handler: any, options?: any) => void
+    }
   }
   elementor?: Object
 }
@@ -279,7 +282,7 @@ let elementorInitPromise: Promise<boolean> | null = null
  */
 export const elementorEditorLoaded = async (): Promise<boolean> => {
   // If Elementor is already initialized, check immediately
-  if (typeof window !== 'undefined' && getWindow().elementorFrontend) {
+  if (typeof window !== 'undefined' && getWindow().elementorFrontend?.elementsHandler) {
     return getWindow().elementorFrontend!.isEditMode()
   }
 
@@ -298,7 +301,7 @@ export const elementorEditorLoaded = async (): Promise<boolean> => {
     // Listen for initialization
     window.addEventListener('elementor/frontend/init', () => {
       elementorInitPromise = null
-      if (getWindow().elementorFrontend) {
+      if (getWindow().elementorFrontend?.elementsHandler) {
         resolve(getWindow().elementorFrontend!.isEditMode())
       } else {
         resolve(false)

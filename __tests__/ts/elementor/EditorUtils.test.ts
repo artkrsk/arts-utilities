@@ -11,6 +11,9 @@ declare global {
   interface Window {
     elementorFrontend?: {
       isEditMode?: () => boolean
+      elementsHandler: {
+        attachHandler: (name: string, handler: any, options?: any) => void
+      }
     }
   }
 }
@@ -392,8 +395,9 @@ describe('EditorUtils', () => {
     it('should return true when elementorFrontend exists and is in edit mode', async () => {
       global.window = {
         elementorFrontend: {
-          isEditMode: () => true
-        }
+          isEditMode: () => true,
+          elementsHandler: {}
+        } as any
       } as any
 
       const result = await elementorEditorLoaded()
@@ -403,8 +407,9 @@ describe('EditorUtils', () => {
     it('should return false when elementorFrontend exists but not in edit mode', async () => {
       global.window = {
         elementorFrontend: {
-          isEditMode: () => false
-        }
+          isEditMode: () => false,
+          elementsHandler: {}
+        } as any
       } as any
 
       const result = await elementorEditorLoaded()
@@ -435,8 +440,9 @@ describe('EditorUtils', () => {
       // Simulate the event firing
       const eventCallback = (global.window.addEventListener as any).mock.calls[0][1]
       global.window.elementorFrontend = {
-        isEditMode: () => true
-      }
+        isEditMode: () => true,
+        elementsHandler: {}
+      } as any
       eventCallback()
 
       const result = await promise
@@ -474,8 +480,9 @@ describe('EditorUtils', () => {
       // Simulate the event firing
       const eventCallback = (global.window.addEventListener as any).mock.calls[0][1]
       global.window.elementorFrontend = {
-        isEditMode: () => true
-      }
+        isEditMode: () => true,
+        elementsHandler: {}
+      } as any
       eventCallback()
 
       const [result1, result2] = await Promise.all([promise1, promise2])
@@ -498,8 +505,9 @@ describe('EditorUtils', () => {
       // Simulate event firing to complete first promise
       const eventCallback = (global.window.addEventListener as any).mock.calls[0][1]
       global.window.elementorFrontend = {
-        isEditMode: () => true
-      }
+        isEditMode: () => true,
+        elementsHandler: {}
+      } as any
       eventCallback()
 
       // Wait for first promise to complete

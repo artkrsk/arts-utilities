@@ -1077,25 +1077,40 @@ describe('DOMService', () => {
     })
 
     it('should throw error when parent is null', () => {
-      const child = DOMService.createElement('span')
-      // @ts-ignore - Testing with null parent
+      const child = document.createElement('div')
+      // @ts-ignore
       expect(() => DOMService.appendChild(null, child)).toThrow(
         'Both parent and child elements are required'
       )
     })
 
     it('should throw error when child is null', () => {
-      const parent = DOMService.createElement('div')
-      // @ts-ignore - Testing with null child
+      const parent = document.createElement('div')
+      // @ts-ignore
       expect(() => DOMService.appendChild(parent, null)).toThrow(
         'Both parent and child elements are required'
       )
     })
 
     it('should throw error when both parent and child are null', () => {
-      // @ts-ignore - Testing with null elements
+      // @ts-ignore
       expect(() => DOMService.appendChild(null, null)).toThrow(
         'Both parent and child elements are required'
+      )
+    })
+
+    it('should throw error when appendChild operation fails', () => {
+      // Create a mock parent that throws an error on appendChild
+      const mockParent = {
+        appendChild: () => {
+          throw new Error('appendChild failed')
+        }
+      }
+      const child = document.createElement('div')
+
+      // @ts-ignore - Testing with mock element
+      expect(() => DOMService.appendChild(mockParent, child)).toThrow(
+        'Failed to append child element'
       )
     })
   })
