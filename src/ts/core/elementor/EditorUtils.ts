@@ -1,6 +1,5 @@
 import type { TElementorSettings, TSettingsMap, TValueMapping } from '../types/TEditorUtils'
 import type { ElementorFrontend, ElementorEditor } from '@arts/elementor-types'
-import { isCSSValue } from '@arts/elementor-types'
 
 // Type for the Window object with Elementor properties
 interface ElementorWindow extends Window {
@@ -10,6 +9,18 @@ interface ElementorWindow extends Window {
 
 // Helper to get properly typed window
 const getElementorWindow = (): ElementorWindow => window as ElementorWindow
+
+// Local type guard for CSS values
+function isCSSValue(value: any): value is { size: number; unit: string } {
+  return (
+    value &&
+    typeof value === 'object' &&
+    'size' in value &&
+    'unit' in value &&
+    typeof value.size === 'number' &&
+    typeof value.unit === 'string'
+  )
+}
 
 /**
  * Extracts keys from an object recursively
