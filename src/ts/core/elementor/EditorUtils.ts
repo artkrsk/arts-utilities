@@ -224,9 +224,7 @@ export const convertSettings = (
           // If 'return_size' is true (and part of elementorMapping), extract .size
           if (
             elementorMapping.return_size === true &&
-            settingValue &&
-            typeof settingValue === 'object' &&
-            settingValue.size !== undefined
+            isCSSValue(settingValue)
           ) {
             result[jsKey] = settingValue.size
           } else {
