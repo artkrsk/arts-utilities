@@ -92,3 +92,6 @@ next-env.d.ts
 
 # Building system
 __builder__
+
+.claude
+CLAUDE.md
