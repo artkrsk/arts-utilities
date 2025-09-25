@@ -99,9 +99,9 @@ trait Kit {
 
 
 	/**
-	 * Get kit setting from Elementor with single source of truth.
+	 * Get kit setting from Elementor or WordPress option.
 	 *
-	 * Retrieves setting from Elementor kit, with direct database fallback if Elementor is not loaded.
+	 * Retrieves setting with priority: WordPress option (save_db), Elementor API, direct database.
 	 *
 	 * @since 1.0.6
 	 *
@@ -112,20 +112,30 @@ trait Kit {
 	 * @return mixed The kit setting value or the fallback value.
 	 */
 	public static function get_kit_setting_or_option( $option_name = null, $fallback_value = null, $return_size = true ) {
-		// Try Elementor API first if available
-		// if ( self::is_elementor_plugin_active() && \Elementor\Plugin::$instance->kits_manager ) {
-		// $value = \Elementor\Plugin::$instance->kits_manager->get_current_settings( $option_name );
+		// First check if value exists in WordPress options (from save_db)
+		$option_value = get_option( $option_name, null );
 
-		// if ( isset( $value ) ) {
-		// if ( $return_size && is_array( $value ) ) {
-		// $value = self::extract_value_from_option_array( $value );
-		// }
+		if ( $option_value !== null && $option_value !== false ) {
+			if ( $return_size && is_array( $option_value ) ) {
+				$option_value = self::extract_value_from_option_array( $option_value );
+			}
+			return $option_value;
+		}
 
-		// return $value;
-		// }
-		// }
+		// Try Elementor API if available (this properly handles custom tab settings)
+		if ( self::is_elementor_plugin_active() && \Elementor\Plugin::$instance->kits_manager ) {
+			$value = \Elementor\Plugin::$instance->kits_manager->get_current_settings( $option_name );
 
-		// Fallback to direct database query
+			if ( isset( $value ) ) {
+				if ( $return_size && is_array( $value ) ) {
+					$value = self::extract_value_from_option_array( $value );
+				}
+
+				return $value;
+			}
+		}
+
+		// Fallback to direct database query (for when Elementor is not loaded)
 		$kit_settings = self::get_kit_settings_from_db();
 
 		if ( $kit_settings && isset( $kit_settings[ $option_name ] ) ) {
