@@ -113,17 +113,17 @@ trait Kit {
 	 */
 	public static function get_kit_setting_or_option( $option_name = null, $fallback_value = null, $return_size = true ) {
 		// Try Elementor API first if available
-		if ( self::is_elementor_plugin_active() && \Elementor\Plugin::$instance->kits_manager ) {
-			$value = \Elementor\Plugin::$instance->kits_manager->get_current_settings( $option_name );
+		// if ( self::is_elementor_plugin_active() && \Elementor\Plugin::$instance->kits_manager ) {
+		// $value = \Elementor\Plugin::$instance->kits_manager->get_current_settings( $option_name );
 
-			if ( isset( $value ) ) {
-				if ( $return_size && is_array( $value ) ) {
-					$value = self::extract_value_from_option_array( $value );
-				}
+		// if ( isset( $value ) ) {
+		// if ( $return_size && is_array( $value ) ) {
+		// $value = self::extract_value_from_option_array( $value );
+		// }
 
-				return $value;
-			}
-		}
+		// return $value;
+		// }
+		// }
 
 		// Fallback to direct database query
 		$kit_settings = self::get_kit_settings_from_db();
@@ -154,7 +154,7 @@ trait Kit {
 	 * @return array Associative array with option names as keys and their values.
 	 */
 	public static function get_kit_settings_or_options( array $option_names, $return_size = true ) {
-		$result = array();
+		$result       = array();
 		$kit_settings = null;
 
 		// Try Elementor API first if available
@@ -308,7 +308,7 @@ trait Kit {
 	 */
 	private static function get_kit_settings_from_db() {
 		static $cached_settings = null;
-		static $cached_kit_id = null;
+		static $cached_kit_id   = null;
 
 		// Get active kit ID
 		$kit_id = get_option( 'elementor_active_kit' );
@@ -330,7 +330,7 @@ trait Kit {
 		}
 
 		// Cache the results
-		$cached_kit_id = $kit_id;
+		$cached_kit_id   = $kit_id;
 		$cached_settings = $settings;
 
 		return $settings;
