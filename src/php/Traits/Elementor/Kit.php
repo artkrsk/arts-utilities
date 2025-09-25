@@ -97,12 +97,13 @@ trait Kit {
 		return $fallback_value;
 	}
 
+
 	/**
-	 * Get kit settings from Elementor.
+	 * Get kit setting from Elementor with single source of truth.
 	 *
-	 * If Elementor is not loaded, it falls back to retrieving the theme modification settings of the given option.
+	 * Retrieves setting from Elementor kit, with direct database fallback if Elementor is not loaded.
 	 *
-	 * @since 1.0.0
+	 * @since 1.0.6
 	 *
 	 * @param string|null $option_name    The name of the option to retrieve. If null, retrieves all settings.
 	 * @param mixed       $fallback_value The value to return if the option is not found. Default is null.
@@ -110,20 +111,26 @@ trait Kit {
 	 *
 	 * @return mixed The kit setting value or the fallback value.
 	 */
-	public static function get_kit_setting_or_theme_mod( $option_name = null, $fallback_value = null, $return_size = true ) {
-		if ( ! self::is_elementor_plugin_active() || ! \Elementor\Plugin::$instance->kits_manager ) {
-			$theme_mod_value = get_theme_mod( $option_name, $fallback_value );
+	public static function get_kit_setting_or_option( $option_name = null, $fallback_value = null, $return_size = true ) {
+		// Try Elementor API first if available
+		if ( self::is_elementor_plugin_active() && \Elementor\Plugin::$instance->kits_manager ) {
+			$value = \Elementor\Plugin::$instance->kits_manager->get_current_settings( $option_name );
 
-			if ( $theme_mod_value !== $fallback_value ) {
-				return $theme_mod_value;
+			if ( isset( $value ) ) {
+				if ( $return_size && is_array( $value ) ) {
+					$value = self::extract_value_from_option_array( $value );
+				}
+
+				return $value;
 			}
-
-			return $fallback_value;
 		}
 
-		$value = \Elementor\Plugin::$instance->kits_manager->get_current_settings( $option_name );
+		// Fallback to direct database query
+		$kit_settings = self::get_kit_settings_from_db();
 
-		if ( isset( $value ) ) {
+		if ( $kit_settings && isset( $kit_settings[ $option_name ] ) ) {
+			$value = $kit_settings[ $option_name ];
+
 			if ( $return_size && is_array( $value ) ) {
 				$value = self::extract_value_from_option_array( $value );
 			}
@@ -135,40 +142,55 @@ trait Kit {
 	}
 
 	/**
-	 * Get kit settings from Elementor.
+	 * Get multiple kit settings from Elementor with single source of truth.
 	 *
-	 * If Elementor is not loaded, it falls back to retrieving the option value of the given option name.
+	 * Retrieves multiple settings from Elementor kit in a single call.
 	 *
-	 * @since 1.0.6
+	 * @since 1.1.0
 	 *
-	 * @param string|null $option_name    The name of the option to retrieve. If null, retrieves all settings.
-	 * @param mixed       $fallback_value The value to return if the option is not found. Default is null.
-	 * @param bool        $return_size    Whether to return the 'size' or 'url' if the value is an array. Default is true.
+	 * @param array $option_names Array of option names to retrieve.
+	 * @param bool  $return_size  Whether to return the 'size' or 'url' if the value is an array. Default is true.
 	 *
-	 * @return mixed The kit setting value or the fallback value.
+	 * @return array Associative array with option names as keys and their values.
 	 */
-	public static function get_kit_setting_or_option( $option_name = null, $fallback_value = null, $return_size = true ) {
-		if ( ! self::is_elementor_plugin_active() || ! \Elementor\Plugin::$instance->kits_manager ) {
-			$option_value = get_option( $option_name, $fallback_value );
+	public static function get_kit_settings_or_options( array $option_names, $return_size = true ) {
+		$result = array();
+		$kit_settings = null;
 
-			if ( $option_value !== $fallback_value ) {
-				return $option_value;
+		// Try Elementor API first if available
+		if ( self::is_elementor_plugin_active() && \Elementor\Plugin::$instance->kits_manager ) {
+			foreach ( $option_names as $option_name ) {
+				$value = \Elementor\Plugin::$instance->kits_manager->get_current_settings( $option_name );
+
+				if ( isset( $value ) ) {
+					if ( $return_size && is_array( $value ) ) {
+						$value = self::extract_value_from_option_array( $value );
+					}
+					$result[ $option_name ] = $value;
+				} else {
+					$result[ $option_name ] = null;
+				}
 			}
+		} else {
+			// Fallback to direct database query
+			$kit_settings = self::get_kit_settings_from_db();
 
-			return $fallback_value;
+			foreach ( $option_names as $option_name ) {
+				if ( $kit_settings && isset( $kit_settings[ $option_name ] ) ) {
+					$value = $kit_settings[ $option_name ];
+
+					if ( $return_size && is_array( $value ) ) {
+						$value = self::extract_value_from_option_array( $value );
+					}
+
+					$result[ $option_name ] = $value;
+				} else {
+					$result[ $option_name ] = null;
+				}
+			}
 		}
 
-		$value = \Elementor\Plugin::$instance->kits_manager->get_current_settings( $option_name );
-
-		if ( isset( $value ) ) {
-			if ( $return_size && is_array( $value ) ) {
-				$value = self::extract_value_from_option_array( $value );
-			}
-
-			return $value;
-		}
-
-		return $fallback_value;
+		return $result;
 	}
 
 	/**
@@ -273,5 +295,44 @@ trait Kit {
 		preg_match( $regex, $input, $match );
 
 		return $match && $match[0] ? $match[0] : '';
+	}
+
+	/**
+	 * Get kit settings directly from database.
+	 *
+	 * Retrieves Elementor kit settings from post meta, with caching to avoid repeated queries.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @return array|false Kit settings array or false if not available.
+	 */
+	private static function get_kit_settings_from_db() {
+		static $cached_settings = null;
+		static $cached_kit_id = null;
+
+		// Get active kit ID
+		$kit_id = get_option( 'elementor_active_kit' );
+
+		if ( ! $kit_id ) {
+			return false;
+		}
+
+		// Return cached settings if kit ID hasn't changed
+		if ( $cached_kit_id === $kit_id && $cached_settings !== null ) {
+			return $cached_settings;
+		}
+
+		// Get kit settings from post meta
+		$settings = get_post_meta( $kit_id, '_elementor_page_settings', true );
+
+		if ( ! is_array( $settings ) ) {
+			$settings = false;
+		}
+
+		// Cache the results
+		$cached_kit_id = $kit_id;
+		$cached_settings = $settings;
+
+		return $settings;
 	}
 }
