@@ -2,7 +2,7 @@
   "name": "arts/utilities",
   "description": "A comprehensive collection of utility methods for WordPress theme and plugin development, with a focus on Elementor integration.",
   "type": "library",
-  "license": "MIT",
+  "license": "GPL-3.0-or-later",
   "authors": [
     {
       "name": "Artem Semkin",

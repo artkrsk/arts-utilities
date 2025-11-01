@@ -4,7 +4,7 @@ A comprehensive collection of utility methods for WordPress theme and plugin dev
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/arts/utilities.svg?style=flat-square)](https://packagist.org/packages/arts/utilities)
 [![Total Downloads](https://img.shields.io/packagist/dt/arts/utilities.svg?style=flat-square)](https://packagist.org/packages/arts/utilities)
-[![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+[![License](https://img.shields.io/badge/license-GPL--3.0--or--later-blue)](LICENSE)
 [![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-ffdd00?style=flat&logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/artemsemkin)
 
 ## Installation
@@ -397,7 +397,9 @@ $total = Utilities::get_cart_total();
 
 ## License
 
-The MIT License (MIT). Please see [License File](LICENSE) for more information.
+GPL-3.0-or-later - Compatible with WordPress. Please see [License File](LICENSE) for more information.
+
+This library is licensed under GPL-3.0-or-later to ensure compatibility with WordPress and GPL-licensed plugins.
 
 ## 💖 Support
 
