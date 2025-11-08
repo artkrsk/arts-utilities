@@ -122,10 +122,10 @@ trait Document {
 	 *
 	 * @return array The body styles model including background, padding, and margin properties.
 	 */
-	public static function get_body_styles_model() {
+	public static function get_body_styles_model( $fallback_color_value ) {
 		$model = array();
 
-		$background_color = self::get_body_document_option( 'background_color' );
+		$background_color = self::get_body_document_option( 'background_color', null, $fallback_color_value );
 		if ( $background_color ) {
 			$model['backgroundColor'] = $background_color;
 		}
