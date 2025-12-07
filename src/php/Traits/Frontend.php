@@ -118,7 +118,12 @@ trait Frontend {
 		}
 
 		if ( $type === 'component' ) {
-			wp_register_script_module( $args['handle'], $args['src'], $deps, $args['ver'], $args['args'] );
+			// WordPress 6.9+ requires array for $args in wp_register_script_module()
+			$script_module_args = $args['args'];
+			if ( ! is_array( $script_module_args ) ) {
+				$script_module_args = $script_module_args ? array( 'in_footer' => true ) : array();
+			}
+			wp_register_script_module( $args['handle'], $args['src'], $deps, $args['ver'], $script_module_args );
 			wp_register_script( $args['handle'], $args['src'], $deps, $args['ver'], $args['args'] );
 		} else {
 			wp_register_script( $args['handle'], $args['src'], $deps, $args['ver'], $args['args'] );
