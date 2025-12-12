@@ -37,19 +37,68 @@ trait ResponsiveControls {
 		$breakpoints_config = \Elementor\Plugin::$instance->breakpoints->get_breakpoints_config();
 
 		// Get desktop value (base setting without suffix).
-		$desktop_value            = $controls_stack->get_settings_for_display( $option );
+		$desktop_value          = $controls_stack->get_settings_for_display( $option );
 		$enabled_map['desktop'] = $desktop_value;
 
 		// Proactively check all active breakpoints.
 		foreach ( $breakpoints_config as $breakpoint_name => $config ) {
 			if ( $config['is_enabled'] ) {
-				$breakpoint_setting          = "{$option}_{$breakpoint_name}";
-				$breakpoint_value            = $controls_stack->get_settings_for_display( $breakpoint_setting );
+				$breakpoint_setting              = "{$option}_{$breakpoint_name}";
+				$breakpoint_value                = $controls_stack->get_settings_for_display( $breakpoint_setting );
 				$enabled_map[ $breakpoint_name ] = $breakpoint_value;
 			}
 		}
 
+		// Apply inheritance: empty values inherit from larger breakpoints (desktop is fallback).
+		$enabled_map = self::apply_responsive_inheritance( $enabled_map, $breakpoints_config );
+
 		return array_reverse( $enabled_map, true );
+	}
+
+	/**
+	 * Applies responsive inheritance to the enabled map.
+	 * Empty values inherit from the next larger breakpoint (desktop is the fallback).
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array $enabled_map        The map of breakpoint values.
+	 * @param array $breakpoints_config The Elementor breakpoints configuration.
+	 *
+	 * @return array The enabled map with inherited values applied.
+	 */
+	private static function apply_responsive_inheritance( $enabled_map, $breakpoints_config ) {
+		// Build ordered list of breakpoints (smallest to largest screen).
+		$ordered_breakpoints = array();
+
+		foreach ( $breakpoints_config as $breakpoint => $config ) {
+			if ( $config['is_enabled'] && array_key_exists( $breakpoint, $enabled_map ) ) {
+				$ordered_breakpoints[] = $breakpoint;
+			}
+		}
+
+		// Insert desktop before widescreen (or at the end).
+		$widescreen_index = array_search( 'widescreen', $ordered_breakpoints, true );
+
+		if ( $widescreen_index !== false ) {
+			array_splice( $ordered_breakpoints, $widescreen_index, 0, 'desktop' );
+		} else {
+			$ordered_breakpoints[] = 'desktop';
+		}
+
+		// Propagate inherited values from larger to smaller breakpoints.
+		$inherited_value = null;
+
+		for ( $i = count( $ordered_breakpoints ) - 1; $i >= 0; $i-- ) {
+			$breakpoint = $ordered_breakpoints[ $i ];
+
+			if ( ! empty( $enabled_map[ $breakpoint ] ) ) {
+				$inherited_value = $enabled_map[ $breakpoint ];
+			} elseif ( $inherited_value !== null ) {
+				$enabled_map[ $breakpoint ] = $inherited_value;
+			}
+		}
+
+		return $enabled_map;
 	}
 
 	/**
