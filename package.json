@@ -53,5 +53,12 @@
     "deps:check": "npx npm-check-updates",
     "deps:update": "npx npm-check-updates -u && pnpm install",
     "deps:clean": "node __builder__/src/scripts/clean-deps.js"
+  },
+  "pnpm": {
+    "overrides": {
+      "vite": ">=7.2.7",
+      "brace-expansion": ">=4.0.1",
+      "js-yaml": ">=4.1.1"
+    }
   }
 }
