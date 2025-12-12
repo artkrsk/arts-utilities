@@ -435,6 +435,14 @@ trait Markup {
 	 * @return string|null The HTML tag if $echo is false, otherwise null.
 	 */
 	public static function print_tag_link( $attributes = array(), $fallback_tag = 'div', $echo = true ) {
+		// Flatten all array values (supports Elementor render attributes)
+		// This matches the pattern used in print_attributes() for all attribute values
+		foreach ( $attributes as $key => $value ) {
+			if ( is_array( $value ) ) {
+				$attributes[ $key ] = implode( ' ', $value );
+			}
+		}
+
 		// Check if we have a valid link
 		$has_valid_link = isset( $attributes['href'] ) &&
 						  is_string( $attributes['href'] ) &&
