@@ -34,20 +34,18 @@ trait ResponsiveControls {
 			return $enabled_map;
 		}
 
-		$settings           = $controls_stack->get_settings_for_display();
 		$breakpoints_config = \Elementor\Plugin::$instance->breakpoints->get_breakpoints_config();
 
-		foreach ( $settings as $key => $value ) {
-			if ( strpos( $key, $option ) === 0 ) {
-				$new_key = substr( $key, strlen( $option . '_' ) );
+		// Get desktop value (base setting without suffix).
+		$desktop_value            = $controls_stack->get_settings_for_display( $option );
+		$enabled_map['desktop'] = $desktop_value;
 
-				if ( empty( $new_key ) ) {
-					$new_key = 'desktop';
-				}
-
-				if ( ( array_key_exists( $new_key, $breakpoints_config ) && $breakpoints_config[ $new_key ]['is_enabled'] ) || $new_key === 'desktop' ) {
-					$enabled_map[ $new_key ] = $value;
-				}
+		// Proactively check all active breakpoints.
+		foreach ( $breakpoints_config as $breakpoint_name => $config ) {
+			if ( $config['is_enabled'] ) {
+				$breakpoint_setting          = "{$option}_{$breakpoint_name}";
+				$breakpoint_value            = $controls_stack->get_settings_for_display( $breakpoint_setting );
+				$enabled_map[ $breakpoint_name ] = $breakpoint_value;
 			}
 		}
 
