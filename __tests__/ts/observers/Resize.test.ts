@@ -38,7 +38,7 @@ describe('Resize', () => {
 
     // Mock global ResizeObserver - create a new instance each time
     originalResizeObserver = global.ResizeObserver
-    global.ResizeObserver = vi.fn((callback) => {
+    global.ResizeObserver = vi.fn(function(callback) {
       mockResizeObserver = new MockResizeObserver(callback)
       return mockResizeObserver
     }) as any
@@ -168,7 +168,7 @@ describe('Resize', () => {
     })
 
     it('should handle errors from ResizeObserver constructor', () => {
-      global.ResizeObserver = vi.fn(() => {
+      global.ResizeObserver = vi.fn(function() {
         throw new Error('ResizeObserver error')
       }) as any
 
@@ -187,7 +187,7 @@ describe('Resize', () => {
 
     it('should handle specific ResizeObserver constructor error and cover error handling lines', () => {
       // Mock ResizeObserver to throw an error during construction
-      global.ResizeObserver = vi.fn(() => {
+      global.ResizeObserver = vi.fn(function() {
         throw new Error('Specific ResizeObserver constructor error')
       }) as any
 
@@ -434,6 +434,9 @@ describe('Resize', () => {
       // Set elements manually and call observeElements
       ;(instance as any).elements = [validElement, invalidElement]
       ;(instance as any).instance = mockResizeObserver // Set a mock observer
+
+      // Clear any previous calls before testing
+      mockResizeObserver.observe.mockClear()
 
       // Call the private observeElements method
       ;(instance as any).observeElements()

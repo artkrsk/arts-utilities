@@ -13,11 +13,11 @@ beforeEach(() => {
   mockDisconnect.mockClear()
 
   // Mock IntersectionObserver
-  mockIntersectionObserver.mockImplementation((callback) => ({
-    observe: mockObserve,
-    disconnect: mockDisconnect,
-    callback
-  }))
+  mockIntersectionObserver.mockImplementation(function(callback) {
+    this.observe = mockObserve
+    this.disconnect = mockDisconnect
+    this.callback = callback
+  })
 
   // Set up global IntersectionObserver
   global.IntersectionObserver = mockIntersectionObserver
@@ -204,12 +204,10 @@ describe('Intersection', () => {
       const mockCallback = vi.fn()
       let observerCallback: Function
 
-      mockIntersectionObserver.mockImplementation((callback) => {
+      mockIntersectionObserver.mockImplementation(function(callback) {
         observerCallback = callback
-        return {
-          observe: mockObserve,
-          disconnect: mockDisconnect
-        }
+        this.observe = mockObserve
+        this.disconnect = mockDisconnect
       })
 
       const intersection = new Intersection({
@@ -237,12 +235,10 @@ describe('Intersection', () => {
       const mockDebouncedCallback = vi.fn()
       let observerCallback: Function
 
-      mockIntersectionObserver.mockImplementation((callback) => {
+      mockIntersectionObserver.mockImplementation(function(callback) {
         observerCallback = callback
-        return {
-          observe: mockObserve,
-          disconnect: mockDisconnect
-        }
+        this.observe = mockObserve
+        this.disconnect = mockDisconnect
       })
 
       const intersection = new Intersection({
@@ -272,12 +268,10 @@ describe('Intersection', () => {
       const mockOffCallback = vi.fn()
       let observerCallback: Function
 
-      mockIntersectionObserver.mockImplementation((callback) => {
+      mockIntersectionObserver.mockImplementation(function(callback) {
         observerCallback = callback
-        return {
-          observe: mockObserve,
-          disconnect: mockDisconnect
-        }
+        this.observe = mockObserve
+        this.disconnect = mockDisconnect
       })
 
       const intersection = new Intersection({
@@ -308,12 +302,10 @@ describe('Intersection', () => {
       const mockOffDebouncedCallback = vi.fn()
       let observerCallback: Function
 
-      mockIntersectionObserver.mockImplementation((callback) => {
+      mockIntersectionObserver.mockImplementation(function(callback) {
         observerCallback = callback
-        return {
-          observe: mockObserve,
-          disconnect: mockDisconnect
-        }
+        this.observe = mockObserve
+        this.disconnect = mockDisconnect
       })
 
       const intersection = new Intersection({
@@ -346,12 +338,10 @@ describe('Intersection', () => {
       const mockOffCallback = vi.fn()
       let observerCallback: Function
 
-      mockIntersectionObserver.mockImplementation((callback) => {
+      mockIntersectionObserver.mockImplementation(function(callback) {
         observerCallback = callback
-        return {
-          observe: mockObserve,
-          disconnect: mockDisconnect
-        }
+        this.observe = mockObserve
+        this.disconnect = mockDisconnect
       })
 
       const intersection = new Intersection({
@@ -386,12 +376,10 @@ describe('Intersection', () => {
       const mockOffCallback = vi.fn()
       let observerCallback: Function
 
-      mockIntersectionObserver.mockImplementation((callback) => {
+      mockIntersectionObserver.mockImplementation(function(callback) {
         observerCallback = callback
-        return {
-          observe: mockObserve,
-          disconnect: mockDisconnect
-        }
+        this.observe = mockObserve
+        this.disconnect = mockDisconnect
       })
 
       const intersection = new Intersection({
@@ -415,12 +403,10 @@ describe('Intersection', () => {
       const mockOnDebouncedCallback = vi.fn()
       let observerCallback: Function
 
-      mockIntersectionObserver.mockImplementation((callback) => {
+      mockIntersectionObserver.mockImplementation(function(callback) {
         observerCallback = callback
-        return {
-          observe: mockObserve,
-          disconnect: mockDisconnect
-        }
+        this.observe = mockObserve
+        this.disconnect = mockDisconnect
       })
 
       const intersection = new Intersection({
