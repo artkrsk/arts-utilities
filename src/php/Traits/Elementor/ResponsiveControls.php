@@ -34,6 +34,10 @@ trait ResponsiveControls {
 			return $enabled_map;
 		}
 
+		if ( ! \Elementor\Plugin::$instance || ! \Elementor\Plugin::$instance->breakpoints ) {
+			return $enabled_map;
+		}
+
 		$breakpoints_config = \Elementor\Plugin::$instance->breakpoints->get_breakpoints_config();
 
 		// Get desktop value (base setting without suffix).
@@ -104,6 +108,10 @@ trait ResponsiveControls {
 	 * @return list<string> The array of responsive queries.
 	 */
 	private static function get_queries( $enabled_map ) {
+		if ( ! \Elementor\Plugin::$instance || ! \Elementor\Plugin::$instance->breakpoints ) {
+			return array();
+		}
+
 		$elementor_breakpoints     = \Elementor\Plugin::$instance->breakpoints;
 		$breakpoints_config        = $elementor_breakpoints->get_breakpoints_config();
 		$widescreen_key            = $elementor_breakpoints::BREAKPOINT_KEY_WIDESCREEN;

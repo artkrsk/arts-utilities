@@ -50,6 +50,10 @@ trait Kit {
 			return $fallback_value;
 		}
 
+		if ( ! \Elementor\Plugin::$instance || ! \Elementor\Plugin::$instance->kits_manager ) {
+			return $fallback_value;
+		}
+
 		$kit_manager = \Elementor\Plugin::$instance->kits_manager;
 
 		$global_settings = array_merge(
@@ -80,7 +84,7 @@ trait Kit {
 	 * @return mixed The kit setting value or the fallback value.
 	 */
 	public static function get_kit_settings( $option_name = null, $fallback_value = null, $return_size = true ) {
-		if ( ! self::is_elementor_plugin_active() || ! \Elementor\Plugin::$instance->kits_manager ) {
+		if ( ! self::is_elementor_plugin_active() || ! \Elementor\Plugin::$instance || ! \Elementor\Plugin::$instance->kits_manager ) {
 			return $fallback_value;
 		}
 
@@ -112,11 +116,13 @@ trait Kit {
 	 * @return mixed The kit setting value or the fallback value.
 	 */
 	public static function get_kit_setting_or_option( $option_name = null, $fallback_value = null, $return_size = true ) {
-		if ( ! self::is_elementor_plugin_active() || ! \Elementor\Plugin::$instance->kits_manager ) {
-			$option_value = get_option( $option_name, $fallback_value );
+		if ( ! self::is_elementor_plugin_active() || ! \Elementor\Plugin::$instance || ! \Elementor\Plugin::$instance->kits_manager ) {
+			if ( is_string( $option_name ) ) {
+				$option_value = get_option( $option_name, $fallback_value );
 
-			if ( $option_value !== $fallback_value ) {
-				return $option_value;
+				if ( $option_value !== $fallback_value ) {
+					return $option_value;
+				}
 			}
 
 			return $fallback_value;
@@ -145,7 +151,7 @@ trait Kit {
 	 * @return bool True on success, false on failure.
 	 */
 	public static function update_kit_settings( $option_elementor, $value ) {
-		if ( ! self::is_elementor_plugin_active() || ! \Elementor\Plugin::$instance->kits_manager ) {
+		if ( ! self::is_elementor_plugin_active() || ! \Elementor\Plugin::$instance || ! \Elementor\Plugin::$instance->kits_manager ) {
 			return false;
 		}
 
@@ -183,6 +189,10 @@ trait Kit {
 
 			// Ensure we have a WP_Post object
 			if ( ! $first_post instanceof \WP_Post ) {
+				return '';
+			}
+
+			if ( ! \Elementor\Plugin::$instance || ! \Elementor\Plugin::$instance->kits_manager ) {
 				return '';
 			}
 

@@ -135,7 +135,7 @@ trait Taxonomies {
 		foreach ( $terms as $term_id ) {
 			$term = get_term( $term_id );
 
-			if ( is_wp_error( $term ) ) {
+			if ( is_wp_error( $term ) || ! $term ) {
 				continue;
 			}
 

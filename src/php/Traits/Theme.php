@@ -77,7 +77,7 @@ trait Theme {
 			self::$parent_theme = $parent !== false ? $parent : null;
 		}
 
-		return self::$parent_theme;
+		return self::$parent_theme !== null ? self::$parent_theme : false;
 	}
 
 	/**

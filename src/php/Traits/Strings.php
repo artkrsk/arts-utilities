@@ -27,11 +27,13 @@ trait Strings {
 	 * @return string The converted string in kebab case.
 	 */
 	public static function convert_camel_to_kebab_case( $string ) {
-		$string = preg_replace( '/([a-z])([A-Z])/', "\\1-\\2", $string );
-		$string = preg_replace( '/([a-z])([A-Z])/', "\\1 - \\2", $string );
-		$string = strtolower( $string );
+		$result = preg_replace( '/([a-z])([A-Z])/', "\\1-\\2", $string );
+		$string = is_string( $result ) ? $result : $string;
 
-		return $string;
+		$result = preg_replace( '/([a-z])([A-Z])/', "\\1 - \\2", $string );
+		$string = is_string( $result ) ? $result : $string;
+
+		return strtolower( $string );
 	}
 
 	/**
@@ -45,8 +47,12 @@ trait Strings {
 	 * @return string The converted string in snake case.
 	 */
 	public static function convert_camel_to_snake_case( $string ) {
-		$string = preg_replace( '/([a-z])([A-Z])/', "\\1-\\2", $string );
-		$string = preg_replace( '/([a-z])([A-Z])/', "\\1 - \\2", $string );
+		$result = preg_replace( '/([a-z])([A-Z])/', "\\1-\\2", $string );
+		$string = is_string( $result ) ? $result : $string;
+
+		$result = preg_replace( '/([a-z])([A-Z])/', "\\1 - \\2", $string );
+		$string = is_string( $result ) ? $result : $string;
+
 		$string = strtolower( $string );
 		$string = str_replace( '-', '_', $string );
 		$string = str_replace( '\\', '_', $string );

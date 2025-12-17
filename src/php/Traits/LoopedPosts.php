@@ -56,8 +56,10 @@ trait LoopedPosts {
 		if ( ! empty( $posts ) ) {
 			$current_post_index = self::get_current_post_index( $posts, $args['post_id'] );
 
-			$prev_next_posts['next']     = self::get_next_post_in_loop( $posts, $current_post_index );
-			$prev_next_posts['previous'] = self::get_previous_post_in_loop( $posts, $current_post_index );
+			if ( $current_post_index !== null ) {
+				$prev_next_posts['next']     = self::get_next_post_in_loop( $posts, $current_post_index );
+				$prev_next_posts['previous'] = self::get_previous_post_in_loop( $posts, $current_post_index );
+			}
 		}
 
 		return $prev_next_posts;
@@ -133,7 +135,10 @@ trait LoopedPosts {
 		if ( $loop->have_posts() ) {
 			while ( $loop->have_posts() ) {
 				$loop->the_post();
-				$posts[] = get_post();
+				$post = get_post();
+				if ( $post instanceof \WP_Post ) {
+					$posts[] = $post;
+				}
 			}
 		}
 

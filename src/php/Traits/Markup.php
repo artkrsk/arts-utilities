@@ -568,7 +568,8 @@ trait Markup {
 		// Check if class attribute already exists
 		if ( strpos( $attributes, 'class=' ) !== false ) {
 			// Add our classes to existing class attribute
-			$attributes = preg_replace( '/class="([^"]*)"/', 'class="$1 ' . $class_string . '"', $attributes );
+			$result = preg_replace( '/class="([^"]*)"/', 'class="$1 ' . $class_string . '"', $attributes );
+			$attributes = is_string( $result ) ? $result : $attributes;
 		} else {
 			// Add new class attribute
 			$attributes .= ' class="' . $class_string . '"';

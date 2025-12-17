@@ -55,6 +55,10 @@ trait Plugin {
 		}
 
 		if ( is_singular() ) {
+			if ( ! \Elementor\Plugin::$instance || ! \Elementor\Plugin::$instance->documents ) {
+				return false;
+			}
+
 			$document = \Elementor\Plugin::$instance->documents->get( $post_id );
 
 			return $document && $document->is_built_with_elementor();
@@ -71,13 +75,11 @@ trait Plugin {
 	 * @return bool True if Elementor editor is active and in preview mode, false otherwise.
 	 */
 	public static function is_elementor_editor_active() {
-		if ( ! self::is_elementor_plugin_active() ) {
+		if ( ! self::is_elementor_plugin_active() || ! \Elementor\Plugin::$instance || ! \Elementor\Plugin::$instance->preview ) {
 			return false;
 		}
 
-		$preview = \Elementor\Plugin::$instance->preview;
-
-		return $preview && $preview->is_preview_mode();
+		return \Elementor\Plugin::$instance->preview->is_preview_mode();
 	}
 
 	/**

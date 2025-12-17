@@ -47,13 +47,17 @@ trait Document {
 		// Get the page settings manager
 		$page_settings_manager = \Elementor\Core\Settings\Manager::get_settings_managers( 'page' );
 
-		// Ensure we have a Manager object, not an array
-		if ( is_array( $page_settings_manager ) ) {
+		// Ensure we have a Manager object, not an array or null
+		if ( ! $page_settings_manager || is_array( $page_settings_manager ) ) {
 			return '';
 		}
 
 		// Get the settings model for current post
 		$page_settings_model = $page_settings_manager->get_model( $post_id );
+
+		if ( ! $page_settings_model ) {
+			return '';
+		}
 
 		// Retrieve the settings we added before
 		return $page_settings_model->get_settings( $option_name );
@@ -240,14 +244,19 @@ trait Document {
 		// Get the page settings manager
 		$page_settings_manager = \Elementor\Core\Settings\Manager::get_settings_managers( 'page' );
 
-		// Ensure we have a Manager object, not an array
-		if ( is_array( $page_settings_manager ) ) {
+		// Ensure we have a Manager object, not an array or null
+		if ( ! $page_settings_manager || is_array( $page_settings_manager ) ) {
 			return '';
 		}
 
 		// Get the settings model for current post
 		$page_settings_model = $page_settings_manager->get_model( $post_id );
-		$settings            = $page_settings_model->get_settings();
+
+		if ( ! $page_settings_model ) {
+			return '';
+		}
+
+		$settings = $page_settings_model->get_settings();
 
 		if ( array_key_exists( '__globals__', $settings ) ) {
 			$settings = $settings['__globals__'];
@@ -257,6 +266,10 @@ trait Document {
 			$color_control_id = self::get_global_color_control_id( $settings[ $option_name ] );
 
 			if ( $color_control_id ) {
+				if ( ! \Elementor\Plugin::$instance || ! \Elementor\Plugin::$instance->kits_manager ) {
+					return $fallback_value;
+				}
+
 				$kit_manager = \Elementor\Plugin::$instance->kits_manager;
 
 				$settings = array_merge(
