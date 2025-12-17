@@ -99,7 +99,7 @@ trait ACF {
 	 *
 	 * @param array|string $page The options page settings.
 	 *
-	 * @return bool|int The ID of the options page or false if not found.
+	 * @return array|false The options page configuration array or false if not found.
 	 */
 	public static function acf_add_options_page( $page = '' ) {
 		if ( self::acf_function_exists( 'acf_add_options_page' ) ) {
