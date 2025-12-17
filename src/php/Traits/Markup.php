@@ -197,7 +197,7 @@ trait Markup {
 		}
 
 		// Filter out empty strings
-		$classes = array_filter( $classes, 'strlen' );
+		$classes = array_filter( $classes, fn( $s ) => $s !== '' );
 
 		if ( empty( $classes ) ) {
 			return $attributes;
@@ -212,7 +212,7 @@ trait Markup {
 				$existing_classes = $attributes['class'];
 			}
 			// Filter out empty strings from existing classes
-			$existing_classes = array_filter( $existing_classes, 'strlen' );
+			$existing_classes = array_filter( $existing_classes, fn( $s ) => $s !== '' );
 		}
 
 		// Merge and assign

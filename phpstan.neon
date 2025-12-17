@@ -2,13 +2,16 @@ includes:
 	- vendor/szepeviktor/phpstan-wordpress/extension.neon
 
 parameters:
-	level: 4
+	level: 5
 
 	paths:
 		- src/php
 
 	bootstrapFiles:
 		- .phpstan/phpstan-bootstrap.php
+
+	stubFiles:
+		- .phpstan/wordpress-stubs.php
 
 	excludePaths:
 		analyse:
@@ -23,3 +26,8 @@ parameters:
 	ignoreErrors:
 		# WordPress core functions may return mixed types
 		- '#Function wp_parse_args invoked with [0-9]+ parameters?, 2 required#'
+
+		# wp_style_add_data() accepts any string key for custom metadata
+		# WordPress stubs restrict to core keys, but custom keys are supported
+		# Verified in WordPress core: wp-includes/functions.wp-styles.php
+		- '#Parameter \#2 \$key of function wp_style_add_data expects .+, .+ given#'
