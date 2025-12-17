@@ -35,15 +35,21 @@ trait Blog {
 	 * Get pagination link attributes for navigation links.
 	 *
 	 * Generates a set of attributes that can be used for pagination links,
-	 * with support for next/previous links.
+	 * with support for next/previous links. Accepts mixed input for compatibility
+	 * with WordPress filters that return mixed.
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array  $attributes Default attributes to merge with. Default empty array.
+	 * @param mixed  $attributes Default attributes to merge with. Non-arrays default to empty array.
 	 * @param string $type       The type of pagination link ('next' or 'prev'). Default 'prev'.
 	 * @return string HTML attributes string for the pagination link.
 	 */
 	public static function get_pagination_link_attributes( $attributes = array(), $type = 'prev' ) {
+		// Handle non-array input gracefully
+		if ( ! is_array( $attributes ) ) {
+			$attributes = array();
+		}
+
 		$default_attributes = array(
 			'class' => array( 'page-numbers' ),
 		);
