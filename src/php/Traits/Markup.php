@@ -189,11 +189,6 @@ trait Markup {
 	 * @return array<string, mixed> Modified attributes with added classes.
 	 */
 	public static function add_classes_to_attributes( array $attributes, $classes ): array {
-		// Validate attributes parameter
-		if ( ! is_array( $attributes ) ) {
-			$attributes = array();
-		}
-
 		// Normalize classes to array
 		if ( is_string( $classes ) ) {
 			$classes = explode( ' ', trim( $classes ) );
@@ -243,7 +238,7 @@ trait Markup {
 	public static function get_post_terms_classes( array $post, string $divider = '-' ): array {
 		$terms_classes = array();
 
-		if ( is_array( $post ) && isset( $post['taxonomies'] ) && ! empty( $post['taxonomies'] ) ) {
+		if ( isset( $post['taxonomies'] ) && ! empty( $post['taxonomies'] ) ) {
 			$post_taxonomies = $post['taxonomies'];
 
 			foreach ( $post_taxonomies as $taxonomy ) {

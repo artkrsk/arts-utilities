@@ -30,7 +30,7 @@ trait ResponsiveControls {
 	public static function get_enabled_settings_map( \Elementor\Element_Base $controls_stack, $option = '' ) {
 		$enabled_map = array();
 
-		if ( ! $option || ! is_string( $option ) || ! $controls_stack ) {
+		if ( ! $option || ! is_string( $option ) ) {
 			return $enabled_map;
 		}
 

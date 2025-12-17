@@ -228,10 +228,6 @@ trait Frontend {
 			return false;
 		}
 
-		if ( ! isset( $wp_scripts->registered[ $handle ]->src ) ) {
-			return false;
-		}
-
 		return true;
 	}
 
@@ -254,10 +250,6 @@ trait Frontend {
 		}
 
 		if ( ! isset( $wp_styles->registered[ $handle ] ) ) {
-			return false;
-		}
-
-		if ( ! isset( $wp_styles->registered[ $handle ]->src ) ) {
 			return false;
 		}
 
