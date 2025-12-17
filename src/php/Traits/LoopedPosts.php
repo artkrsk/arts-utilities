@@ -96,7 +96,7 @@ trait LoopedPosts {
 		);
 
 		if ( $args['in_same_term'] ) {
-			$current_terms = get_taxonomy_term_names( $args['post_id'], $args['taxonomy'] );
+			$current_terms = self::get_taxonomy_term_names( $args['post_id'], $args['taxonomy'] );
 
 			if ( ! empty( $current_terms ) ) {
 				$terms = array_map(

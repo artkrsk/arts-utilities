@@ -240,7 +240,7 @@ trait ACF {
 
 		$acf_fields = self::acf_get_field_objects( $post_id );
 
-		if ( $acf_fields && ! empty( $acf_fields ) ) {
+		if ( is_array( $acf_fields ) ) {
 			foreach ( $acf_fields as $field ) {
 				$result[ $field['name'] ] = $field['value'];
 			}

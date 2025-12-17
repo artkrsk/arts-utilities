@@ -67,7 +67,7 @@ trait ResponsiveControls {
 	 */
 	public static function get_media_query_string_for_responsive_option( \Elementor\Element_Base $controls_stack, $option = '', $additional_query_suffix = '' ) {
 		$enabled_map = self::get_enabled_settings_map( $controls_stack, $option );
-		$queries     = self::get_queries( $enabled_map, $controls_stack );
+		$queries     = self::get_queries( $enabled_map );
 		$queries     = self::add_additional_query_suffix( $queries, $additional_query_suffix );
 
 		return implode( ', ', $queries );
@@ -137,13 +137,13 @@ trait ResponsiveControls {
 				$min_width = $elementor_breakpoints->get_desktop_min_point();
 				$queries[] = '(min-width: ' . $min_width . 'px)';
 
-				if ( $has_widescreen_breakpoint ) {
-					$queries[] = ' and (max-width: ' . $config['value'] . 'px)';
+				if ( $has_widescreen_breakpoint && isset( $breakpoints_config[ $widescreen_key ] ) ) {
+					$queries[] = ' and (max-width: ' . $breakpoints_config[ $widescreen_key ]['value'] . 'px)';
 				}
 			} else {
-				if ( $has_widescreen_breakpoint ) {
+				if ( $has_widescreen_breakpoint && isset( $breakpoints_config[ $widescreen_key ] ) ) {
 					$min_width = $elementor_breakpoints->get_desktop_min_point();
-					$queries[] = 'not ((min-width: ' . $min_width . 'px) and (max-width: ' . $config['value'] . 'px))';
+					$queries[] = 'not ((min-width: ' . $min_width . 'px) and (max-width: ' . $breakpoints_config[ $widescreen_key ]['value'] . 'px))';
 				}
 			}
 		}

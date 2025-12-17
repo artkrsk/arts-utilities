@@ -28,7 +28,7 @@ trait Document {
 	 * @return mixed The value of the option, or the fallback value if not found.
 	 */
 	public static function get_document_option( $option_name = '', $post_id = null, $fallback_value = '' ) {
-		if ( ! $option_name || empty( $option_name ) || ! class_exists( '\Elementor\Core\Settings\Manager' ) ) {
+		if ( ! $option_name || ! class_exists( '\Elementor\Core\Settings\Manager' ) ) {
 			return $fallback_value;
 		}
 

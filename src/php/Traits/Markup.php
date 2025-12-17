@@ -169,7 +169,7 @@ trait Markup {
 			// All attributes and values are escaped and are safe to output
 			echo join( ' ', $attribute_pairs ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		} else {
-			return ! is_array( $attributes ) || empty( $attributes ) ? '' : join( ' ', $attribute_pairs );
+			return join( ' ', $attribute_pairs );
 		}
 	}
 
