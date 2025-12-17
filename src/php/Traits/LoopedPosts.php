@@ -22,7 +22,7 @@ trait LoopedPosts {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array $args {
+	 * @param array<string, mixed> $args {
 	 *   Optional. An array of arguments for retrieving the previous and next posts.
 	 *
 	 *   @type int    $post_id        The ID of the post. Default is the ID of the current post in global $post.
@@ -32,7 +32,7 @@ trait LoopedPosts {
 	 *   @type string $taxonomy       The taxonomy to use for retrieving the previous and next posts. Default is 'category'.
 	 * }
 	 *
-	 * @return array An array containing the previous and next posts. If no previous or next posts are found, the corresponding key will be null.
+	 * @return array{previous: \WP_Post|null, next: \WP_Post|null} An array containing the previous and next posts. If no previous or next posts are found, the corresponding key will be null.
 	 */
 	public static function get_prev_next_posts_looped( $args = array() ) {
 		$current_post_index = null;
@@ -68,8 +68,8 @@ trait LoopedPosts {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array $args The arguments to customize the query.
-	 * @return array The retrieved posts.
+	 * @param array<string, mixed> $args The arguments to customize the query.
+	 * @return list<\WP_Post> The retrieved posts.
 	 */
 	private static function get_posts( $args ) {
 		$query_args = self::get_query_args( $args );

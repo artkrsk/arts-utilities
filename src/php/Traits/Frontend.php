@@ -19,8 +19,8 @@ trait Frontend {
 	/**
 	 * Registers and enqueues a script with dynamic loading metadata.
 	 *
-	 * @param string $type Type of the script. Either 'asset' or 'component'.
-	 * @param array  $args {
+	 * @param string                $type Type of the script. Either 'asset' or 'component'.
+	 * @param array<string, mixed>  $args {
 	 *     An array of arguments for the script.
 	 *
 	 *     @type string       $handle    Name of the script. Should be unique.
@@ -151,7 +151,7 @@ trait Frontend {
 	/**
 	 * Enqueue a dynamically loaded stylesheet.
 	 *
-	 * @param array $args {
+	 * @param array<string, mixed> $args {
 	 *   Arguments for enqueuing the stylesheet.
 	 *
 	 *   @type string $handle Name of the stylesheet. Should be unique.

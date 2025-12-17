@@ -120,7 +120,9 @@ trait Document {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @return array The body styles model including background, padding, and margin properties.
+	 * @param string $fallback_color_value The fallback color value. Default is '#ffffff'.
+	 *
+	 * @return array<string, mixed> The body styles model including background, padding, and margin properties.
 	 */
 	public static function get_body_styles_model( $fallback_color_value = '#ffffff' ) {
 		$model = array();

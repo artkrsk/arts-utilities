@@ -97,10 +97,10 @@ trait TypeGuards {
 	 *
 	 * @since 1.1.11
 	 *
-	 * @param mixed $value   The value to validate.
-	 * @param array $default Default value if not an array. Default empty array.
+	 * @param mixed                     $value   The value to validate.
+	 * @param array<string|int, mixed>  $default Default value if not an array. Default empty array.
 	 *
-	 * @return array The validated array or default.
+	 * @return array<string|int, mixed> The validated array or default.
 	 */
 	public static function get_array_value( $value, $default = array() ) {
 		return is_array( $value ) ? $value : $default;
@@ -128,10 +128,10 @@ trait TypeGuards {
 	 *
 	 * @since 1.1.11
 	 *
-	 * @param mixed $args     The args value (typically global $args in template).
-	 * @param array $defaults Default values to merge with.
+	 * @param mixed                     $args     The args value (typically global $args in template).
+	 * @param array<string, mixed>      $defaults Default values to merge with.
 	 *
-	 * @return array The parsed args array.
+	 * @return array<string, mixed> The parsed args array.
 	 */
 	public static function parse_template_args( $args, $defaults = array() ) {
 		$args = is_array( $args ) ? $args : array();

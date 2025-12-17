@@ -40,6 +40,8 @@ trait Theme {
 	 * Primarily used for testing purposes.
 	 *
 	 * @since 1.0.0
+	 *
+	 * @return void
 	 */
 	public static function reset_theme_cache() {
 		self::$current_theme = null;

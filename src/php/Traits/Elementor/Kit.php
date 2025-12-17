@@ -23,7 +23,7 @@ trait Kit {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array  $settings       The widget settings array.
+	 * @param array<string, mixed>  $settings       The widget settings array.
 	 * @param string $option_name    The option name to retrieve the color for.
 	 * @param string $fallback_value The fallback color value if not found.
 	 *

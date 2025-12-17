@@ -27,7 +27,7 @@ trait Controls {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array  $settings              The settings array.
+	 * @param array<string, mixed>  $settings              The settings array.
 	 * @param mixed  $image_id              The image ID or array containing the image ID.
 	 * @param string $group_control_prefix  The prefix for the group control.
 	 * @param string $size_control_suffix   The suffix for the size control. Default is 'size'.
@@ -110,8 +110,8 @@ trait Controls {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array  $settings            The settings array.
-	 * @param string $group_control_prefix The prefix for the group control.
+	 * @param array<string, mixed>  $settings            The settings array.
+	 * @param string                $group_control_prefix The prefix for the group control.
 	 * @param string $type                The type of control value to retrieve. Default is 'size'.
 	 * @param mixed  $fallback            The fallback value if the setting is not found. Default is 'full'.
 	 *

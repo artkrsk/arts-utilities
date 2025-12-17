@@ -26,9 +26,9 @@ trait ContactForm7 {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param int   $post_id The post ID of the Contact Form 7 form.
-	 * @param array $options Optional. Array of options for form rendering. Defaults to array with 'html_id', 'html_name', 'html_title', 'html_class', and 'output' keys.
-	 * @param bool  $echo    Optional. Whether to echo the form HTML. Defaults to true.
+	 * @param int                     $post_id The post ID of the Contact Form 7 form.
+	 * @param array<string, string>   $options Optional. Array of options for form rendering. Defaults to array with 'html_id', 'html_name', 'html_title', 'html_class', and 'output' keys.
+	 * @param bool                    $echo    Optional. Whether to echo the form HTML. Defaults to true.
 	 *
 	 * @return string|void The form HTML if $echo is false, void otherwise.
 	 */

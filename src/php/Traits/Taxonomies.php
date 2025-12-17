@@ -24,7 +24,7 @@ trait Taxonomies {
 	 * @param int|\WP_Post $post     The post ID or object.
 	 * @param string       $taxonomy The taxonomy name.
 	 *
-	 * @return array An array of taxonomy term names, slugs, and URLs.
+	 * @return list<array{slug: string, name: string, url: string|WP_Error}> An array of taxonomy term names, slugs, and URLs.
 	 */
 	public static function get_taxonomy_term_names( $post, $taxonomy ) {
 		$items  = get_the_terms( $post, $taxonomy );
@@ -55,10 +55,10 @@ trait Taxonomies {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array        $taxonomies List of taxonomy objects.
-	 * @param int|\WP_Post $post       Post ID or WP_Post object.
+	 * @param list<object>  $taxonomies List of taxonomy objects.
+	 * @param int|\WP_Post  $post       Post ID or WP_Post object.
 	 *
-	 * @return array List of terms grouped by taxonomy.
+	 * @return list<array{id: string, name: string, terms: list<array{id: int, slug: string, name: string}>}> List of terms grouped by taxonomy.
 	 */
 	public static function get_post_terms( $taxonomies, $post ) {
 		$result = array();
@@ -114,10 +114,10 @@ trait Taxonomies {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array  $terms    Array of term IDs.
-	 * @param string $operator Optional. The logical relationship between each inner taxonomy array when there is more than one. Default 'IN'.
+	 * @param list<int>  $terms    Array of term IDs.
+	 * @param string     $operator Optional. The logical relationship between each inner taxonomy array when there is more than one. Default 'IN'.
 	 *
-	 * @return array The tax query array.
+	 * @return list<array{taxonomy: string, field: string, terms: list<int>, operator: string}> The tax query array.
 	 */
 	public static function get_tax_query( $terms, $operator = 'IN' ) {
 		$result     = array();
@@ -156,9 +156,9 @@ trait Taxonomies {
 	 * @param int    $term_id  The term ID.
 	 * @param string $taxonomy The taxonomy name.
 	 * @param string $order    The sort order of the ancestors. Default 'ASC'.
-	 * @param array  $fields   The fields to return for each ancestor. Default array('term_id', 'name', 'slug').
+	 * @param list<string>  $fields   The fields to return for each ancestor. Default array('term_id', 'name', 'slug').
 	 *
-	 * @return array Array of term ancestors.
+	 * @return list<array<string, mixed>> Array of term ancestors.
 	 */
 	public static function get_term_ancestors_list( $term_id, $taxonomy, $order = 'ASC', $fields = array( 'term_id', 'name', 'slug' ) ) {
 		$ancestors = get_ancestors( $term_id, $taxonomy, 'taxonomy' );
@@ -199,7 +199,7 @@ trait Taxonomies {
 	 * @param string $taxonomy The taxonomy name.
 	 * @param int    $parent   The parent term ID. Default 0.
 	 *
-	 * @return array Hierarchical array of terms.
+	 * @return list<array{term_id: int, name: string, slug: string, children: list<mixed>}> Hierarchical array of terms.
 	 */
 	public static function get_taxonomy_hierarchy( $taxonomy, $parent = 0 ) {
 		// Get all terms for the taxonomy
@@ -240,7 +240,7 @@ trait Taxonomies {
 	 * @param mixed  $value    The value to search for.
 	 * @param string $taxonomy The taxonomy name.
 	 *
-	 * @return array|false Term array on success, false on failure.
+	 * @return array{term_id: int, name: string, slug: string, taxonomy: string}|false Term array on success, false on failure.
 	 */
 	public static function get_term_by( $field, $value, $taxonomy ) {
 		$term = get_term_by( $field, $value, $taxonomy );

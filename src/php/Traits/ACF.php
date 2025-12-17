@@ -97,9 +97,9 @@ trait ACF {
 	 *
 	 * @since 1.0.10
 	 *
-	 * @param array|string $page The options page settings.
+	 * @param array<string, mixed>|string $page The options page settings.
 	 *
-	 * @return array|false The options page configuration array or false if not found.
+	 * @return array<string, mixed>|false The options page configuration array or false if not found.
 	 */
 	public static function acf_add_options_page( $page = '' ) {
 		if ( self::acf_function_exists( 'acf_add_options_page' ) ) {

@@ -25,7 +25,7 @@ trait ResponsiveControls {
 	 * @param \Elementor\Element_Base $controls_stack The controls stack object.
 	 * @param string                  $option         The option to retrieve the enabled settings for.
 	 *
-	 * @return array The enabled settings for the given option.
+	 * @return array<string, mixed> The enabled settings for the given option.
 	 */
 	public static function get_enabled_settings_map( \Elementor\Element_Base $controls_stack, $option = '' ) {
 		$enabled_map = array();
@@ -100,8 +100,8 @@ trait ResponsiveControls {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array $enabled_map The map of enabled breakpoints.
-	 * @return array The array of responsive queries.
+	 * @param array<string, mixed> $enabled_map The map of enabled breakpoints.
+	 * @return list<string> The array of responsive queries.
 	 */
 	private static function get_queries( $enabled_map ) {
 		$elementor_breakpoints     = \Elementor\Plugin::$instance->breakpoints;
@@ -156,9 +156,9 @@ trait ResponsiveControls {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array  $queries                 The array of queries to modify.
-	 * @param string $additional_query_suffix The additional query suffix to add.
-	 * @return array The modified array of queries.
+	 * @param list<string>          $queries                 The array of queries to modify.
+	 * @param string                $additional_query_suffix The additional query suffix to add.
+	 * @return list<string> The modified array of queries.
 	 */
 	private static function add_additional_query_suffix( $queries, $additional_query_suffix ) {
 		if ( ! empty( $additional_query_suffix ) ) {

@@ -218,7 +218,7 @@ trait Query {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array $query_args - WP_Query arguments
+	 * @param array<string, mixed> $query_args - WP_Query arguments
 	 *
 	 * @return string
 	 */
@@ -254,6 +254,11 @@ trait Query {
 	 *
 	 * @deprecated 2.0.0 Use get_posts_terms() instead.
 	 * @since 1.0.0
+	 *
+	 * @param string                $mode Mode of retrieval.
+	 * @param array<string, mixed>  $args Optional arguments.
+	 *
+	 * @return array<int|string, array{id: int, name: string, slug: string, total: int, current: bool, url?: string}> An array of terms with their details.
 	 */
 	public static function get_posts_categories( $mode = 'all', $args = array() ) {
 		// Forward to the new method
@@ -361,7 +366,7 @@ trait Query {
 	 * @since 1.0.0
 	 *
 	 * @param int|null $post_id The ID of the post. Default is null.
-	 * @return array {
+	 * @return array<string, mixed> {
 	 *   Array of author information.
 	 *
 	 *   @type int    $id     The author ID.

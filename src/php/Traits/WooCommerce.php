@@ -208,7 +208,7 @@ trait WooCommerce {
 	 * @since 1.0.0
 	 *
 	 * @param int $product_id The product ID.
-	 * @return array|false Product data array or false if not found.
+	 * @return array<string, mixed>|false Product data array or false if not found.
 	 */
 	public static function get_product( $product_id ) {
 		if ( function_exists( 'wc_get_product' ) ) {
@@ -252,7 +252,7 @@ trait WooCommerce {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @return array Cart contents.
+	 * @return array<string, mixed> Cart contents.
 	 */
 	public static function get_cart_contents() {
 		if ( function_exists( 'WC' ) && isset( WC()->cart ) ) {
@@ -303,7 +303,7 @@ trait WooCommerce {
 	 * @since 1.0.0
 	 *
 	 * @param int $product_id The product ID.
-	 * @return array|false Array of image IDs or false if the product doesn't exist.
+	 * @return list<int>|false Array of image IDs or false if the product doesn't exist.
 	 */
 	public static function get_product_gallery_image_ids( $product_id ) {
 		if ( function_exists( 'wc_get_product' ) ) {
