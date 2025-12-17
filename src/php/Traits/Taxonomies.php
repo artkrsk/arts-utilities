@@ -80,6 +80,10 @@ trait Taxonomies {
 		$exclude_taxonomies = apply_filters( 'arts/utilities/taxonomies/get_post_terms/exclude_taxonomies', $exclude_taxonomies );
 
 		foreach ( $taxonomies as $taxonomy ) {
+			if ( ! isset( $taxonomy->name ) ) {
+				continue;
+			}
+
 			$taxonomy_terms = get_the_terms(
 				$post,
 				$taxonomy->name
@@ -88,7 +92,7 @@ trait Taxonomies {
 			if ( ! in_array( $taxonomy->name, $exclude_taxonomies ) ) {
 				$terms = array();
 
-				if ( ! empty( $taxonomy_terms ) ) {
+				if ( is_array( $taxonomy_terms ) ) {
 					foreach ( $taxonomy_terms as $term ) {
 						$terms[] = array(
 							'id'   => $term->term_id,
@@ -98,9 +102,14 @@ trait Taxonomies {
 					}
 				}
 
+				$taxonomy_name = '';
+				if ( isset( $taxonomy->labels->name ) ) {
+					$taxonomy_name = $taxonomy->labels->name;
+				}
+
 				$result[] = array(
 					'id'    => $taxonomy->name,
-					'name'  => $taxonomy->labels->name,
+					'name'  => $taxonomy_name,
 					'terms' => $terms,
 				);
 			}
@@ -126,6 +135,10 @@ trait Taxonomies {
 		foreach ( $terms as $term_id ) {
 			$term = get_term( $term_id );
 
+			if ( is_wp_error( $term ) ) {
+				continue;
+			}
+
 			if ( ! array_key_exists( $term->taxonomy, $taxonomies ) ) {
 				$taxonomies[ $term->taxonomy ] = array(
 					'name'  => $term->taxonomy,
@@ -137,6 +150,10 @@ trait Taxonomies {
 		}
 
 		foreach ( $taxonomies as $taxonomy ) {
+			if ( ! isset( $taxonomy['name'] ) ) {
+				continue;
+			}
+
 			$result[] = array(
 				'taxonomy' => $taxonomy['name'],
 				'field'    => 'term_id',

@@ -270,6 +270,9 @@ trait Markup {
 	 * @return array<string, mixed>|object The merged list.
 	 */
 	private static function merge_lists( $output, $list, $preserve_integer_keys ) {
+		if ( ! is_array( $output ) ) {
+			$output = (array) $output;
+		}
 		foreach ( (array) $list as $key => $value ) {
 			$output = self::merge_list_item( $output, $key, $value, $preserve_integer_keys );
 		}
@@ -328,9 +331,19 @@ trait Markup {
 	 * @return bool True if the items should be merged recursively, false otherwise.
 	 */
 	private static function should_merge_recursively( $output, $key, $value ) {
-		return ( is_array( $output ) || is_object( $output ) ) &&
-						( is_array( $value ) || is_object( $value ) ) &&
-						isset( $output[ $key ] ) &&
+		if ( ! ( is_array( $output ) || is_object( $output ) ) ) {
+			return false;
+		}
+
+		if ( ! ( is_array( $value ) || is_object( $value ) ) ) {
+			return false;
+		}
+
+		if ( ! is_array( $output ) ) {
+			return false;
+		}
+
+		return isset( $output[ $key ] ) &&
 						( is_array( $output[ $key ] ) || is_object( $output[ $key ] ) );
 	}
 

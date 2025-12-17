@@ -120,7 +120,10 @@ trait Strings {
 	 */
 	public static function get_asset_url_file_extension( $url ) {
 		$url_path = parse_url( $url, PHP_URL_PATH );
-		$ext      = pathinfo( $url_path, PATHINFO_EXTENSION );
+		if ( ! is_string( $url_path ) ) {
+			return '';
+		}
+		$ext = pathinfo( $url_path, PATHINFO_EXTENSION );
 
 		return $ext;
 	}

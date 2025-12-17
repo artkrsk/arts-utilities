@@ -162,7 +162,10 @@ trait WooCommerce {
 			// Add WooCommerce page URLs to the array
 			foreach ( $woocommerce_pages as $page => $page_id ) {
 				if ( ! empty( $page_id ) ) {
-					$woocommerce_urls[] = untrailingslashit( get_permalink( $page_id ) );
+					$permalink = get_permalink( $page_id );
+					if ( is_string( $permalink ) ) {
+						$woocommerce_urls[] = untrailingslashit( $permalink );
+					}
 				}
 			}
 		}

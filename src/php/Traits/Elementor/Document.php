@@ -40,6 +40,10 @@ trait Document {
 			$post_id = get_the_ID();
 		}
 
+		if ( ! $post_id ) {
+			return $fallback_value;
+		}
+
 		// Get the page settings manager
 		$page_settings_manager = \Elementor\Core\Settings\Manager::get_settings_managers( 'page' );
 
@@ -227,6 +231,10 @@ trait Document {
 
 		if ( ! $post_id ) {
 			$post_id = get_the_ID();
+		}
+
+		if ( ! $post_id ) {
+			return $fallback_value;
 		}
 
 		// Get the page settings manager

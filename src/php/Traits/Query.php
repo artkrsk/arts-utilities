@@ -112,10 +112,16 @@ trait Query {
 		} elseif ( self::is_woocommerce_archive() ) {
 			$page_title = self::get_woocommerce_page_title();
 		} elseif ( is_category() ) {
-			$page_title    = get_category( get_query_var( 'cat' ) )->name;
+			$category = get_category( get_query_var( 'cat' ) );
+			if ( $category && ! is_wp_error( $category ) ) {
+				$page_title = $category->name;
+			}
 			$page_subtitle = $strings['category'];
 		} elseif ( is_author() ) {
-			$page_title    = get_userdata( get_query_var( 'author' ) )->display_name;
+			$userdata = get_userdata( get_query_var( 'author' ) );
+			if ( $userdata ) {
+				$page_title = $userdata->display_name;
+			}
 			$page_subtitle = $strings['author'];
 		} elseif ( is_tag() ) {
 			$page_title    = single_tag_title( '', false );
@@ -193,9 +199,18 @@ trait Query {
 		if ( $loop->have_posts() ) {
 			while ( $loop->have_posts() ) {
 				$loop->the_post();
-				$id        = get_the_ID();
+				$id = get_the_ID();
+
+				if ( ! $id ) {
+					continue;
+				}
+
 				$permalink = wp_get_attachment_url( $id );
-				$filetype  = wp_check_filetype( $permalink );
+				if ( ! is_string( $permalink ) ) {
+					$permalink = false;
+				}
+
+				$filetype = $permalink ? wp_check_filetype( $permalink ) : array( 'ext' => false, 'type' => false );
 
 				$result[] = array(
 					'ID'        => $id,
@@ -318,9 +333,15 @@ trait Query {
 			if ( $mode === 'current_page' ) {
 				while ( $loop->have_posts() ) {
 					$loop->the_post();
-					$terms = get_the_terms( get_the_ID(), $taxonomy );
+					$post_id = get_the_ID();
 
-					if ( ! empty( $terms ) ) {
+					if ( ! $post_id ) {
+						continue;
+					}
+
+					$terms = get_the_terms( $post_id, $taxonomy );
+
+					if ( is_array( $terms ) ) {
 						foreach ( $terms as $term ) {
 							if ( array_key_exists( $term->term_id, $result ) ) {
 								$result[ $term->term_id ]['total'] += 1;
@@ -339,16 +360,23 @@ trait Query {
 			} else {
 				$posts_terms = get_terms( array( 'taxonomy' => $taxonomy ) );
 
-				if ( ! empty( $posts_terms ) ) {
+				if ( ! is_wp_error( $posts_terms ) && is_array( $posts_terms ) ) {
 					foreach ( $posts_terms as $term ) {
-						$result[] = array(
+						$term_url = get_term_link( $term->term_id, $taxonomy );
+
+						$term_data = array(
 							'id'      => $term->term_id,
 							'slug'    => $term->slug,
 							'name'    => $term->name,
-							'url'     => get_term_link( $term->term_id, $taxonomy ),
 							'total'   => $term->count,
 							'current' => ( $taxonomy === 'category' && is_category( $term->term_id ) ) || ( $taxonomy === 'post_tag' && is_tag( $term->term_id ) ),
 						);
+
+						if ( is_string( $term_url ) ) {
+							$term_data['url'] = $term_url;
+						}
+
+						$result[] = $term_data;
 					}
 				}
 			}
@@ -395,9 +423,11 @@ trait Query {
 
 		$author_id = get_post_field( 'post_author', $post_id );
 
-		if ( ! $author_id ) {
+		if ( ! $author_id || ! is_numeric( $author_id ) ) {
 			return $result;
 		}
+
+		$author_id = (int) $author_id;
 
 		$result['id'] = $author_id;
 
