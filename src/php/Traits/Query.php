@@ -63,19 +63,13 @@ trait Query {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @return array $titles {
-	 *   An associative array containing the page title, subtitle, and description.
-	 *
-	 *   @type string $title       The page title.
-	 *   @type string $subtitle    The page subtitle.
-	 *   @type string $description The page description.
-	 * }
+	 * @return array{title: string, subtitle: string, description: string} An associative array containing the page title, subtitle, and description.
 	 *
 	 * @filter `arts/utilities/get_page_titles/acf_fields` Allows customization of ACF fields used for subtitle and description.
 	 * @filter `arts/utilities/get_page_titles/strings`    Allows customization of default strings for various contexts.
 	 * @filter `arts/utilities/get_page_titles/titles`     Allows customization of the final titles array before it is returned.
 	 */
-	public static function get_page_titles() {
+	public static function get_page_titles(): array {
 		$page_title       = '';
 		$page_subtitle    = '';
 		$page_description = '';
@@ -179,9 +173,9 @@ trait Query {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @return array List of uploaded font files with their ID, permalink, and filetype.
+	 * @return array<int, array{ID: int, permalink: string|false, filetype: array<string, string|false>}> List of uploaded font files with their ID, permalink, and filetype.
 	 */
-	public static function get_uploaded_fonts() {
+	public static function get_uploaded_fonts(): array {
 		$result     = array();
 		$query_args = array(
 			'posts_per_page' => -1,
@@ -271,13 +265,13 @@ trait Query {
 	 *
 	 * @since 1.0.24
 	 *
-	 * @param string $mode The mode of retrieval.
-	 * @param array  $args Optional arguments.
+	 * @param string $mode The mode of retrieval ('all' or 'current_page').
+	 * @param array<string, mixed>  $args Optional arguments.
 	 * @param string $taxonomy The taxonomy to retrieve. Default 'category'.
 	 *
-	 * @return array An array of terms with their details.
+	 * @return array<int|string, array{id: int, name: string, slug: string, total: int, current: bool, url?: string}> An array of terms with their details.
 	 */
-	public static function get_posts_terms( $mode = 'all', $args = array(), $taxonomy = 'category' ) {
+	public static function get_posts_terms( string $mode = 'all', array $args = array(), string $taxonomy = 'category' ): array {
 		$result = array();
 
 		$defaults = array(

@@ -48,19 +48,19 @@ trait Markup {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array        $attributes    Existing attributes.
-	 * @param array        $args {
+	 * @param array<string, mixed>        $attributes    Existing attributes.
+	 * @param array<string, mixed>        $args {
 	 *  Optional. Arguments to modify component attributes.
 	 *
 	 *  @type string $name         Component name. Default 'MyComponent'.
 	 *  @type array  $options      Component options. Default empty array.
 	 *  @type bool   $hasAnimation Whether the component has animation. Default false.
 	 * }
-	 * @param array|string $exclude_names Names to exclude from adding to attributes. Default empty array.
+	 * @param array<int, string>|string $exclude_names Names to exclude from adding to attributes. Default empty array.
 	 *
-	 * @return array Modified attributes.
+	 * @return array<string, mixed> Modified attributes.
 	 */
-	public static function get_component_attributes( $attributes = array(), $args = array(), $exclude_names = array( 'PSWP' ) ) {
+	public static function get_component_attributes( array $attributes = array(), array $args = array(), $exclude_names = array( 'PSWP' ) ): array {
 		$defaults = array(
 			'name'         => 'MyComponent',
 			'options'      => array(),
@@ -182,12 +182,12 @@ trait Markup {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array        $attributes Associative array of HTML attributes.
-	 * @param string|array $classes    One or more classes to add.
+	 * @param array<string, mixed> $attributes Associative array of HTML attributes.
+	 * @param string|array<int, string> $classes    One or more classes to add.
 	 *
-	 * @return array Modified attributes with added classes.
+	 * @return array<string, mixed> Modified attributes with added classes.
 	 */
-	public static function add_classes_to_attributes( $attributes, $classes ) {
+	public static function add_classes_to_attributes( array $attributes, $classes ): array {
 		// Validate attributes parameter
 		if ( ! is_array( $attributes ) ) {
 			$attributes = array();
@@ -234,12 +234,12 @@ trait Markup {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array  $post    Associative array containing post data with 'taxonomies' key.
+	 * @param array<string, mixed>  $post    Associative array containing post data with 'taxonomies' key.
 	 * @param string $divider Optional. The divider between taxonomy and term. Default is '-'.
 	 *
-	 * @return array An array of class names for the post's terms.
+	 * @return array<int, string> An array of class names for the post's terms.
 	 */
-	public static function get_post_terms_classes( $post, $divider = '-' ) {
+	public static function get_post_terms_classes( array $post, string $divider = '-' ): array {
 		$terms_classes = array();
 
 		if ( is_array( $post ) && isset( $post['taxonomies'] ) && ! empty( $post['taxonomies'] ) ) {
@@ -354,9 +354,9 @@ trait Markup {
 	 *     @type bool   $nofollow    Whether to add nofollow rel attribute. Default false.
 	 * }
 	 *
-	 * @return array Array of HTML attributes for the link.
+	 * @return array<string, string> Array of HTML attributes for the link.
 	 */
-	public static function get_link_attributes( $link_data = array() ) {
+	public static function get_link_attributes( array $link_data = array() ): array {
 		$defaults = array(
 			'url'         => '',
 			'is_external' => false,

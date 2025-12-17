@@ -1,6 +1,6 @@
 {
   "name": "@arts/utilities",
-  "version": "1.1.11",
+  "version": "1.1.12",
   "type": "module",
   "description": "A collection of useful PHP and JS utility functions for developing a WordPress theme",
   "license": "MIT",

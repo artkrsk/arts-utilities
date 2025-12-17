@@ -48,9 +48,9 @@ trait Images {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @return array Associative array of image sizes with keys as size identifiers and values as formatted names.
+	 * @return array<string, string> Associative array of image sizes with keys as size identifiers and values as formatted names.
 	 */
-	public static function get_available_image_sizes() {
+	public static function get_available_image_sizes(): array {
 		$image_sizes     = get_intermediate_image_sizes();
 		$formatted_sizes = array();
 		$image_sizes[]   = 'full'; // default image size

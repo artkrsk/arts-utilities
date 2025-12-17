@@ -77,14 +77,14 @@ trait ACF {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param int  $post_id      Optional. The post ID where the value is saved. Defaults to the current post.
+	 * @param int|false  $post_id      Optional. The post ID where the value is saved. Defaults to the current post.
 	 * @param bool $format_value Optional. Whether to apply formatting logic. Defaults to true.
 	 * @param bool $load_value   Optional. Whether to load the value. Defaults to true.
 	 * @param bool $escape_html  Optional. Whether to escape HTML. Defaults to false.
 	 *
-	 * @return array|false The field objects or false if not found.
+	 * @return array<string, array<string, mixed>>|false The field objects or false if not found.
 	 */
-	public static function acf_get_field_objects( $post_id = false, $format_value = true, $load_value = true, $escape_html = false ) {
+	public static function acf_get_field_objects( $post_id = false, bool $format_value = true, bool $load_value = true, bool $escape_html = false ) {
 		if ( self::acf_function_exists( 'get_field_objects' ) ) {
 			return get_field_objects( $post_id, $format_value, $load_value, $escape_html );
 		} else {
