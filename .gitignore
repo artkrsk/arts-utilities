@@ -52,6 +52,9 @@ package-lock.json
 /cypress/videos/
 /cypress/screenshots/
 
+# Runtime test fixtures
+__tests__/php/fake-*
+
 # Environment files
 .env.*
 !.env.example
