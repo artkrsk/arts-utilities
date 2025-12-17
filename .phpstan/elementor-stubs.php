@@ -41,6 +41,11 @@ namespace Elementor {
 			public $kits_manager;
 
 			/**
+			 * @var \Elementor\Core\Breakpoints\Manager
+			 */
+			public $breakpoints;
+
+			/**
 			 * @return Plugin
 			 */
 			public static function instance() {
@@ -65,7 +70,7 @@ namespace Elementor {
 	}
 }
 
-namespace Elementor\Core\DocumentsManager {
+namespace Elementor\Core {
 	if ( ! class_exists( 'DocumentsManager' ) ) {
 		/**
 		 * Elementor Documents Manager stub
@@ -77,6 +82,39 @@ namespace Elementor\Core\DocumentsManager {
 			 */
 			public function get( $post_id = null ) {
 				return false;
+			}
+		}
+	}
+}
+
+namespace Elementor\Core\Breakpoints {
+	if ( ! class_exists( 'Manager' ) ) {
+		/**
+		 * Elementor Breakpoints Manager stub
+		 */
+		class Manager {
+			const BREAKPOINT_KEY_WIDESCREEN = 'widescreen';
+
+			/**
+			 * @return array<string, mixed>
+			 */
+			public function get_breakpoints_config() {
+				return array();
+			}
+
+			/**
+			 * @param string $breakpoint
+			 * @return int
+			 */
+			public function get_device_min_breakpoint( $breakpoint ) {
+				return 0;
+			}
+
+			/**
+			 * @return int
+			 */
+			public function get_desktop_min_point() {
+				return 0;
 			}
 		}
 	}

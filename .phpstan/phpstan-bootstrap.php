@@ -28,6 +28,9 @@ if ( ! defined( 'ARRAY_N' ) ) {
 	define( 'ARRAY_N', 'ARRAY_N' );
 }
 
+// Load WordPress stubs
+require_once __DIR__ . '/wordpress-stubs.php';
+
 // Load ACF stubs
 require_once __DIR__ . '/acf-stubs.php';
 
