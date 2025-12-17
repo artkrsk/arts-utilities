@@ -24,7 +24,7 @@ trait Taxonomies {
 	 * @param int|\WP_Post $post     The post ID or object.
 	 * @param string       $taxonomy The taxonomy name.
 	 *
-	 * @return list<array{slug: string, name: string, url: string|WP_Error}> An array of taxonomy term names, slugs, and URLs.
+	 * @return list<array{slug: string, name: string, url: string|\WP_Error}> An array of taxonomy term names, slugs, and URLs.
 	 */
 	public static function get_taxonomy_term_names( $post, $taxonomy ) {
 		$items  = get_the_terms( $post, $taxonomy );

@@ -85,8 +85,8 @@ trait LoopedPosts {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array $args The arguments for retrieving posts.
-	 * @return array The query arguments.
+	 * @param array<string, mixed> $args The arguments for retrieving posts.
+	 * @return array<string, mixed> The query arguments.
 	 */
 	private static function get_query_args( $args ) {
 		$query_args = array(
@@ -125,7 +125,7 @@ trait LoopedPosts {
 	 * @since 1.0.0
 	 *
 	 * @param \WP_Query $loop The WordPress loop object.
-	 * @return array An array of post objects.
+	 * @return list<\WP_Post> An array of post objects.
 	 */
 	private static function get_posts_from_loop( $loop ) {
 		$posts = array();
@@ -145,13 +145,13 @@ trait LoopedPosts {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array $posts   An array of post objects.
+	 * @param list<\WP_Post> $posts   An array of post objects.
 	 * @param int   $post_id The ID of the post to find.
 	 * @return int|null The index of the post in the array, or null if not found.
 	 */
 	private static function get_current_post_index( $posts, $post_id ) {
 		foreach ( $posts as $index => $post ) {
-			if ( is_object( $post ) && isset( $post->ID ) && $post->ID === $post_id ) {
+			if ( is_object( $post ) && $post->ID === $post_id ) {
 				return $index;
 			}
 		}
@@ -169,7 +169,7 @@ trait LoopedPosts {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array $posts              The array of posts.
+	 * @param list<\WP_Post> $posts              The array of posts.
 	 * @param int   $current_post_index The index of the current post.
 	 * @return mixed|null The next post in the loop, or null if there is no next post.
 	 */
@@ -195,7 +195,7 @@ trait LoopedPosts {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array $posts             The array of posts.
+	 * @param list<\WP_Post> $posts             The array of posts.
 	 * @param int   $current_post_index The index of the current post.
 	 * @return mixed|null The previous post in the loop, or null if not found.
 	 */
@@ -216,7 +216,7 @@ trait LoopedPosts {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array $posts Array of post objects.
+	 * @param list<\WP_Post> $posts Array of post objects.
 	 * @return bool True if setup was successful, false otherwise.
 	 */
 	public function setup_looped_posts( $posts ) {
@@ -309,6 +309,8 @@ trait LoopedPosts {
 	 * resets the loop to the beginning.
 	 *
 	 * @since 1.0.0
+	 *
+	 * @return void
 	 */
 	public function rewind_looped_posts() {
 		global $MOCK_DATA;
@@ -323,6 +325,8 @@ trait LoopedPosts {
 	 * Completely clears all looped posts data from the global variable.
 	 *
 	 * @since 1.0.0
+	 *
+	 * @return void
 	 */
 	public function reset_looped_posts() {
 		global $MOCK_DATA;

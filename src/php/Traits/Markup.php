@@ -22,12 +22,12 @@ trait Markup {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array|object $args           Array or object that contains the user-defined values.
-	 * @param array|object $defaults       Array, Object that serves as the defaults or string.
+	 * @param array<string, mixed>|object $args           Array or object that contains the user-defined values.
+	 * @param array<string, mixed>|object $defaults       Array, Object that serves as the defaults or string.
 	 * @param boolean      $preserve_type  Optional. Convert output array into object if $args or $defaults if it is. Default true.
 	 * @param boolean      $preserve_integer_keys Optional. If given, integer keys will be preserved and merged instead of appended.
 	 *
-	 * @return array|object $output Merged user defined values with defaults.
+	 * @return array<string, mixed>|object $output Merged user defined values with defaults.
 	 */
 	public static function parse_args_recursive( $args, $defaults, $preserve_type = true, $preserve_integer_keys = false ) {
 		$output = array();
@@ -263,11 +263,11 @@ trait Markup {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array|object $output              The initial list to merge into.
-	 * @param array|object $list                The list to merge from.
+	 * @param array<string, mixed>|object $output              The initial list to merge into.
+	 * @param array<string, mixed>|object $list                The list to merge from.
 	 * @param bool         $preserve_integer_keys Whether to preserve integer keys.
 	 *
-	 * @return array|object The merged list.
+	 * @return array<string, mixed>|object The merged list.
 	 */
 	private static function merge_lists( $output, $list, $preserve_integer_keys ) {
 		foreach ( (array) $list as $key => $value ) {
@@ -282,12 +282,12 @@ trait Markup {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array $output               The output array to merge into.
+	 * @param array<string, mixed> $output               The output array to merge into.
 	 * @param mixed $key                  The key of the item to merge.
 	 * @param mixed $value                The value of the item to merge.
 	 * @param bool  $preserve_integer_keys Whether to preserve integer keys.
 	 *
-	 * @return array The merged output array.
+	 * @return array<string, mixed> The merged output array.
 	 */
 	private static function merge_list_item( $output, $key, $value, $preserve_integer_keys ) {
 		if ( is_integer( $key ) && ! $preserve_integer_keys ) {
@@ -321,7 +321,7 @@ trait Markup {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array|object $output The output array or object.
+	 * @param array<string, mixed>|object $output The output array or object.
 	 * @param mixed        $key    The key of the item to check.
 	 * @param mixed        $value  The value of the item to check.
 	 *
@@ -342,7 +342,7 @@ trait Markup {
 	 *
 	 * @since 1.0.25
 	 *
-	 * @param array $link_data {
+	 * @param array<string, mixed> $link_data {
 	 *     Optional. Link data array.
 	 *
 	 *     @type string $url         The URL for the link. Default empty string.
@@ -396,10 +396,10 @@ trait Markup {
 	 *
 	 * @since 1.0.25
 	 *
-	 * @param array $attributes Existing HTML attributes array.
-	 * @param array $link_data  Link data array (same format as get_link_attributes).
+	 * @param array<string, mixed> $attributes Existing HTML attributes array.
+	 * @param array<string, mixed> $link_data  Link data array (same format as get_link_attributes).
 	 *
-	 * @return array Modified attributes array with link attributes added.
+	 * @return array<string, mixed> Modified attributes array with link attributes added.
 	 */
 	public static function add_link_attributes( $attributes = array(), $link_data = array() ) {
 		// Validate attributes parameter
@@ -427,7 +427,7 @@ trait Markup {
 	 *
 	 * @since 1.0.25
 	 *
-	 * @param array  $attributes   HTML attributes array.
+	 * @param array<string, mixed>  $attributes   HTML attributes array.
 	 * @param string $fallback_tag Optional. Fallback tag to use if no valid link. Default 'div'.
 	 * @param bool   $echo         Optional. Whether to echo the tag. Default true.
 	 *
@@ -533,7 +533,7 @@ trait Markup {
 	 * @since 1.0.0
 	 *
 	 * @param string       $attributes Current HTML element attributes.
-	 * @param string|array $classes    One or more classes to add.
+	 * @param list<string>|string $classes    One or more classes to add.
 	 * @return string Modified attributes with added classes.
 	 */
 	public static function add_root_html_classes( $attributes, $classes ) {
