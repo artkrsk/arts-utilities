@@ -32,6 +32,7 @@ class Utilities {
 	use Traits\Strings;
 	use Traits\Taxonomies;
 	use Traits\Theme;
+	use Traits\TypeGuards;
 	use Traits\URL;
 	use Traits\WooCommerce;
 }
