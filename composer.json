@@ -16,7 +16,9 @@
     "phpunit/phpunit": "^9.6",
     "yoast/phpunit-polyfills": "^4.0",
     "brain/monkey": "^2.6",
-    "antecedent/patchwork": "^2.1"
+    "antecedent/patchwork": "^2.1",
+    "phpstan/phpstan": "^2.0",
+    "szepeviktor/phpstan-wordpress": "^2.0"
   },
   "config": {
     "allow-plugins": {
@@ -34,5 +36,9 @@
     "psr-4": {
       "Tests\\": "__tests__/php/"
     }
+  },
+  "scripts": {
+    "phpstan": "phpstan analyse --memory-limit=1G",
+    "phpstan:baseline": "phpstan analyse --memory-limit=1G --generate-baseline"
   }
 }
