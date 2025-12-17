@@ -124,7 +124,7 @@ trait LoopedPosts {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param WP_Query $loop The WordPress loop object.
+	 * @param \WP_Query $loop The WordPress loop object.
 	 * @return array An array of post objects.
 	 */
 	private static function get_posts_from_loop( $loop ) {

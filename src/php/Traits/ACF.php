@@ -39,10 +39,10 @@ trait ACF {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param string $selector     The field name or field key.
-	 * @param int    $post_id      Optional. The post ID where the value is saved. Defaults to the current post.
-	 * @param bool   $format_value Optional. Whether to apply formatting logic. Defaults to true.
-	 * @param bool   $escape_html  Optional. Whether to escape HTML. Defaults to false.
+	 * @param string    $selector     The field name or field key.
+	 * @param int|false $post_id      Optional. The post ID where the value is saved. Defaults to the current post.
+	 * @param bool      $format_value Optional. Whether to apply formatting logic. Defaults to true.
+	 * @param bool      $escape_html  Optional. Whether to escape HTML. Defaults to false.
 	 *
 	 * @return mixed|false The value of the field or false if not found.
 	 */
@@ -59,8 +59,8 @@ trait ACF {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param string $selector The field name or field key.
-	 * @param int    $post_id  Optional. The post ID where the value is saved. Defaults to the current post.
+	 * @param string    $selector The field name or field key.
+	 * @param int|false $post_id  Optional. The post ID where the value is saved. Defaults to the current post.
 	 *
 	 * @return bool Whether the field has rows or not.
 	 */
@@ -97,7 +97,7 @@ trait ACF {
 	 *
 	 * @since 1.0.10
 	 *
-	 * @param array $page The options page settings.
+	 * @param array|string $page The options page settings.
 	 *
 	 * @return bool|int The ID of the options page or false if not found.
 	 */
@@ -133,9 +133,9 @@ trait ACF {
 	 *
 	 * @since 1.0.30
 	 *
-	 * @param string $selector The field name or field key.
-	 * @param mixed  $value    The new value to save.
-	 * @param int    $post_id  Optional. The post ID where the value is saved. Defaults to the current post.
+	 * @param string    $selector The field name or field key.
+	 * @param mixed     $value    The new value to save.
+	 * @param int|false $post_id  Optional. The post ID where the value is saved. Defaults to the current post.
 	 *
 	 * @return bool Whether the field was updated successfully or false if not found.
 	 */

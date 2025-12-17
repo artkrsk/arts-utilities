@@ -21,8 +21,8 @@ trait Taxonomies {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param int|WP_Post $post     The post ID or object.
-	 * @param string      $taxonomy The taxonomy name.
+	 * @param int|\WP_Post $post     The post ID or object.
+	 * @param string       $taxonomy The taxonomy name.
 	 *
 	 * @return array An array of taxonomy term names, slugs, and URLs.
 	 */
@@ -55,8 +55,8 @@ trait Taxonomies {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array       $taxonomies List of taxonomy objects.
-	 * @param int|WP_Post $post       Post ID or WP_Post object.
+	 * @param array        $taxonomies List of taxonomy objects.
+	 * @param int|\WP_Post $post       Post ID or WP_Post object.
 	 *
 	 * @return array List of terms grouped by taxonomy.
 	 */

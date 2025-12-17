@@ -168,6 +168,7 @@ trait Markup {
 		if ( $echo ) {
 			// All attributes and values are escaped and are safe to output
 			echo join( ' ', $attribute_pairs ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			return null;
 		} else {
 			return join( ' ', $attribute_pairs );
 		}
@@ -474,6 +475,7 @@ trait Markup {
 
 		if ( $echo ) {
 			echo esc_html( $tag );
+		return null;
 		} else {
 			return esc_html( $tag );
 		}
