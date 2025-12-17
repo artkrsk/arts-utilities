@@ -40,7 +40,8 @@ trait ThemeBuilder {
 			} elseif ( is_single() ) {
 				$location = 'single';
 			} elseif ( is_singular() || is_404() ) {
-				return get_the_ID();
+				$current_id = get_the_ID();
+				return $current_id !== false ? $current_id : null;
 			}
 
 			if ( $location ) {
@@ -50,7 +51,7 @@ trait ThemeBuilder {
 				$IDs      = array_keys( $document );
 
 				if ( ! empty( $IDs ) && $IDs[0] ) {
-					$post_id = $IDs[0];
+					$post_id = is_numeric( $IDs[0] ) ? (int) $IDs[0] : null;
 				}
 			}
 		}

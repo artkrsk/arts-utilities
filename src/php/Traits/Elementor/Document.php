@@ -43,6 +43,11 @@ trait Document {
 		// Get the page settings manager
 		$page_settings_manager = \Elementor\Core\Settings\Manager::get_settings_managers( 'page' );
 
+		// Ensure we have a Manager object, not an array
+		if ( is_array( $page_settings_manager ) ) {
+			return '';
+		}
+
 		// Get the settings model for current post
 		$page_settings_model = $page_settings_manager->get_model( $post_id );
 
@@ -226,6 +231,11 @@ trait Document {
 
 		// Get the page settings manager
 		$page_settings_manager = \Elementor\Core\Settings\Manager::get_settings_managers( 'page' );
+
+		// Ensure we have a Manager object, not an array
+		if ( is_array( $page_settings_manager ) ) {
+			return '';
+		}
 
 		// Get the settings model for current post
 		$page_settings_model = $page_settings_manager->get_model( $post_id );

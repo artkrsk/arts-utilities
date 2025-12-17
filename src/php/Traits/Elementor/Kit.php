@@ -178,8 +178,15 @@ trait Kit {
 		);
 
 		if ( $recent_edited_post->post_count ) {
-			$posts   = $recent_edited_post->get_posts();
-			$post_id = reset( $posts )->ID;
+			$posts = $recent_edited_post->get_posts();
+			$first_post = reset( $posts );
+
+			// Ensure we have a WP_Post object
+			if ( ! $first_post instanceof \WP_Post ) {
+				return '';
+			}
+
+			$post_id = $first_post->ID;
 			$kit_id  = \Elementor\Plugin::$instance->kits_manager->get_active_id();
 
 			$url = admin_url( 'post.php?post=' . $post_id . '&action=elementor&active-document=' . $kit_id );

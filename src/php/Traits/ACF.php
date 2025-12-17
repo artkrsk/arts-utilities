@@ -153,7 +153,7 @@ trait ACF {
 	 * @since 1.1.8
 	 *
 	 * @param string   $selector     The field name or field key.
-	 * @param int|bool $post_id      Optional. The post ID where the value is saved. Defaults to the current post.
+	 * @param int|false $post_id      Optional. The post ID where the value is saved. Defaults to the current post.
 	 * @param string   $default      Optional. Default value if field is not a string. Defaults to empty string.
 	 * @param bool     $format_value Optional. Whether to apply formatting logic. Defaults to true.
 	 * @param bool     $escape_html  Optional. Whether to escape HTML. Defaults to false.
@@ -171,7 +171,7 @@ trait ACF {
 	 * @since 1.1.8
 	 *
 	 * @param string   $selector     The field name or field key.
-	 * @param int|bool $post_id      Optional. The post ID where the value is saved. Defaults to the current post.
+	 * @param int|false $post_id      Optional. The post ID where the value is saved. Defaults to the current post.
 	 * @param int      $default      Optional. Default value if field is not numeric. Defaults to 0.
 	 * @param bool     $format_value Optional. Whether to apply formatting logic. Defaults to true.
 	 * @param bool     $escape_html  Optional. Whether to escape HTML. Defaults to false.
@@ -189,7 +189,7 @@ trait ACF {
 	 * @since 1.1.8
 	 *
 	 * @param string       $selector     The field name or field key.
-	 * @param int|bool     $post_id      Optional. The post ID where the value is saved. Defaults to the current post.
+	 * @param int|false     $post_id      Optional. The post ID where the value is saved. Defaults to the current post.
 	 * @param array<mixed> $default      Optional. Default value if field is not an array. Defaults to empty array.
 	 * @param bool         $format_value Optional. Whether to apply formatting logic. Defaults to true.
 	 * @param bool         $escape_html  Optional. Whether to escape HTML. Defaults to false.
@@ -207,7 +207,7 @@ trait ACF {
 	 * @since 1.1.8
 	 *
 	 * @param string   $selector     The field name or field key.
-	 * @param int|bool $post_id      Optional. The post ID where the value is saved. Defaults to the current post.
+	 * @param int|false $post_id      Optional. The post ID where the value is saved. Defaults to the current post.
 	 * @param bool     $default      Optional. Default value if field is empty. Defaults to false.
 	 * @param bool     $format_value Optional. Whether to apply formatting logic. Defaults to true.
 	 * @param bool     $escape_html  Optional. Whether to escape HTML. Defaults to false.
