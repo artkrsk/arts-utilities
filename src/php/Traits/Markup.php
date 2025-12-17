@@ -113,9 +113,12 @@ trait Markup {
 	/**
 	 * Prints or returns HTML attributes from an associative array.
 	 *
+	 * Accepts mixed input for compatibility with WordPress filters that return mixed.
+	 * Non-array values are silently ignored and return empty string.
+	 *
 	 * @since 1.0.0
 	 *
-	 * @param array $attributes Associative array of attributes and their values.
+	 * @param mixed $attributes Associative array of attributes and their values. Non-arrays are ignored.
 	 * @param bool  $echo       Optional. Whether to echo the attributes. Default true.
 	 *
 	 * @return string|null The HTML attributes string if $echo is false, otherwise null.
@@ -456,10 +459,13 @@ trait Markup {
 	/**
 	 * Print a validated and escaped HTML tag.
 	 *
+	 * Accepts mixed input for compatibility with WordPress filters that return mixed.
+	 * Non-string values default to 'div'.
+	 *
 	 * @since 1.0.0
 	 *
-	 * @param string $tag  The HTML tag to be validated and printed.
-	 * @param bool   $echo Optional. Whether to echo the tag. Default true.
+	 * @param mixed $tag  The HTML tag to be validated and printed. Non-strings default to 'div'.
+	 * @param bool  $echo Optional. Whether to echo the tag. Default true.
 	 *
 	 * @return string|null The validated and escaped HTML tag if $echo is false, otherwise null.
 	 */
@@ -478,16 +484,22 @@ trait Markup {
 	 *
 	 * This function checks if the provided tag is in the list of allowed HTML tags.
 	 * If the tag is valid, it returns the tag; otherwise, it returns 'div'.
+	 * Accepts mixed input for compatibility with WordPress filters that return mixed.
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param string $tag The HTML tag to validate.
+	 * @param mixed $tag The HTML tag to validate. Non-strings return 'div'.
 	 *
 	 * @return string The validated HTML tag or 'div' if invalid.
 	 *
 	 * @filter `arts/utilities/markup/allows_html_tags` Allows filtering the list of allowed HTML tags.
 	 */
 	public static function get_valid_html_tag( $tag ) {
+		// Handle non-string input gracefully
+		if ( ! is_string( $tag ) ) {
+			return 'div';
+		}
+
 		$allowed_html_tags = apply_filters(
 			'arts/utilities/markup/allows_html_tags',
 			array(
