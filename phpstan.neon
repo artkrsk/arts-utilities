@@ -1,0 +1,25 @@
+includes:
+	- vendor/szepeviktor/phpstan-wordpress/extension.neon
+
+parameters:
+	level: 1
+
+	paths:
+		- src/php
+
+	bootstrapFiles:
+		- .phpstan/phpstan-bootstrap.php
+
+	excludePaths:
+		analyse:
+			- __tests__/*
+
+	# Treat PHPDoc types as uncertain for better WordPress compatibility
+	treatPhpDocTypesAsCertain: false
+
+	# Don't report unmatched ignored error patterns
+	reportUnmatchedIgnoredErrors: false
+
+	ignoreErrors:
+		# WordPress core functions may return mixed types
+		- '#Function wp_parse_args invoked with [0-9]+ parameters?, 2 required#'
