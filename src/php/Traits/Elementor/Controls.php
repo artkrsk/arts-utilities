@@ -87,12 +87,12 @@ trait Controls {
 			);
 
 			// Restore missing width using the intrinsic aspect ratio.
-			if ( empty( $custom_width ) && ! empty( $custom_height ) && ! empty( $aspect_ratio ) ) {
+			if ( empty( $custom_width ) && ! empty( $custom_height ) && ! empty( $aspect_ratio ) && is_numeric( $custom_height ) && is_numeric( $aspect_ratio ) ) {
 				$thumbnail_size[0] = (float) $custom_height * (float) $aspect_ratio;
 			}
 
 			// Restore missing height using the intrinsic aspect ratio.
-			if ( empty( $custom_height ) && ! empty( $custom_width ) && ! empty( $aspect_ratio ) ) {
+			if ( empty( $custom_height ) && ! empty( $custom_width ) && ! empty( $aspect_ratio ) && is_numeric( $custom_width ) && is_numeric( $aspect_ratio ) ) {
 				$thumbnail_size[1] = (float) $custom_width / (float) $aspect_ratio;
 			}
 

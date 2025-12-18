@@ -278,7 +278,7 @@ trait Document {
 
 				$index = array_search( $color_control_id, array_column( $settings, '_id' ) );
 
-				if ( is_int( $index ) && array_key_exists( $index, $settings ) && $settings[ $index ]['color'] ) {
+				if ( is_int( $index ) && array_key_exists( $index, $settings ) && is_array( $settings[ $index ] ) && isset( $settings[ $index ]['color'] ) ) {
 					return self::get_string_value( $settings[ $index ]['color'], $fallback_value );
 				} else {
 					return $fallback_value;

@@ -22,12 +22,12 @@ trait Markup {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array<string, mixed>|object $args           Array or object that contains the user-defined values.
-	 * @param array<string, mixed>|object $defaults       Array, Object that serves as the defaults or string.
+	 * @param array<int|string, mixed>|object $args           Array or object that contains the user-defined values.
+	 * @param array<int|string, mixed>|object $defaults       Array, Object that serves as the defaults or string.
 	 * @param boolean      $preserve_type  Optional. Convert output array into object if $args or $defaults if it is. Default true.
 	 * @param boolean      $preserve_integer_keys Optional. If given, integer keys will be preserved and merged instead of appended.
 	 *
-	 * @return array<string, mixed>|object $output Merged user defined values with defaults.
+	 * @return array<int|string, mixed>|object $output Merged user defined values with defaults.
 	 */
 	public static function parse_args_recursive( $args, $defaults, $preserve_type = true, $preserve_integer_keys = false ) {
 		$output = array();
@@ -78,9 +78,8 @@ trait Markup {
 		if ( ! empty( $args['name'] ) ) {
 			if ( ! in_array( $args['name'], $exclude_names, true ) ) {
 				$kebab_case_name = self::convert_camel_to_kebab_case( $args['name'] );
-				$class_is_array  = array_key_exists( 'class', $attributes ) && is_array( $attributes['class'] );
 
-				if ( $class_is_array ) {
+				if ( array_key_exists( 'class', $attributes ) && is_array( $attributes['class'] ) ) {
 					$attributes['class'][] = $kebab_case_name;
 					$attributes['class'][] = 'js-' . $kebab_case_name;
 				} else {
@@ -154,7 +153,7 @@ trait Markup {
 			if ( is_int( $key ) ) {
 				$attribute_pairs[] = $val;
 			} else {
-				$val = htmlspecialchars( $val, ENT_QUOTES | ENT_HTML5 );
+				$val = htmlspecialchars( self::get_string_value( $val ), ENT_QUOTES | ENT_HTML5 );
 
 				// Different escaping function for URLs
 				if ( $key === 'href' ) {
@@ -241,14 +240,29 @@ trait Markup {
 		if ( isset( $post['taxonomies'] ) && ! empty( $post['taxonomies'] ) ) {
 			$post_taxonomies = $post['taxonomies'];
 
-			foreach ( $post_taxonomies as $taxonomy ) {
-				$tax_id = $taxonomy['id'];
+			if ( ! is_array( $post_taxonomies ) ) {
+				return $terms_classes;
+			}
 
-				if ( isset( $taxonomy['terms'] ) && ! empty( $taxonomy['terms'] ) ) {
+			foreach ( $post_taxonomies as $taxonomy ) {
+				if ( ! is_array( $taxonomy ) || ! isset( $taxonomy['id'], $taxonomy['terms'] ) ) {
+					continue;
+				}
+
+				$tax_id = self::get_string_value( $taxonomy['id'] );
+
+				if ( ! empty( $taxonomy['terms'] ) ) {
 					$tax_terms = $taxonomy['terms'];
 
+					if ( ! is_array( $tax_terms ) ) {
+						continue;
+					}
+
 					foreach ( $tax_terms as $term ) {
-						$term_slug       = $term['slug'];
+						if ( ! is_array( $term ) || ! isset( $term['slug'] ) ) {
+							continue;
+						}
+						$term_slug       = self::get_string_value( $term['slug'] );
 						$terms_classes[] = "{$tax_id}{$divider}{$term_slug}";
 					}
 				}
@@ -263,11 +277,11 @@ trait Markup {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array<string, mixed>|object $output              The initial list to merge into.
-	 * @param array<string, mixed>|object $list                The list to merge from.
+	 * @param array<int|string, mixed>|object $output              The initial list to merge into.
+	 * @param array<int|string, mixed>|object $list                The list to merge from.
 	 * @param bool         $preserve_integer_keys Whether to preserve integer keys.
 	 *
-	 * @return array<string, mixed>|object The merged list.
+	 * @return array<int|string, mixed>|object The merged list.
 	 */
 	private static function merge_lists( $output, $list, $preserve_integer_keys ) {
 		if ( ! is_array( $output ) ) {
@@ -285,18 +299,30 @@ trait Markup {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array<string, mixed> $output               The output array to merge into.
+	 * @param array<int|string, mixed> $output               The output array to merge into.
 	 * @param mixed $key                  The key of the item to merge.
 	 * @param mixed $value                The value of the item to merge.
 	 * @param bool  $preserve_integer_keys Whether to preserve integer keys.
 	 *
-	 * @return array<string, mixed> The merged output array.
+	 * @return array<int|string, mixed> The merged output array.
 	 */
 	private static function merge_list_item( $output, $key, $value, $preserve_integer_keys ) {
+		// Type guard for array key
+		if ( ! is_string( $key ) && ! is_int( $key ) ) {
+			return $output;
+		}
+
 		if ( is_integer( $key ) && ! $preserve_integer_keys ) {
 			$output[] = $value;
 		} elseif ( self::should_merge_recursively( $output, $key, $value ) ) {
-			$output[ $key ] = self::merge_lists( $output[ $key ], $value, $preserve_integer_keys );
+			// Validate before recursion
+			if ( ! is_array( $output ) || ! isset( $output[ $key ] ) ) {
+				$output[ $key ] = $value;
+			} else {
+				$safe_current    = self::get_array_value( $output[ $key ] );
+				$safe_new        = self::get_array_value( $value );
+				$output[ $key ] = self::merge_lists( $safe_current, $safe_new, $preserve_integer_keys );
+			}
 		} else {
 			$output[ $key ] = $value;
 		}
@@ -308,12 +334,12 @@ trait Markup {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param mixed $output       The output to be converted.
+	 * @param array<int|string, mixed>|object $output       The output to be converted.
 	 * @param mixed $args         The arguments to check for object type.
 	 * @param mixed $defaults     The default values to check for object type.
 	 * @param bool  $preserve_type Whether to preserve the object type.
 	 *
-	 * @return mixed The converted output, either as an object or the original type.
+	 * @return array<int|string, mixed>|object The converted output, either as an object or the original type.
 	 */
 	private static function convert_output_type( $output, $args, $defaults, $preserve_type ) {
 		return $preserve_type && ( is_object( $args ) || is_object( $defaults ) ) ? (object) $output : $output;
@@ -324,7 +350,7 @@ trait Markup {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array<string, mixed>|object $output The output array or object.
+	 * @param array<int|string, mixed>|object $output The output array or object.
 	 * @param mixed        $key    The key of the item to check.
 	 * @param mixed        $value  The value of the item to check.
 	 *
@@ -342,6 +368,10 @@ trait Markup {
 		if ( ! is_array( $output ) ) {
 			return false;
 		}
+
+	if ( ! is_string( $key ) && ! is_int( $key ) ) {
+		return false;
+	}
 
 		return isset( $output[ $key ] ) &&
 						( is_array( $output[ $key ] ) || is_object( $output[ $key ] ) );

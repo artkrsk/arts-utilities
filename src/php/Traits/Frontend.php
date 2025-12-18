@@ -68,8 +68,9 @@ trait Frontend {
 			return;
 		}
 
-		$files_deps            = array();
-		$deps                  = is_array( $args['deps'] ) ? $args['deps'] : array();
+		$files_deps = array();
+		/** @var array<string> $deps */
+		$deps = is_array( $args['deps'] ) ? $args['deps'] : array();
 		$allowed_preload_types = array(
 			'preload',
 			'modulepreload',
@@ -123,6 +124,7 @@ trait Frontend {
 			if ( ! is_array( $script_module_args ) ) {
 				$script_module_args = $script_module_args ? array( 'in_footer' => true ) : array();
 			}
+			/** @var array{in_footer?: bool, fetchpriority?: 'auto'|'high'|'low'} $script_module_args */
 			wp_register_script_module( $args['handle'], $args['src'], $deps, $args['ver'], $script_module_args );
 			wp_register_script( $args['handle'], $args['src'], $deps, $args['ver'], $args['args'] );
 		} else {

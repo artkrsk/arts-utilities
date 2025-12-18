@@ -46,7 +46,7 @@ trait ResponsiveControls {
 
 		// Proactively check all active breakpoints.
 		foreach ( $breakpoints_config as $breakpoint_name => $config ) {
-			if ( $config['is_enabled'] ) {
+			if ( is_array( $config ) && isset( $config['is_enabled'] ) && $config['is_enabled'] ) {
 				$breakpoint_setting              = "{$option}_{$breakpoint_name}";
 				$breakpoint_value                = $controls_stack->get_settings_for_display( $breakpoint_setting );
 				$enabled_map[ $breakpoint_name ] = $breakpoint_value;
@@ -118,40 +118,45 @@ trait ResponsiveControls {
 		$has_widescreen_breakpoint = false;
 		$queries                   = array();
 
-		foreach ( $breakpoints_config as $breakpoint => $config ) {
-			if ( in_array( $breakpoint, array_keys( $enabled_map ) ) && $config['is_enabled'] ) {
-				if ( $enabled_map[ $breakpoint ] === 'yes' ) {
-					if ( $config['direction'] === 'max' ) {
-						$min_width = $elementor_breakpoints->get_device_min_breakpoint( $breakpoint );
-						$queries[] = '(min-width: ' . $min_width . 'px) and (max-width: ' . $config['value'] . 'px)';
-					} else {
-						$queries[] = '(min-width: ' . $config['value'] . 'px)';
-					}
-				} else {
-					if ( $config['direction'] === 'min' ) {
-						// $min_width = $elementor_breakpoints->get_device_min_breakpoint( $breakpoint );
-						$queries[] = 'not (min-width: ' . $config['value'] . 'px)';
-					}
-				}
+	foreach ( $breakpoints_config as $breakpoint => $config ) {
+		if ( ! is_array( $config ) || ! isset( $config['is_enabled'], $config['direction'], $config['value'] ) ) {
+			continue;
+		}
 
-				if ( $breakpoint === $widescreen_key ) {
-					$has_widescreen_breakpoint = true;
+		if ( in_array( $breakpoint, array_keys( $enabled_map ) ) && $config['is_enabled'] ) {
+			if ( $enabled_map[ $breakpoint ] === 'yes' ) {
+				if ( $config['direction'] === 'max' ) {
+					$min_width = $elementor_breakpoints->get_device_min_breakpoint( $breakpoint );
+					$queries[] = '(min-width: ' . self::get_string_value( $min_width ) . 'px) and (max-width: ' . self::get_string_value( $config['value'] ) . 'px)';
+				} else {
+					$queries[] = '(min-width: ' . self::get_string_value( $config['value'] ) . 'px)';
+				}
+			} else {
+				if ( $config['direction'] === 'min' ) {
+					// $min_width = $elementor_breakpoints->get_device_min_breakpoint( $breakpoint );
+					$queries[] = 'not (min-width: ' . self::get_string_value( $config['value'] ) . 'px)';
 				}
 			}
+
+			if ( $breakpoint === $widescreen_key ) {
+				$has_widescreen_breakpoint = true;
+			}
 		}
+	}
+
 
 		if ( array_key_exists( 'desktop', $enabled_map ) ) {
 			if ( $enabled_map['desktop'] === 'yes' ) {
 				$min_width = $elementor_breakpoints->get_desktop_min_point();
-				$queries[] = '(min-width: ' . $min_width . 'px)';
+				$queries[] = '(min-width: ' . self::get_string_value( $min_width ) . 'px)';
 
-				if ( $has_widescreen_breakpoint && isset( $breakpoints_config[ $widescreen_key ] ) ) {
-					$queries[] = ' and (max-width: ' . $breakpoints_config[ $widescreen_key ]['value'] . 'px)';
+				if ( $has_widescreen_breakpoint && isset( $breakpoints_config[ $widescreen_key ] ) && is_array( $breakpoints_config[ $widescreen_key ] ) && isset( $breakpoints_config[ $widescreen_key ]['value'] ) ) {
+					$queries[] = ' and (max-width: ' . self::get_string_value( $breakpoints_config[ $widescreen_key ]['value'] ) . 'px)';
 				}
 			} else {
-				if ( $has_widescreen_breakpoint && isset( $breakpoints_config[ $widescreen_key ] ) ) {
+				if ( $has_widescreen_breakpoint && isset( $breakpoints_config[ $widescreen_key ] ) && is_array( $breakpoints_config[ $widescreen_key ] ) && isset( $breakpoints_config[ $widescreen_key ]['value'] ) ) {
 					$min_width = $elementor_breakpoints->get_desktop_min_point();
-					$queries[] = 'not ((min-width: ' . $min_width . 'px) and (max-width: ' . $breakpoints_config[ $widescreen_key ]['value'] . 'px))';
+					$queries[] = 'not ((min-width: ' . self::get_string_value( $min_width ) . 'px) and (max-width: ' . self::get_string_value( $breakpoints_config[ $widescreen_key ]['value'] ) . 'px))';
 				}
 			}
 		}

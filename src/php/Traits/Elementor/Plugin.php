@@ -59,7 +59,12 @@ trait Plugin {
 				return false;
 			}
 
-			$document = \Elementor\Plugin::$instance->documents->get( self::get_post_id( $post_id ) );
+			$safe_post_id = self::get_post_id( $post_id );
+			if ( $safe_post_id instanceof \WP_Post ) {
+				$safe_post_id = $safe_post_id->ID;
+			}
+
+			$document = \Elementor\Plugin::$instance->documents->get( $safe_post_id );
 
 			return $document && $document->is_built_with_elementor();
 		}

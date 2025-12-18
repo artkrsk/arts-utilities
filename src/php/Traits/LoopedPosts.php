@@ -57,8 +57,15 @@ trait LoopedPosts {
 			$current_post_index = self::get_current_post_index( $posts, $args['post_id'] );
 
 			if ( $current_post_index !== null ) {
-				$prev_next_posts['next']     = self::get_next_post_in_loop( $posts, $current_post_index );
-				$prev_next_posts['previous'] = self::get_previous_post_in_loop( $posts, $current_post_index );
+				$next_post = self::get_next_post_in_loop( $posts, $current_post_index );
+				$prev_post = self::get_previous_post_in_loop( $posts, $current_post_index );
+
+				if ( $next_post instanceof \WP_Post || $next_post === null ) {
+					$prev_next_posts['next'] = $next_post;
+				}
+				if ( $prev_post instanceof \WP_Post || $prev_post === null ) {
+					$prev_next_posts['previous'] = $prev_post;
+				}
 			}
 		}
 
@@ -98,7 +105,14 @@ trait LoopedPosts {
 		);
 
 		if ( $args['in_same_term'] ) {
-			$current_terms = self::get_taxonomy_term_names( $args['post_id'], $args['taxonomy'] );
+			$post_id  = self::get_post_id( $args['post_id'] );
+			$taxonomy = self::get_string_value( $args['taxonomy'] );
+
+			if ( $post_id !== null ) {
+				$current_terms = self::get_taxonomy_term_names( $post_id, $taxonomy );
+			} else {
+				$current_terms = array();
+			}
 
 			if ( ! empty( $current_terms ) ) {
 				$terms = array_map(
