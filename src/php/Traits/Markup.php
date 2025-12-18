@@ -77,7 +77,7 @@ trait Markup {
 
 		if ( ! empty( $args['name'] ) ) {
 			if ( ! in_array( $args['name'], $exclude_names, true ) ) {
-				$kebab_case_name = self::convert_camel_to_kebab_case( $args['name'] );
+				$kebab_case_name = self::convert_camel_to_kebab_case( self::get_string_value( $args['name'] ) );
 
 				if ( array_key_exists( 'class', $attributes ) && is_array( $attributes['class'] ) ) {
 					$attributes['class'][] = $kebab_case_name;
@@ -87,21 +87,21 @@ trait Markup {
 				}
 			}
 
-			$attribute_component_name                = esc_attr( apply_filters( 'arts/utilities/markup/add_component_attributes/attribute_name', 'data-arts-component-name' ) );
-			$attributes[ $attribute_component_name ] = esc_attr( $args['name'] );
+			$attribute_component_name                = esc_attr( self::get_string_value( apply_filters( 'arts/utilities/markup/add_component_attributes/attribute_name', 'data-arts-component-name' ) ) );
+			$attributes[ $attribute_component_name ] = esc_attr( self::get_string_value( $args['name'] ) );
 
 			if ( is_array( $args['options'] ) && ! empty( $args['options'] ) ) {
-				$attribute_component_options                = esc_attr( apply_filters( 'arts/utilities/markup/add_component_attributes/attribute_options', 'data-arts-component-options' ) );
+				$attribute_component_options                = esc_attr( self::get_string_value( apply_filters( 'arts/utilities/markup/add_component_attributes/attribute_options', 'data-arts-component-options' ) ) );
 				$attributes[ $attribute_component_options ] = wp_json_encode( $args['options'] );
 			}
 
 			if ( is_array( $args['dependencies'] ) && ! empty( $args['dependencies'] ) ) {
-				$attribute_component_dependencies                = esc_attr( apply_filters( 'arts/utilities/markup/add_component_attributes/attribute_dependencies', 'data-arts-component-dependencies' ) );
+				$attribute_component_dependencies                = esc_attr( self::get_string_value( apply_filters( 'arts/utilities/markup/add_component_attributes/attribute_dependencies', 'data-arts-component-dependencies' ) ) );
 				$attributes[ $attribute_component_dependencies ] = wp_json_encode( $args['dependencies'] );
 			}
 
 			if ( $args['hasAnimation'] ) {
-				$attribute_component_animation                = esc_attr( apply_filters( 'arts/utilities/markup/add_component_attributes/attribute_animation', 'data-arts-os-animation' ) );
+				$attribute_component_animation                = esc_attr( self::get_string_value( apply_filters( 'arts/utilities/markup/add_component_attributes/attribute_animation', 'data-arts-os-animation' ) ) );
 				$attributes[ $attribute_component_animation ] = 'true';
 			}
 		}
@@ -540,27 +540,29 @@ trait Markup {
 			return 'div';
 		}
 
-		$allowed_html_tags = apply_filters(
-			'arts/utilities/markup/allows_html_tags',
-			array(
-				'a',
-				'article',
-				'aside',
-				'button',
-				'div',
-				'footer',
-				'h1',
-				'h2',
-				'h3',
-				'h4',
-				'h5',
-				'h6',
-				'header',
-				'main',
-				'nav',
-				'p',
-				'section',
-				'span',
+		$allowed_html_tags = self::get_array_value(
+			apply_filters(
+				'arts/utilities/markup/allows_html_tags',
+				array(
+					'a',
+					'article',
+					'aside',
+					'button',
+					'div',
+					'footer',
+					'h1',
+					'h2',
+					'h3',
+					'h4',
+					'h5',
+					'h6',
+					'header',
+					'main',
+					'nav',
+					'p',
+					'section',
+					'span',
+				)
 			)
 		);
 

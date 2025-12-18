@@ -135,6 +135,8 @@ trait TypeGuards {
 	 */
 	public static function parse_template_args( $args, $defaults = array() ) {
 		$args = is_array( $args ) ? $args : array();
-		return wp_parse_args( $args, $defaults );
+		$result = wp_parse_args( $args, $defaults );
+		/** @var array<string, mixed> $result */
+		return $result;
 	}
 }

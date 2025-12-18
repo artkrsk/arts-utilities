@@ -29,7 +29,7 @@ trait ACF {
 	 */
 	protected static function acf_function_exists( $function_name ) {
 		if ( function_exists( 'acf_function_exists' ) ) {
-			return acf_function_exists( $function_name );
+			return (bool) acf_function_exists( $function_name );
 		}
 		return function_exists( $function_name );
 	}
@@ -108,7 +108,12 @@ trait ACF {
 	 */
 	public static function acf_add_options_page( $page = '' ) {
 		if ( self::acf_function_exists( 'acf_add_options_page' ) ) {
-			return acf_add_options_page( $page );
+			$result = acf_add_options_page( $page );
+			if ( is_array( $result ) ) {
+				/** @var array<string, mixed> $result */
+				return $result;
+			}
+			return false;
 		} else {
 			return false;
 		}

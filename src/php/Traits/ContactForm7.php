@@ -44,11 +44,12 @@ trait ContactForm7 {
 		}
 
 		$contact_form = wpcf7_contact_form( $post_id );
-		if ( $contact_form ) {
+		if ( $contact_form && is_object( $contact_form ) && method_exists( $contact_form, 'form_html' ) ) {
+			$form_html = $contact_form->form_html( $options );
 			if ( $echo ) {
-				echo $contact_form->form_html( $options );
+				echo is_string( $form_html ) ? $form_html : '';
 			} else {
-				return $contact_form->form_html( $options );
+				return is_string( $form_html ) ? $form_html : '';
 			}
 		}
 	}

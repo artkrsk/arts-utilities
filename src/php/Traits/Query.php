@@ -78,24 +78,28 @@ trait Query {
 			'subtitle'    => '',
 			'description' => '',
 		);
-		$acf_fields       = apply_filters(
-			'arts/utilities/get_page_titles/acf_fields',
-			array(
-				'subtitle'    => 'subheading',
-				'description' => 'description',
+		$acf_fields       = self::get_array_value(
+			apply_filters(
+				'arts/utilities/get_page_titles/acf_fields',
+				array(
+					'subtitle'    => 'subheading',
+					'description' => 'description',
+				)
 			)
 		);
-		$strings          = apply_filters(
-			'arts/utilities/get_page_titles/strings',
-			array(
-				'category' => esc_html__( 'Posts in category', 'arts-utilities' ),
-				'author'   => esc_html__( 'Posts by author', 'arts-utilities' ),
-				'tag'      => esc_html__( 'Posts with tag', 'arts-utilities' ),
-				'day'      => esc_html__( 'Day archive', 'arts-utilities' ),
-				'month'    => esc_html__( 'Month archive', 'arts-utilities' ),
-				'year'     => esc_html__( 'Year archive', 'arts-utilities' ),
-				'search'   => esc_html__( 'Search', 'arts-utilities' ),
-				'blog'     => esc_html__( 'Blog', 'arts-utilities' ),
+		$strings          = self::get_array_value(
+			apply_filters(
+				'arts/utilities/get_page_titles/strings',
+				array(
+					'category' => esc_html__( 'Posts in category', 'arts-utilities' ),
+					'author'   => esc_html__( 'Posts by author', 'arts-utilities' ),
+					'tag'      => esc_html__( 'Posts with tag', 'arts-utilities' ),
+					'day'      => esc_html__( 'Day archive', 'arts-utilities' ),
+					'month'    => esc_html__( 'Month archive', 'arts-utilities' ),
+					'year'     => esc_html__( 'Year archive', 'arts-utilities' ),
+					'search'   => esc_html__( 'Search', 'arts-utilities' ),
+					'blog'     => esc_html__( 'Blog', 'arts-utilities' ),
+				)
 			)
 		);
 
@@ -103,65 +107,65 @@ trait Query {
 			$page_title = get_the_title();
 
 			if ( isset( $acf_fields['subtitle'] ) ) {
-				$page_subtitle = self::acf_get_field( $acf_fields['subtitle'] );
+				$page_subtitle = self::acf_get_field( self::get_string_value( $acf_fields['subtitle'] ) );
 			}
 
 			if ( isset( $acf_fields['description'] ) ) {
-				$page_description = self::acf_get_field( $acf_fields['description'] );
+				$page_description = self::acf_get_field( self::get_string_value( $acf_fields['description'] ) );
 			}
 		} elseif ( self::is_woocommerce_archive() ) {
 			$page_title = self::get_woocommerce_page_title();
 		} elseif ( is_category() ) {
 			$cat_id   = self::get_int_value( get_query_var( 'cat' ) );
-		$category = get_category( $cat_id );
+			$category = get_category( $cat_id );
 			if ( $category && ! is_wp_error( $category ) ) {
 				$page_title = $category->name;
 			}
-			$page_subtitle = $strings['category'];
+			$page_subtitle = self::get_string_value( $strings['category'] );
 		} elseif ( is_author() ) {
 			$author_id = self::get_int_value( get_query_var( 'author' ) );
-		$userdata  = get_userdata( $author_id );
+			$userdata  = get_userdata( $author_id );
 			if ( $userdata ) {
 				$page_title = $userdata->display_name;
 			}
-			$page_subtitle = $strings['author'];
+			$page_subtitle = self::get_string_value( $strings['author'] );
 		} elseif ( is_tag() ) {
 			$page_title    = single_tag_title( '', false );
-			$page_subtitle = $strings['tag'];
+			$page_subtitle = self::get_string_value( $strings['tag'] );
 		} elseif ( is_day() ) {
 			$page_title    = get_the_date();
-			$page_subtitle = $strings['day'];
+			$page_subtitle = self::get_string_value( $strings['day'] );
 		} elseif ( is_month() ) {
 			$page_title    = get_the_date( 'F Y' );
-			$page_subtitle = $strings['month'];
+			$page_subtitle = self::get_string_value( $strings['month'] );
 		} elseif ( is_year() ) {
 			$page_title    = get_the_date( 'Y' );
-			$page_subtitle = $strings['year'];
+			$page_subtitle = self::get_string_value( $strings['year'] );
 		} elseif ( is_home() ) {
 			$posts_page_id = self::get_int_value( get_option( 'page_for_posts' ) );
 			if ( $posts_page_id ) {
 				$page_title = get_the_title( $posts_page_id );
 
 				if ( isset( $acf_fields['subtitle'] ) ) {
-					$page_subtitle = self::acf_get_field( $acf_fields['subtitle'], $posts_page_id );
+					$page_subtitle = self::acf_get_field( self::get_string_value( $acf_fields['subtitle'] ), $posts_page_id );
 				}
 
 				if ( isset( $acf_fields['description'] ) ) {
-					$page_description = self::acf_get_field( $acf_fields['description'], $posts_page_id );
+					$page_description = self::acf_get_field( self::get_string_value( $acf_fields['description'] ), $posts_page_id );
 				}
 			} else {
 				// Fallback for when no static posts page is set
-				$page_title = $strings['blog'];
+				$page_title = self::get_string_value( $strings['blog'] );
 			}
 		} elseif ( is_search() ) {
-			$page_title = $strings['search'];
+			$page_title = self::get_string_value( $strings['search'] );
 		} else {
 			$page_title = get_the_title();
 		}
 
 		// Fallback page title.
 		if ( ! $page_title ) {
-			$page_title = $strings['blog'];
+			$page_title = self::get_string_value( $strings['blog'] );
 		}
 
 		// Fallback page description.
@@ -173,7 +177,9 @@ trait Query {
 		$titles['subtitle']    = $page_subtitle;
 		$titles['description'] = $page_description;
 
-		return apply_filters( 'arts/utilities/get_page_titles/titles', $titles );
+		$filtered_titles = apply_filters( 'arts/utilities/get_page_titles/titles', $titles );
+		/** @var array{title: string, subtitle: string, description: string} $filtered_titles */
+		return $filtered_titles;
 	}
 
 	/**
@@ -212,7 +218,10 @@ trait Query {
 					$permalink = false;
 				}
 
-				$filetype = $permalink ? wp_check_filetype( $permalink ) : array( 'ext' => false, 'type' => false );
+				$filetype = $permalink ? wp_check_filetype( $permalink ) : array(
+					'ext'  => false,
+					'type' => false,
+				);
 
 				$result[] = array(
 					'ID'        => $id,
@@ -240,12 +249,16 @@ trait Query {
 	 * @return string
 	 */
 	public static function fix_query_hicpo_before( $query_args = array() ) {
-		$should_alter_global_get = isset( $query_args['orderby'] ) && $query_args['orderby'] === 'post__in';
+		/** @var array<string, mixed> $query_args_validated */
+		$query_args_validated    = self::get_array_value( $query_args );
+		$should_alter_global_get = isset( $query_args_validated['orderby'] ) && self::get_string_value( $query_args_validated['orderby'] ) === 'post__in';
 		$get_orderby             = isset( $_GET['orderby'] ) ? $_GET['orderby'] : null;
 
 		if ( $should_alter_global_get ) {
 			global $_GET;
-			$_GET['orderby'] = 'post__in';
+			if ( is_array( $_GET ) ) {
+				$_GET['orderby'] = 'post__in';
+			}
 		}
 
 		return self::get_string_value( $get_orderby );
@@ -272,8 +285,8 @@ trait Query {
 	 * @deprecated 2.0.0 Use get_posts_terms() instead.
 	 * @since 1.0.0
 	 *
-	 * @param string                $mode Mode of retrieval.
-	 * @param array<string, mixed>  $args Optional arguments.
+	 * @param string               $mode Mode of retrieval.
+	 * @param array<string, mixed> $args Optional arguments.
 	 *
 	 * @return array<int|string, array{id: int, name: string, slug: string, total: int, current: bool, url?: string}> An array of terms with their details.
 	 */
@@ -287,9 +300,9 @@ trait Query {
 	 *
 	 * @since 1.0.24
 	 *
-	 * @param string $mode The mode of retrieval ('all' or 'current_page').
-	 * @param array<string, mixed>  $args Optional arguments.
-	 * @param string $taxonomy The taxonomy to retrieve. Default 'category'.
+	 * @param string               $mode The mode of retrieval ('all' or 'current_page').
+	 * @param array<string, mixed> $args Optional arguments.
+	 * @param string               $taxonomy The taxonomy to retrieve. Default 'category'.
 	 *
 	 * @return array<int|string, array{id: int, name: string, slug: string, total: int, current: bool, url?: string}> An array of terms with their details.
 	 */
@@ -416,14 +429,19 @@ trait Query {
 		if ( ! $post_id ) {
 			global $post;
 
-			if ( isset( $post ) ) {
+			if ( $post instanceof \WP_Post ) {
 				$post_id = $post->ID;
 			} else {
 				return $result;
 			}
 		}
 
-		$author_id = get_post_field( 'post_author', $post_id );
+		$post_id_validated = self::get_post_id( $post_id );
+		if ( $post_id_validated === null ) {
+			return $result;
+		}
+
+		$author_id = get_post_field( 'post_author', $post_id_validated );
 
 		if ( ! $author_id || ! is_numeric( $author_id ) ) {
 			return $result;

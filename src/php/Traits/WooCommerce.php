@@ -161,7 +161,7 @@ trait WooCommerce {
 
 			// Add WooCommerce page URLs to the array
 			foreach ( $woocommerce_pages as $page => $page_id ) {
-				if ( ! empty( $page_id ) ) {
+				if ( ! empty( $page_id ) && is_int( $page_id ) ) {
 					$permalink = get_permalink( $page_id );
 					if ( is_string( $permalink ) ) {
 						$woocommerce_urls[] = untrailingslashit( $permalink );
@@ -172,8 +172,9 @@ trait WooCommerce {
 
 		// Retrieve WooCommerce permalink structure URLs
 		if ( function_exists( 'wc_get_permalink_structure' ) ) {
-			$woocommerce_permalinks = wc_get_permalink_structure();
-			$site_base_url          = trailingslashit( get_site_url() );
+			$woocommerce_permalinks_raw = wc_get_permalink_structure();
+			$woocommerce_permalinks     = self::get_array_value( $woocommerce_permalinks_raw );
+			$site_base_url              = trailingslashit( get_site_url() );
 
 			$permalink_bases = array(
 				'product_base'   => 'product_base',
@@ -184,7 +185,7 @@ trait WooCommerce {
 
 			foreach ( $permalink_bases as $base_key => $base_value ) {
 				if ( array_key_exists( $base_key, $woocommerce_permalinks ) && ! empty( $woocommerce_permalinks[ $base_key ] ) ) {
-					$woocommerce_urls[] = untrailingslashit( $site_base_url . $woocommerce_permalinks[ $base_key ] );
+					$woocommerce_urls[] = untrailingslashit( $site_base_url . self::get_string_value( $woocommerce_permalinks[ $base_key ] ) );
 				}
 			}
 		}
@@ -202,7 +203,11 @@ trait WooCommerce {
 	 * @return string The WooCommerce page title if the function exists, otherwise an empty string.
 	 */
 	public static function get_woocommerce_page_title() {
-		return function_exists( 'woocommerce_page_title' ) ? woocommerce_page_title( false ) : '';
+		if ( function_exists( 'woocommerce_page_title' ) ) {
+			$title = woocommerce_page_title( false );
+			return is_string( $title ) ? $title : '';
+		}
+		return '';
 	}
 
 	/**
@@ -217,7 +222,7 @@ trait WooCommerce {
 		if ( function_exists( 'wc_get_product' ) ) {
 			$product = wc_get_product( $product_id );
 
-			if ( $product ) {
+			if ( is_object( $product ) && method_exists( $product, 'get_id' ) && method_exists( $product, 'get_name' ) && method_exists( $product, 'get_price' ) && method_exists( $product, 'get_type' ) ) {
 				return array(
 					'id'    => $product->get_id(),
 					'name'  => $product->get_name(),
@@ -242,8 +247,8 @@ trait WooCommerce {
 		if ( function_exists( 'wc_get_product' ) ) {
 			$product = wc_get_product( $product_id );
 
-			if ( $product ) {
-				return $product->is_in_stock();
+			if ( is_object( $product ) && method_exists( $product, 'is_in_stock' ) ) {
+				return (bool) $product->is_in_stock();
 			}
 		}
 
@@ -258,8 +263,15 @@ trait WooCommerce {
 	 * @return array<string, mixed> Cart contents.
 	 */
 	public static function get_cart_contents() {
-		if ( function_exists( 'WC' ) && isset( WC()->cart ) ) {
-			return WC()->cart->get_cart();
+		if ( function_exists( 'WC' ) ) {
+			$wc = WC();
+			if ( is_object( $wc ) && isset( $wc->cart ) && is_object( $wc->cart ) && method_exists( $wc->cart, 'get_cart' ) ) {
+				$cart = $wc->cart->get_cart();
+				if ( is_array( $cart ) ) {
+					/** @var array<string, mixed> $cart */
+					return $cart;
+				}
+			}
 		}
 
 		return array();
@@ -273,11 +285,15 @@ trait WooCommerce {
 	 * @return float Cart total.
 	 */
 	public static function get_cart_total() {
-		if ( function_exists( 'WC' ) && isset( WC()->cart ) ) {
-			return WC()->cart->get_cart_contents_total();
+		if ( function_exists( 'WC' ) ) {
+			$wc = WC();
+			if ( is_object( $wc ) && isset( $wc->cart ) && is_object( $wc->cart ) && method_exists( $wc->cart, 'get_cart_contents_total' ) ) {
+				$total = $wc->cart->get_cart_contents_total();
+				return is_numeric( $total ) ? (float) $total : 0.0;
+			}
 		}
 
-		return 0;
+		return 0.0;
 	}
 
 	/**
@@ -292,8 +308,8 @@ trait WooCommerce {
 		if ( function_exists( 'wc_get_product' ) ) {
 			$product = wc_get_product( $product_id );
 
-			if ( $product ) {
-				return $product->is_purchasable();
+			if ( is_object( $product ) && method_exists( $product, 'is_purchasable' ) ) {
+				return (bool) $product->is_purchasable();
 			}
 		}
 
@@ -312,8 +328,13 @@ trait WooCommerce {
 		if ( function_exists( 'wc_get_product' ) ) {
 			$product = wc_get_product( $product_id );
 
-			if ( $product ) {
-				return $product->get_gallery_image_ids();
+			if ( is_object( $product ) && method_exists( $product, 'get_gallery_image_ids' ) ) {
+				$gallery_ids = $product->get_gallery_image_ids();
+				if ( is_array( $gallery_ids ) ) {
+					/** @var list<int> $gallery_ids */
+					return $gallery_ids;
+				}
+				return false;
 			}
 		}
 

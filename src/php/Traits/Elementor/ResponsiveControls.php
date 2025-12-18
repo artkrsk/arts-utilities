@@ -114,7 +114,7 @@ trait ResponsiveControls {
 
 		$elementor_breakpoints     = \Elementor\Plugin::$instance->breakpoints;
 		$breakpoints_config        = $elementor_breakpoints->get_breakpoints_config();
-		$widescreen_key            = $elementor_breakpoints::BREAKPOINT_KEY_WIDESCREEN;
+		$widescreen_key            = self::get_string_value( $elementor_breakpoints::BREAKPOINT_KEY_WIDESCREEN );
 		$has_widescreen_breakpoint = false;
 		$queries                   = array();
 

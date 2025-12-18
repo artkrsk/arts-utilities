@@ -77,19 +77,21 @@ trait Taxonomies {
 			'product_shipping_class',
 			false,
 		);
-		$exclude_taxonomies = apply_filters( 'arts/utilities/taxonomies/get_post_terms/exclude_taxonomies', $exclude_taxonomies );
+		$exclude_taxonomies = self::get_array_value( apply_filters( 'arts/utilities/taxonomies/get_post_terms/exclude_taxonomies', $exclude_taxonomies ) );
 
 		foreach ( $taxonomies as $taxonomy ) {
-			if ( ! isset( $taxonomy->name ) ) {
+			if ( ! is_object( $taxonomy ) || ! isset( $taxonomy->name ) || ! is_string( $taxonomy->name ) ) {
 				continue;
 			}
 
+			$taxonomy_name_value = $taxonomy->name;
+
 			$taxonomy_terms = get_the_terms(
 				$post,
-				$taxonomy->name
+				$taxonomy_name_value
 			);
 
-			if ( ! in_array( $taxonomy->name, $exclude_taxonomies ) ) {
+			if ( ! in_array( $taxonomy_name_value, $exclude_taxonomies, true ) ) {
 				$terms = array();
 
 				if ( is_array( $taxonomy_terms ) ) {
@@ -102,14 +104,14 @@ trait Taxonomies {
 					}
 				}
 
-				$taxonomy_name = '';
-				if ( isset( $taxonomy->labels->name ) ) {
-					$taxonomy_name = $taxonomy->labels->name;
+				$taxonomy_label_name = '';
+				if ( isset( $taxonomy->labels ) && is_object( $taxonomy->labels ) && isset( $taxonomy->labels->name ) && is_string( $taxonomy->labels->name ) ) {
+					$taxonomy_label_name = $taxonomy->labels->name;
 				}
 
 				$result[] = array(
-					'id'    => $taxonomy->name,
-					'name'  => $taxonomy_name,
+					'id'    => $taxonomy_name_value,
+					'name'  => $taxonomy_label_name,
 					'terms' => $terms,
 				);
 			}

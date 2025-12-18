@@ -147,7 +147,7 @@ trait Document {
 
 		$background_image = self::get_body_document_option( 'background_image' );
 		if ( $background_image && is_array( $background_image ) && array_key_exists( 'url', $background_image ) && ! empty( $background_image['url'] ) ) {
-			$model['backgroundImage'] = "url({$background_image['url']})";
+			$model['backgroundImage'] = 'url(' . self::get_string_value( $background_image['url'] ) . ')';
 
 			$background_position = self::get_body_document_option( 'background_position' );
 			if ( $background_position ) {
@@ -175,38 +175,38 @@ trait Document {
 		$padding = self::get_body_document_option( 'padding' );
 		if ( $padding && is_array( $padding ) ) {
 			if ( ! empty( $padding['top'] ) ) {
-				$model['paddingTop'] = $padding['top'] . $padding['unit'];
+				$model['paddingTop'] = self::get_string_value( $padding['top'] ) . self::get_string_value( $padding['unit'] );
 			}
 
 			if ( ! empty( $padding['right'] ) ) {
-				$model['paddingRight'] = $padding['right'] . $padding['unit'];
+				$model['paddingRight'] = self::get_string_value( $padding['right'] ) . self::get_string_value( $padding['unit'] );
 			}
 
 			if ( ! empty( $padding['bottom'] ) ) {
-				$model['paddingBottom'] = $padding['bottom'] . $padding['unit'];
+				$model['paddingBottom'] = self::get_string_value( $padding['bottom'] ) . self::get_string_value( $padding['unit'] );
 			}
 
 			if ( ! empty( $padding['left'] ) ) {
-				$model['paddingLeft'] = $padding['left'] . $padding['unit'];
+				$model['paddingLeft'] = self::get_string_value( $padding['left'] ) . self::get_string_value( $padding['unit'] );
 			}
 		}
 
 		$margin = self::get_body_document_option( 'margin' );
 		if ( $margin && is_array( $margin ) ) {
 			if ( ! empty( $margin['top'] ) ) {
-				$model['marginTop'] = $margin['top'] . $margin['unit'];
+				$model['marginTop'] = self::get_string_value( $margin['top'] ) . self::get_string_value( $margin['unit'] );
 			}
 
 			if ( ! empty( $margin['right'] ) ) {
-				$model['marginRight'] = $margin['right'] . $margin['unit'];
+				$model['marginRight'] = self::get_string_value( $margin['right'] ) . self::get_string_value( $margin['unit'] );
 			}
 
 			if ( ! empty( $margin['bottom'] ) ) {
-				$model['marginBottom'] = $margin['bottom'] . $margin['unit'];
+				$model['marginBottom'] = self::get_string_value( $margin['bottom'] ) . self::get_string_value( $margin['unit'] );
 			}
 
 			if ( ! empty( $margin['left'] ) ) {
-				$model['marginLeft'] = $margin['left'] . $margin['unit'];
+				$model['marginLeft'] = self::get_string_value( $margin['left'] ) . self::get_string_value( $margin['unit'] );
 			}
 		}
 

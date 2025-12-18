@@ -50,11 +50,13 @@ trait LoopedPosts {
 		);
 
 		$args = wp_parse_args( $args, $defaults );
+		/** @var array<string, mixed> $args */
 
 		$posts = self::get_posts( $args );
 
 		if ( ! empty( $posts ) ) {
-			$current_post_index = self::get_current_post_index( $posts, $args['post_id'] );
+			$post_id_value = self::get_int_value( $args['post_id'] );
+			$current_post_index = self::get_current_post_index( $posts, $post_id_value );
 
 			if ( $current_post_index !== null ) {
 				$next_post = self::get_next_post_in_loop( $posts, $current_post_index );
@@ -231,6 +233,23 @@ trait LoopedPosts {
 	}
 
 	/**
+	 * Get the MOCK_DATA global as an array.
+	 *
+	 * @since 1.1.12
+	 *
+	 * @return array<string, mixed> The MOCK_DATA array.
+	 */
+	private static function get_mock_data() {
+		global $MOCK_DATA;
+		if ( ! isset( $MOCK_DATA ) ) {
+			$MOCK_DATA = array();
+		}
+		$result = is_array( $MOCK_DATA ) ? $MOCK_DATA : array();
+		/** @var array<string, mixed> $result */
+		return $result;
+	}
+
+	/**
 	 * Setup looped posts for iteration.
 	 *
 	 * @since 1.0.0
@@ -240,6 +259,9 @@ trait LoopedPosts {
 	 */
 	public function setup_looped_posts( $posts ) {
 		global $MOCK_DATA;
+		if ( ! is_array( $MOCK_DATA ) ) {
+			$MOCK_DATA = array();
+		}
 
 		$MOCK_DATA['looped_posts']        = $posts;
 		$MOCK_DATA['looped_posts_index']  = 0;
@@ -262,15 +284,21 @@ trait LoopedPosts {
 	 */
 	public function have_looped_posts() {
 		global $MOCK_DATA;
+		if ( ! is_array( $MOCK_DATA ) ) {
+			return false;
+		}
 
 		if ( ! isset( $MOCK_DATA['looped_posts_index'] ) || ! isset( $MOCK_DATA['looped_posts_count'] ) ) {
 			return false;
 		}
 
-		$have_posts = $MOCK_DATA['looped_posts_index'] < $MOCK_DATA['looped_posts_count'];
+		$index = is_int( $MOCK_DATA['looped_posts_index'] ) ? $MOCK_DATA['looped_posts_index'] : 0;
+		$count = is_int( $MOCK_DATA['looped_posts_count'] ) ? $MOCK_DATA['looped_posts_count'] : 0;
+
+		$have_posts = $index < $count;
 
 		if ( $have_posts ) {
-			$MOCK_DATA['looped_posts_index']++;
+			$MOCK_DATA['looped_posts_index'] = $index + 1;
 		}
 
 		return $have_posts;
@@ -288,16 +316,24 @@ trait LoopedPosts {
 	 */
 	public function the_looped_post() {
 		global $MOCK_DATA;
+		if ( ! is_array( $MOCK_DATA ) ) {
+			return null;
+		}
 
 		if ( ! isset( $MOCK_DATA['looped_posts'] ) || ! isset( $MOCK_DATA['looped_posts_index'] ) ) {
 			return null;
 		}
 
-		$index = $MOCK_DATA['looped_posts_index'] - 1;
+		$posts = is_array( $MOCK_DATA['looped_posts'] ) ? $MOCK_DATA['looped_posts'] : array();
+		$raw_index = $MOCK_DATA['looped_posts_index'];
+		$index = is_int( $raw_index ) ? $raw_index - 1 : -1;
 
-		if ( $index >= 0 && isset( $MOCK_DATA['looped_posts'][ $index ] ) ) {
-			$MOCK_DATA['current_looped_post'] = $MOCK_DATA['looped_posts'][ $index ];
-			return $MOCK_DATA['current_looped_post'];
+		if ( $index >= 0 && isset( $posts[ $index ] ) ) {
+			$current_post = $posts[ $index ];
+			if ( is_object( $current_post ) ) {
+				$MOCK_DATA['current_looped_post'] = $current_post;
+				return $current_post;
+			}
 		}
 
 		return null;
@@ -313,12 +349,22 @@ trait LoopedPosts {
 	 */
 	public function get_looped_post( $index ) {
 		global $MOCK_DATA;
-
-		if ( ! isset( $MOCK_DATA['looped_posts'] ) || ! isset( $MOCK_DATA['looped_posts'][ $index ] ) ) {
+		if ( ! is_array( $MOCK_DATA ) ) {
 			return null;
 		}
 
-		return $MOCK_DATA['looped_posts'][ $index ];
+		if ( ! isset( $MOCK_DATA['looped_posts'] ) ) {
+			return null;
+		}
+
+		$posts = is_array( $MOCK_DATA['looped_posts'] ) ? $MOCK_DATA['looped_posts'] : array();
+
+		if ( ! isset( $posts[ $index ] ) ) {
+			return null;
+		}
+
+		$post = $posts[ $index ];
+		return is_object( $post ) ? $post : null;
 	}
 
 	/**
@@ -333,6 +379,9 @@ trait LoopedPosts {
 	 */
 	public function rewind_looped_posts() {
 		global $MOCK_DATA;
+		if ( ! is_array( $MOCK_DATA ) ) {
+			$MOCK_DATA = array();
+		}
 
 		$MOCK_DATA['looped_posts_index']  = 0;
 		$MOCK_DATA['current_looped_post'] = null;
@@ -349,6 +398,9 @@ trait LoopedPosts {
 	 */
 	public function reset_looped_posts() {
 		global $MOCK_DATA;
+		if ( ! is_array( $MOCK_DATA ) ) {
+			return;
+		}
 
 		unset( $MOCK_DATA['looped_posts'] );
 		unset( $MOCK_DATA['looped_posts_index'] );
@@ -365,8 +417,16 @@ trait LoopedPosts {
 	 */
 	public function get_looped_posts_count() {
 		global $MOCK_DATA;
+		if ( ! is_array( $MOCK_DATA ) ) {
+			return 0;
+		}
 
-		return isset( $MOCK_DATA['looped_posts_count'] ) ? $MOCK_DATA['looped_posts_count'] : 0;
+		if ( ! isset( $MOCK_DATA['looped_posts_count'] ) ) {
+			return 0;
+		}
+
+		$count = $MOCK_DATA['looped_posts_count'];
+		return is_int( $count ) ? $count : 0;
 	}
 
 	/**
@@ -378,7 +438,15 @@ trait LoopedPosts {
 	 */
 	public function get_looped_post_index() {
 		global $MOCK_DATA;
+		if ( ! is_array( $MOCK_DATA ) ) {
+			return 0;
+		}
 
-		return isset( $MOCK_DATA['looped_posts_index'] ) ? $MOCK_DATA['looped_posts_index'] : 0;
+		if ( ! isset( $MOCK_DATA['looped_posts_index'] ) ) {
+			return 0;
+		}
+
+		$index = $MOCK_DATA['looped_posts_index'];
+		return is_int( $index ) ? $index : 0;
 	}
 }
