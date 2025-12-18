@@ -237,16 +237,27 @@ trait Query {
 	}
 
 	/**
-	 * Fix for Intutive Custom Posts Order plugin
-	 * when custom posts sorting in Elementor is applied.
-	 * Returns the original $_GET['orderby'] value for later restore.
-	 * Call it right before \WP_Query.
+	 * WORKAROUND for Intuitive Custom Post Order plugin conflict.
+	 *
+	 * The HICPO plugin intercepts WP_Query and incorrectly handles orderby=post__in,
+	 * breaking custom post ordering in Elementor. This method temporarily sets
+	 * $_GET['orderby'] to bypass the plugin's faulty check.
+	 *
+	 * IMPORTANT: This is technical debt for third-party plugin compatibility.
+	 * - Sets known-safe value ('post__in'), NOT user input
+	 * - Restored immediately via fix_query_hicpo_after()
+	 * - Called right before WP_Query execution
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array<string, mixed> $query_args - WP_Query arguments
+	 * @param array<string, mixed> $query_args WP_Query arguments to check for orderby=post__in.
 	 *
-	 * @return string
+	 * @return string Original $_GET['orderby'] value for restoration.
+	 *
+	 * @see fix_query_hicpo_after() Restores original $_GET value.
+	 * @link https://wordpress.org/plugins/intuitive-custom-post-order/
+	 *
+	 * @todo Consider using 'pre_get_posts' filter instead of global manipulation.
 	 */
 	public static function fix_query_hicpo_before( $query_args = array() ) {
 		/** @var array<string, mixed> $query_args_validated */
@@ -255,6 +266,7 @@ trait Query {
 		$get_orderby             = isset( $_GET['orderby'] ) ? $_GET['orderby'] : null;
 
 		if ( $should_alter_global_get ) {
+			// Temporarily modify $_GET to work around HICPO plugin bug
 			global $_GET;
 			if ( is_array( $_GET ) ) {
 				$_GET['orderby'] = 'post__in';
