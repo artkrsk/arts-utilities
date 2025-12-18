@@ -20,13 +20,7 @@ parameters:
 	# Treat PHPDoc types as uncertain for better WordPress compatibility
 	treatPhpDocTypesAsCertain: false
 
-	# Don't report unmatched ignored error patterns
-	reportUnmatchedIgnoredErrors: false
-
 	ignoreErrors:
-		# WordPress core functions may return mixed types
-		- '#Function wp_parse_args invoked with [0-9]+ parameters?, 2 required#'
-
 		# wp_style_add_data() accepts any string key for custom metadata
 		# WordPress stubs restrict to core keys, but custom keys are supported
 		# Verified in WordPress core: wp-includes/functions.wp-styles.php

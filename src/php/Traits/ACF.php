@@ -72,7 +72,7 @@ trait ACF {
 			$result = get_field_objects( $post_id, $format_value, $load_value, $escape_html );
 			if ( is_array( $result ) ) {
 				/** @var array<string, array<string, mixed>> $result */
-			return $result;
+				return $result;
 			}
 			return false;
 		} else {

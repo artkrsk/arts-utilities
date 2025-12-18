@@ -57,17 +57,10 @@ trait LoopedPosts {
 			$post_id_value = self::get_int_value( $args['post_id'] );
 			$current_post_index = self::get_current_post_index( $posts, $post_id_value );
 
-			if ( $current_post_index !== null ) {
-				$next_post = self::get_next_post_in_loop( $posts, $current_post_index );
-				$prev_post = self::get_previous_post_in_loop( $posts, $current_post_index );
-
-				if ( $next_post instanceof \WP_Post || $next_post === null ) {
-					$prev_next_posts['next'] = $next_post;
-				}
-				if ( $prev_post instanceof \WP_Post || $prev_post === null ) {
-					$prev_next_posts['previous'] = $prev_post;
-				}
-			}
+		if ( $current_post_index !== null ) {
+			$prev_next_posts['next'] = self::get_next_post_in_loop( $posts, $current_post_index );
+			$prev_next_posts['previous'] = self::get_previous_post_in_loop( $posts, $current_post_index );
+		}
 		}
 
 		return $prev_next_posts;
@@ -191,7 +184,7 @@ trait LoopedPosts {
 	 *
 	 * @param list<\WP_Post> $posts              The array of posts.
 	 * @param int   $current_post_index The index of the current post.
-	 * @return mixed|null The next post in the loop, or null if there is no next post.
+	 * @return \WP_Post|null The next post in the loop, or null if there is no next post.
 	 */
 	private static function get_next_post_in_loop( $posts, $current_post_index ) {
 		$next_index      = $current_post_index + 1;
@@ -217,7 +210,7 @@ trait LoopedPosts {
 	 *
 	 * @param list<\WP_Post> $posts             The array of posts.
 	 * @param int   $current_post_index The index of the current post.
-	 * @return mixed|null The previous post in the loop, or null if not found.
+	 * @return \WP_Post|null The previous post in the loop, or null if not found.
 	 */
 	private static function get_previous_post_in_loop( $posts, $current_post_index ) {
 		$prev_index = $current_post_index - 1;

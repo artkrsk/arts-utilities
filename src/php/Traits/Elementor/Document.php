@@ -49,14 +49,14 @@ trait Document {
 
 		// Ensure we have a Manager object, not an array or null
 		if ( ! $page_settings_manager || is_array( $page_settings_manager ) ) {
-			return '';
+			return $fallback_value;
 		}
 
 		// Get the settings model for current post
 		$page_settings_model = $page_settings_manager->get_model( $post_id );
 
 		if ( ! $page_settings_model ) {
-			return '';
+			return $fallback_value;
 		}
 
 		// Retrieve the settings we added before
@@ -246,14 +246,14 @@ trait Document {
 
 		// Ensure we have a Manager object, not an array or null
 		if ( ! $page_settings_manager || is_array( $page_settings_manager ) ) {
-			return '';
+			return $fallback_value;
 		}
 
 		// Get the settings model for current post
 		$page_settings_model = $page_settings_manager->get_model( $post_id );
 
 		if ( ! $page_settings_model ) {
-			return '';
+			return $fallback_value;
 		}
 
 		$settings = $page_settings_model->get_settings();
