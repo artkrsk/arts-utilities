@@ -50,6 +50,7 @@ trait Controls {
 			return false;
 		}
 
+		/** @phpstan-ignore-next-line */
 		require_once $bfi_thumb_path;
 
 		// Extract image ID from array if needed.

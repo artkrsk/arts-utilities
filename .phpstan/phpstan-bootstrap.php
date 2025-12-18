@@ -9,12 +9,12 @@
 
 // Define WordPress constants if not already defined
 if ( ! defined( 'ABSPATH' ) ) {
-	define( 'ABSPATH', dirname( __DIR__ ) . '/__tests__/php/fake-wp/' );
+	define( 'ABSPATH', dirname( __DIR__ ) . '/vendor/szepeviktor/phpstan-wordpress/wordpress/' );
 }
 
 // Define Elementor path constant
 if ( ! defined( 'ELEMENTOR_PATH' ) ) {
-	define( 'ELEMENTOR_PATH', dirname( __DIR__ ) . '/__tests__/php/fake-elementor/' );
+	define( 'ELEMENTOR_PATH', dirname( __DIR__ ) . '/vendor/' );
 }
 
 // Define WordPress object constants if not already defined
