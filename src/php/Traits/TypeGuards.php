@@ -47,7 +47,15 @@ trait TypeGuards {
 	 * @return string The validated string or default.
 	 */
 	public static function get_string_value( $value, $default = '' ) {
-		return is_string( $value ) ? $value : $default;
+		if ( is_string( $value ) ) {
+			return $value;
+		}
+
+		if ( is_scalar( $value ) ) {
+			return (string) $value;
+		}
+
+		return $default;
 	}
 
 	/**
