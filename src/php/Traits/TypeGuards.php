@@ -51,10 +51,12 @@ trait TypeGuards {
 			return $value;
 		}
 
-		if ( is_scalar( $value ) ) {
+		// Explicitly handle numeric values
+		if ( is_int( $value ) || is_float( $value ) ) {
 			return (string) $value;
 		}
 
+		// For bool, null, arrays, objects, return default
 		return $default;
 	}
 

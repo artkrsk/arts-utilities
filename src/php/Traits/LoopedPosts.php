@@ -2,6 +2,8 @@
 
 namespace Arts\Utilities\Traits;
 
+use WP_Query;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
@@ -76,7 +78,7 @@ trait LoopedPosts {
 	 */
 	private static function get_posts( $args ) {
 		$query_args = self::get_query_args( $args );
-		$loop       = new \WP_Query( $query_args );
+		$loop       = new WP_Query( $query_args );
 		$posts      = self::get_posts_from_loop( $loop );
 		wp_reset_postdata();
 
