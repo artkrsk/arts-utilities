@@ -25,12 +25,16 @@ trait ResponsiveControls {
 	 * @param \Elementor\Element_Base $controls_stack The controls stack object.
 	 * @param string                  $option         The option to retrieve the enabled settings for.
 	 *
-	 * @return array The enabled settings for the given option.
+	 * @return array<string, mixed> The enabled settings for the given option.
 	 */
 	public static function get_enabled_settings_map( \Elementor\Element_Base $controls_stack, $option = '' ) {
 		$enabled_map = array();
 
-		if ( ! $option || ! is_string( $option ) || ! $controls_stack ) {
+		if ( ! $option || ! is_string( $option ) ) {
+			return $enabled_map;
+		}
+
+		if ( ! \Elementor\Plugin::$instance || ! \Elementor\Plugin::$instance->breakpoints ) {
 			return $enabled_map;
 		}
 
@@ -42,7 +46,7 @@ trait ResponsiveControls {
 
 		// Proactively check all active breakpoints.
 		foreach ( $breakpoints_config as $breakpoint_name => $config ) {
-			if ( $config['is_enabled'] ) {
+			if ( is_array( $config ) && isset( $config['is_enabled'] ) && $config['is_enabled'] ) {
 				$breakpoint_setting              = "{$option}_{$breakpoint_name}";
 				$breakpoint_value                = $controls_stack->get_settings_for_display( $breakpoint_setting );
 				$enabled_map[ $breakpoint_name ] = $breakpoint_value;
@@ -67,7 +71,7 @@ trait ResponsiveControls {
 	 */
 	public static function get_media_query_string_for_responsive_option( \Elementor\Element_Base $controls_stack, $option = '', $additional_query_suffix = '' ) {
 		$enabled_map = self::get_enabled_settings_map( $controls_stack, $option );
-		$queries     = self::get_queries( $enabled_map, $controls_stack );
+		$queries     = self::get_queries( $enabled_map );
 		$queries     = self::add_additional_query_suffix( $queries, $additional_query_suffix );
 
 		return implode( ', ', $queries );
@@ -100,50 +104,59 @@ trait ResponsiveControls {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array $enabled_map The map of enabled breakpoints.
-	 * @return array The array of responsive queries.
+	 * @param array<string, mixed> $enabled_map The map of enabled breakpoints.
+	 * @return list<string> The array of responsive queries.
 	 */
 	private static function get_queries( $enabled_map ) {
+		if ( ! \Elementor\Plugin::$instance || ! \Elementor\Plugin::$instance->breakpoints ) {
+			return array();
+		}
+
 		$elementor_breakpoints     = \Elementor\Plugin::$instance->breakpoints;
 		$breakpoints_config        = $elementor_breakpoints->get_breakpoints_config();
-		$widescreen_key            = $elementor_breakpoints::BREAKPOINT_KEY_WIDESCREEN;
+		$widescreen_key            = self::get_string_value( $elementor_breakpoints::BREAKPOINT_KEY_WIDESCREEN );
 		$has_widescreen_breakpoint = false;
 		$queries                   = array();
 
-		foreach ( $breakpoints_config as $breakpoint => $config ) {
-			if ( in_array( $breakpoint, array_keys( $enabled_map ) ) && $config['is_enabled'] ) {
-				if ( $enabled_map[ $breakpoint ] === 'yes' ) {
-					if ( $config['direction'] === 'max' ) {
-						$min_width = $elementor_breakpoints->get_device_min_breakpoint( $breakpoint );
-						$queries[] = '(min-width: ' . $min_width . 'px) and (max-width: ' . $config['value'] . 'px)';
-					} else {
-						$queries[] = '(min-width: ' . $config['value'] . 'px)';
-					}
-				} else {
-					if ( $config['direction'] === 'min' ) {
-						// $min_width = $elementor_breakpoints->get_device_min_breakpoint( $breakpoint );
-						$queries[] = 'not (min-width: ' . $config['value'] . 'px)';
-					}
-				}
+	foreach ( $breakpoints_config as $breakpoint => $config ) {
+		if ( ! is_array( $config ) || ! isset( $config['is_enabled'], $config['direction'], $config['value'] ) ) {
+			continue;
+		}
 
-				if ( $breakpoint === $widescreen_key ) {
-					$has_widescreen_breakpoint = true;
+		if ( in_array( $breakpoint, array_keys( $enabled_map ) ) && $config['is_enabled'] ) {
+			if ( $enabled_map[ $breakpoint ] === 'yes' ) {
+				if ( $config['direction'] === 'max' ) {
+					$min_width = $elementor_breakpoints->get_device_min_breakpoint( $breakpoint );
+					$queries[] = '(min-width: ' . self::get_string_value( $min_width ) . 'px) and (max-width: ' . self::get_string_value( $config['value'] ) . 'px)';
+				} else {
+					$queries[] = '(min-width: ' . self::get_string_value( $config['value'] ) . 'px)';
+				}
+			} else {
+				if ( $config['direction'] === 'min' ) {
+					// $min_width = $elementor_breakpoints->get_device_min_breakpoint( $breakpoint );
+					$queries[] = 'not (min-width: ' . self::get_string_value( $config['value'] ) . 'px)';
 				}
 			}
+
+			if ( $breakpoint === $widescreen_key ) {
+				$has_widescreen_breakpoint = true;
+			}
 		}
+	}
+
 
 		if ( array_key_exists( 'desktop', $enabled_map ) ) {
 			if ( $enabled_map['desktop'] === 'yes' ) {
 				$min_width = $elementor_breakpoints->get_desktop_min_point();
-				$queries[] = '(min-width: ' . $min_width . 'px)';
+				$queries[] = '(min-width: ' . self::get_string_value( $min_width ) . 'px)';
 
-				if ( $has_widescreen_breakpoint ) {
-					$queries[] = ' and (max-width: ' . $config['value'] . 'px)';
+				if ( $has_widescreen_breakpoint && isset( $breakpoints_config[ $widescreen_key ] ) && is_array( $breakpoints_config[ $widescreen_key ] ) && isset( $breakpoints_config[ $widescreen_key ]['value'] ) ) {
+					$queries[] = ' and (max-width: ' . self::get_string_value( $breakpoints_config[ $widescreen_key ]['value'] ) . 'px)';
 				}
 			} else {
-				if ( $has_widescreen_breakpoint ) {
+				if ( $has_widescreen_breakpoint && isset( $breakpoints_config[ $widescreen_key ] ) && is_array( $breakpoints_config[ $widescreen_key ] ) && isset( $breakpoints_config[ $widescreen_key ]['value'] ) ) {
 					$min_width = $elementor_breakpoints->get_desktop_min_point();
-					$queries[] = 'not ((min-width: ' . $min_width . 'px) and (max-width: ' . $config['value'] . 'px))';
+					$queries[] = 'not ((min-width: ' . self::get_string_value( $min_width ) . 'px) and (max-width: ' . self::get_string_value( $breakpoints_config[ $widescreen_key ]['value'] ) . 'px))';
 				}
 			}
 		}
@@ -156,9 +169,9 @@ trait ResponsiveControls {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array  $queries                 The array of queries to modify.
-	 * @param string $additional_query_suffix The additional query suffix to add.
-	 * @return array The modified array of queries.
+	 * @param list<string>          $queries                 The array of queries to modify.
+	 * @param string                $additional_query_suffix The additional query suffix to add.
+	 * @return list<string> The modified array of queries.
 	 */
 	private static function add_additional_query_suffix( $queries, $additional_query_suffix ) {
 		if ( ! empty( $additional_query_suffix ) ) {

@@ -67,7 +67,8 @@ trait Blog {
 
 		$attributes = self::parse_args_recursive( $attributes, $default_attributes );
 
-		return self::print_attributes( $attributes, false );
+		$result = self::print_attributes( $attributes, false );
+		return $result ?? '';
 	}
 
 	/**

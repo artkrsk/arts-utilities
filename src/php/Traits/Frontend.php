@@ -19,8 +19,8 @@ trait Frontend {
 	/**
 	 * Registers and enqueues a script with dynamic loading metadata.
 	 *
-	 * @param string $type Type of the script. Either 'asset' or 'component'.
-	 * @param array  $args {
+	 * @param string                $type Type of the script. Either 'asset' or 'component'.
+	 * @param array<string, mixed>  $args {
 	 *     An array of arguments for the script.
 	 *
 	 *     @type string       $handle    Name of the script. Should be unique.
@@ -68,8 +68,9 @@ trait Frontend {
 			return;
 		}
 
-		$files_deps            = array();
-		$deps                  = is_array( $args['deps'] ) ? $args['deps'] : array();
+		$files_deps = array();
+		/** @var array<string> $deps */
+		$deps = is_array( $args['deps'] ) ? $args['deps'] : array();
 		$allowed_preload_types = array(
 			'preload',
 			'modulepreload',
@@ -77,9 +78,10 @@ trait Frontend {
 		);
 
 		// Enqueue Component files
-		if ( $type === 'component' && ! empty( $args['files'] ) ) {
-			foreach ( $args['files'] as $file ) {
-				if ( ! isset( $file['type'] ) || ! isset( $file['src'] ) ) {
+		$files = self::get_array_value( $args['files'] );
+		if ( $type === 'component' && ! empty( $files ) ) {
+			foreach ( $files as $file ) {
+				if ( ! is_array( $file ) || ! isset( $file['type'] ) || ! isset( $file['src'] ) || ! isset( $file['id'] ) ) {
 					continue;
 				}
 				$file_src    = $file['src'];
@@ -117,41 +119,65 @@ trait Frontend {
 			$deps = array_merge( $deps, $files_deps );
 		}
 
+		// Validate args for WordPress functions
+		$handle = self::get_string_value( $args['handle'] );
+		// Validate $src: must be string|false
+		$src = false;
+		if ( is_string( $args['src'] ) ) {
+			$src = $args['src'];
+		}
+		// Validate $ver: must be string|false|null
+		$ver = null;
+		if ( is_string( $args['ver'] ) ) {
+			$ver = $args['ver'];
+		} elseif ( $args['ver'] === false ) {
+			$ver = false;
+		}
+		/** @var array<string> $deps */
+		$script_args_value = $args['args'];
+		/** @var array{strategy?: string, in_footer?: bool, fetchpriority?: string}|bool $script_args */
+		$script_args = ( is_array( $script_args_value ) || is_bool( $script_args_value ) ) ? $script_args_value : true;
+
 		if ( $type === 'component' ) {
 			// WordPress 6.9+ requires array for $args in wp_register_script_module()
 			$script_module_args = $args['args'];
 			if ( ! is_array( $script_module_args ) ) {
 				$script_module_args = $script_module_args ? array( 'in_footer' => true ) : array();
 			}
-			wp_register_script_module( $args['handle'], $args['src'], $deps, $args['ver'], $script_module_args );
-			wp_register_script( $args['handle'], $args['src'], $deps, $args['ver'], $args['args'] );
+			/** @var array{in_footer?: bool, fetchpriority?: 'auto'|'high'|'low'} $script_module_args */
+			// For script modules, $src must be string and $deps must be properly formatted
+			$module_src = self::get_string_value( $src );
+			/** @var array<int|string, array{id: string, import?: string}> $module_deps */
+			$module_deps = array();
+			wp_register_script_module( $handle, $module_src, $module_deps, $ver, $script_module_args );
+			wp_register_script( $handle, $src, $deps, $ver, $script_args );
 		} else {
-			wp_register_script( $args['handle'], $args['src'], $deps, $args['ver'], $args['args'] );
+			wp_register_script( $handle, $src, $deps, $ver, $script_args );
 		}
 
-		wp_script_add_data( $args['handle'], 'dynamic_load_enabled', true );
-		wp_script_add_data( $args['handle'], 'dynamic_load_prevent_autoload', boolval( $args['dynamic_load_prevent_autoload'] ) );
-		wp_script_add_data( $args['handle'], 'dynamic_load_type', $type );
+		wp_script_add_data( $handle, 'dynamic_load_enabled', true );
+		wp_script_add_data( $handle, 'dynamic_load_prevent_autoload', boolval( $args['dynamic_load_prevent_autoload'] ) );
+		wp_script_add_data( $handle, 'dynamic_load_type', $type );
 
 		if ( $args['dynamic_load_handle'] ) {
-			wp_style_add_data( $args['handle'], 'dynamic_load_handle', $args['dynamic_load_handle'] );
+			wp_style_add_data( $handle, 'dynamic_load_handle', self::get_string_value( $args['dynamic_load_handle'] ) );
 		}
 
 		if ( $args['preload_type'] && in_array( $args['preload_type'], $allowed_preload_types, true ) ) {
-			wp_script_add_data( $args['handle'], 'preload_type', $args['preload_type'] );
+			wp_script_add_data( $handle, 'preload_type', self::get_string_value( $args['preload_type'] ) );
 		}
 
 		if ( $type === 'component' ) {
-			wp_enqueue_script_module( $args['handle'] );
+			wp_enqueue_script_module( $handle );
 		} else {
-			wp_enqueue_script( $args['handle'] );
+			wp_enqueue_script( $handle );
 		}
 	}
 
 	/**
 	 * Enqueue a dynamically loaded stylesheet.
 	 *
-	 * @param array $args {
+	 * @param array<string, mixed> $args {
 	 *   Arguments for enqueuing the stylesheet.
 	 *
 	 *   @type string $handle Name of the stylesheet. Should be unique.
@@ -186,20 +212,39 @@ trait Frontend {
 			'prefetch',
 		);
 
-		wp_register_style( $args['handle'], $args['src'], $args['deps'], $args['ver'], $args['media'] );
-		wp_style_add_data( $args['handle'], 'dynamic_load_enabled', true );
+		// Validate args for WordPress functions
+		$handle = self::get_string_value( $args['handle'] );
+		// Validate $src: must be string|false
+		$src = false;
+		if ( is_string( $args['src'] ) ) {
+			$src = $args['src'];
+		}
+		$deps_value = self::get_array_value( $args['deps'] );
+		/** @var array<string> $deps */
+		$deps   = $deps_value;
+		// Validate $ver: must be string|false|null
+		$ver = null;
+		if ( is_string( $args['ver'] ) ) {
+			$ver = $args['ver'];
+		} elseif ( $args['ver'] === false ) {
+			$ver = false;
+		}
+		$media  = self::get_string_value( $args['media'] );
+
+		wp_register_style( $handle, $src, $deps, $ver, $media );
+		wp_style_add_data( $handle, 'dynamic_load_enabled', true );
 
 		if ( $args['dynamic_load_handle'] ) {
-			wp_style_add_data( $args['handle'], 'dynamic_load_handle', $args['dynamic_load_handle'] );
+			wp_style_add_data( $handle, 'dynamic_load_handle', self::get_string_value( $args['dynamic_load_handle'] ) );
 		}
 
 		if ( $args['preload_type'] && in_array( $args['preload_type'], $allowed_preload_types, true ) ) {
-			wp_style_add_data( $args['handle'], 'preload_type', $args['preload_type'] );
+			wp_style_add_data( $handle, 'preload_type', self::get_string_value( $args['preload_type'] ) );
 		}
 
-		wp_style_add_data( $args['handle'], 'dynamic_load_prevent_autoload', boolval( $args['dynamic_load_prevent_autoload'] ) );
+		wp_style_add_data( $handle, 'dynamic_load_prevent_autoload', boolval( $args['dynamic_load_prevent_autoload'] ) );
 
-		wp_enqueue_style( $args['handle'] );
+		wp_enqueue_style( $handle );
 	}
 
 	/**
@@ -228,10 +273,6 @@ trait Frontend {
 			return false;
 		}
 
-		if ( ! isset( $wp_scripts->registered[ $handle ]->src ) ) {
-			return false;
-		}
-
 		return true;
 	}
 
@@ -254,10 +295,6 @@ trait Frontend {
 		}
 
 		if ( ! isset( $wp_styles->registered[ $handle ] ) ) {
-			return false;
-		}
-
-		if ( ! isset( $wp_styles->registered[ $handle ]->src ) ) {
 			return false;
 		}
 

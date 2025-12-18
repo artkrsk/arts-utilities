@@ -23,7 +23,7 @@ trait Kit {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array  $settings       The widget settings array.
+	 * @param array<string, mixed>  $settings       The widget settings array.
 	 * @param string $option_name    The option name to retrieve the color for.
 	 * @param string $fallback_value The fallback color value if not found.
 	 *
@@ -44,23 +44,26 @@ trait Kit {
 			return $fallback_value;
 		}
 
-		$color_control_id = self::get_global_color_control_id( $globals[ $option_name ] );
+		$color_control_id = self::get_global_color_control_id( self::get_string_value( $globals[ $option_name ] ) );
 
 		if ( ! $color_control_id ) {
 			return $fallback_value;
 		}
 
+		if ( ! \Elementor\Plugin::$instance || ! \Elementor\Plugin::$instance->kits_manager ) {
+			return $fallback_value;
+		}
+
 		$kit_manager = \Elementor\Plugin::$instance->kits_manager;
 
-		$global_settings = array_merge(
-			$kit_manager->get_current_settings( 'system_colors' ),
-			$kit_manager->get_current_settings( 'custom_colors' )
-		);
+	$system_colors   = self::get_array_value( $kit_manager->get_current_settings( 'system_colors' ) );
+	$custom_colors   = self::get_array_value( $kit_manager->get_current_settings( 'custom_colors' ) );
+	$global_settings = array_merge( $system_colors, $custom_colors );
 
 		$index = array_search( $color_control_id, array_column( $global_settings, '_id' ) );
 
-		if ( $index !== false && isset( $global_settings[ $index ] ) && isset( $global_settings[ $index ]['color'] ) ) {
-			return $global_settings[ $index ]['color'];
+		if ( $index !== false && isset( $global_settings[ $index ] ) && is_array( $global_settings[ $index ] ) && isset( $global_settings[ $index ]['color'] ) ) {
+			return self::get_string_value( $global_settings[ $index ]['color'], $fallback_value );
 		}
 
 		return $fallback_value;
@@ -80,7 +83,7 @@ trait Kit {
 	 * @return mixed The kit setting value or the fallback value.
 	 */
 	public static function get_kit_settings( $option_name = null, $fallback_value = null, $return_size = true ) {
-		if ( ! self::is_elementor_plugin_active() || ! \Elementor\Plugin::$instance->kits_manager ) {
+		if ( ! self::is_elementor_plugin_active() || ! \Elementor\Plugin::$instance || ! \Elementor\Plugin::$instance->kits_manager ) {
 			return $fallback_value;
 		}
 
@@ -112,11 +115,13 @@ trait Kit {
 	 * @return mixed The kit setting value or the fallback value.
 	 */
 	public static function get_kit_setting_or_option( $option_name = null, $fallback_value = null, $return_size = true ) {
-		if ( ! self::is_elementor_plugin_active() || ! \Elementor\Plugin::$instance->kits_manager ) {
-			$option_value = get_option( $option_name, $fallback_value );
+		if ( ! self::is_elementor_plugin_active() || ! \Elementor\Plugin::$instance || ! \Elementor\Plugin::$instance->kits_manager ) {
+			if ( is_string( $option_name ) ) {
+				$option_value = get_option( $option_name, $fallback_value );
 
-			if ( $option_value !== $fallback_value ) {
-				return $option_value;
+				if ( $option_value !== $fallback_value ) {
+					return $option_value;
+				}
 			}
 
 			return $fallback_value;
@@ -145,7 +150,7 @@ trait Kit {
 	 * @return bool True on success, false on failure.
 	 */
 	public static function update_kit_settings( $option_elementor, $value ) {
-		if ( ! self::is_elementor_plugin_active() || ! \Elementor\Plugin::$instance->kits_manager ) {
+		if ( ! self::is_elementor_plugin_active() || ! \Elementor\Plugin::$instance || ! \Elementor\Plugin::$instance->kits_manager ) {
 			return false;
 		}
 
@@ -178,8 +183,19 @@ trait Kit {
 		);
 
 		if ( $recent_edited_post->post_count ) {
-			$posts   = $recent_edited_post->get_posts();
-			$post_id = reset( $posts )->ID;
+			$posts = $recent_edited_post->get_posts();
+			$first_post = reset( $posts );
+
+			// Ensure we have a WP_Post object
+			if ( ! $first_post instanceof \WP_Post ) {
+				return '';
+			}
+
+			if ( ! \Elementor\Plugin::$instance || ! \Elementor\Plugin::$instance->kits_manager ) {
+				return '';
+			}
+
+			$post_id = $first_post->ID;
 			$kit_id  = \Elementor\Plugin::$instance->kits_manager->get_active_id();
 
 			$url = admin_url( 'post.php?post=' . $post_id . '&action=elementor&active-document=' . $kit_id );

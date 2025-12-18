@@ -27,7 +27,7 @@ trait Plugin {
 	 * @return string The version of the plugin.
 	 */
 	public static function get_plugin_version( $plugin_file = __FILE__ ) {
-		$data    = get_file_data( $plugin_file, array( 'ver' => 'Version' ), false );
+		$data    = get_file_data( $plugin_file, array( 'ver' => 'Version' ), '' );
 		$version = '';
 
 		if ( isset( $data['ver'] ) ) {

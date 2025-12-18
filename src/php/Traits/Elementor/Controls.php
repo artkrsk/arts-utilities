@@ -27,7 +27,7 @@ trait Controls {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array  $settings              The settings array.
+	 * @param array<string, mixed>  $settings              The settings array.
 	 * @param mixed  $image_id              The image ID or array containing the image ID.
 	 * @param string $group_control_prefix  The prefix for the group control.
 	 * @param string $size_control_suffix   The suffix for the size control. Default is 'size'.
@@ -50,6 +50,7 @@ trait Controls {
 			return false;
 		}
 
+		/** @phpstan-ignore-next-line */
 		require_once $bfi_thumb_path;
 
 		// Extract image ID from array if needed.
@@ -62,11 +63,11 @@ trait Controls {
 
 		// If custom size is selected, build an array with BFITHUMB cropping & aspect ratio logic.
 		if ( array_key_exists( "{$group_control_prefix}_{$size_control_suffix}", $settings ) && $settings[ "{$group_control_prefix}_{$size_control_suffix}" ] === 'custom' ) {
-			$aspect_ratio = self::get_image_aspect_ratio( $image_id );
+			$aspect_ratio = self::get_image_aspect_ratio( self::get_int_value( $image_id ) );
 
 			$dimensions    = self::get_group_control_value( $settings, $group_control_prefix, $custom_dimension_suffix, array() );
-			$custom_width  = $dimensions && array_key_exists( 'width', $dimensions ) ? $dimensions['width'] : 0;
-			$custom_height = $dimensions && array_key_exists( 'height', $dimensions ) ? $dimensions['height'] : 0;
+			$custom_width  = is_array( $dimensions ) && array_key_exists( 'width', $dimensions ) ? $dimensions['width'] : 0;
+			$custom_height = is_array( $dimensions ) && array_key_exists( 'height', $dimensions ) ? $dimensions['height'] : 0;
 
 			// Convert to floats or set them to null if zero.
 			$float_width  = null;
@@ -87,12 +88,12 @@ trait Controls {
 			);
 
 			// Restore missing width using the intrinsic aspect ratio.
-			if ( empty( $custom_width ) && ! empty( $custom_height ) && ! empty( $aspect_ratio ) ) {
+			if ( empty( $custom_width ) && ! empty( $custom_height ) && ! empty( $aspect_ratio ) && is_numeric( $custom_height ) && is_numeric( $aspect_ratio ) ) {
 				$thumbnail_size[0] = (float) $custom_height * (float) $aspect_ratio;
 			}
 
 			// Restore missing height using the intrinsic aspect ratio.
-			if ( empty( $custom_height ) && ! empty( $custom_width ) && ! empty( $aspect_ratio ) ) {
+			if ( empty( $custom_height ) && ! empty( $custom_width ) && ! empty( $aspect_ratio ) && is_numeric( $custom_width ) && is_numeric( $aspect_ratio ) ) {
 				$thumbnail_size[1] = (float) $custom_width / (float) $aspect_ratio;
 			}
 
@@ -110,8 +111,8 @@ trait Controls {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array  $settings            The settings array.
-	 * @param string $group_control_prefix The prefix for the group control.
+	 * @param array<string, mixed>  $settings            The settings array.
+	 * @param string                $group_control_prefix The prefix for the group control.
 	 * @param string $type                The type of control value to retrieve. Default is 'size'.
 	 * @param mixed  $fallback            The fallback value if the setting is not found. Default is 'full'.
 	 *

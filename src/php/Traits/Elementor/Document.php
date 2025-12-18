@@ -28,7 +28,7 @@ trait Document {
 	 * @return mixed The value of the option, or the fallback value if not found.
 	 */
 	public static function get_document_option( $option_name = '', $post_id = null, $fallback_value = '' ) {
-		if ( ! $option_name || empty( $option_name ) || ! class_exists( '\Elementor\Core\Settings\Manager' ) ) {
+		if ( ! $option_name || ! class_exists( '\Elementor\Core\Settings\Manager' ) ) {
 			return $fallback_value;
 		}
 
@@ -40,11 +40,24 @@ trait Document {
 			$post_id = get_the_ID();
 		}
 
+		if ( ! $post_id ) {
+			return $fallback_value;
+		}
+
 		// Get the page settings manager
 		$page_settings_manager = \Elementor\Core\Settings\Manager::get_settings_managers( 'page' );
 
+		// Ensure we have a Manager object, not an array or null
+		if ( ! $page_settings_manager || is_array( $page_settings_manager ) ) {
+			return $fallback_value;
+		}
+
 		// Get the settings model for current post
 		$page_settings_model = $page_settings_manager->get_model( $post_id );
+
+		if ( ! $page_settings_model ) {
+			return $fallback_value;
+		}
 
 		// Retrieve the settings we added before
 		return $page_settings_model->get_settings( $option_name );
@@ -103,7 +116,7 @@ trait Document {
 
 				// Return the actual background color
 				if ( ! empty( $document_background_color ) ) {
-					return $document_background_color;
+					return self::get_string_value( $document_background_color, $fallback_value );
 				} else { // Look for color in global colors
 					return self::get_global_color_value( $option_name, $post_id, $fallback_value );
 				}
@@ -120,7 +133,9 @@ trait Document {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @return array The body styles model including background, padding, and margin properties.
+	 * @param string $fallback_color_value The fallback color value. Default is '#ffffff'.
+	 *
+	 * @return array<string, mixed> The body styles model including background, padding, and margin properties.
 	 */
 	public static function get_body_styles_model( $fallback_color_value = '#ffffff' ) {
 		$model = array();
@@ -132,7 +147,7 @@ trait Document {
 
 		$background_image = self::get_body_document_option( 'background_image' );
 		if ( $background_image && is_array( $background_image ) && array_key_exists( 'url', $background_image ) && ! empty( $background_image['url'] ) ) {
-			$model['backgroundImage'] = "url({$background_image['url']})";
+			$model['backgroundImage'] = 'url(' . self::get_string_value( $background_image['url'] ) . ')';
 
 			$background_position = self::get_body_document_option( 'background_position' );
 			if ( $background_position ) {
@@ -160,38 +175,38 @@ trait Document {
 		$padding = self::get_body_document_option( 'padding' );
 		if ( $padding && is_array( $padding ) ) {
 			if ( ! empty( $padding['top'] ) ) {
-				$model['paddingTop'] = $padding['top'] . $padding['unit'];
+				$model['paddingTop'] = self::get_string_value( $padding['top'] ) . self::get_string_value( $padding['unit'] );
 			}
 
 			if ( ! empty( $padding['right'] ) ) {
-				$model['paddingRight'] = $padding['right'] . $padding['unit'];
+				$model['paddingRight'] = self::get_string_value( $padding['right'] ) . self::get_string_value( $padding['unit'] );
 			}
 
 			if ( ! empty( $padding['bottom'] ) ) {
-				$model['paddingBottom'] = $padding['bottom'] . $padding['unit'];
+				$model['paddingBottom'] = self::get_string_value( $padding['bottom'] ) . self::get_string_value( $padding['unit'] );
 			}
 
 			if ( ! empty( $padding['left'] ) ) {
-				$model['paddingLeft'] = $padding['left'] . $padding['unit'];
+				$model['paddingLeft'] = self::get_string_value( $padding['left'] ) . self::get_string_value( $padding['unit'] );
 			}
 		}
 
 		$margin = self::get_body_document_option( 'margin' );
 		if ( $margin && is_array( $margin ) ) {
 			if ( ! empty( $margin['top'] ) ) {
-				$model['marginTop'] = $margin['top'] . $margin['unit'];
+				$model['marginTop'] = self::get_string_value( $margin['top'] ) . self::get_string_value( $margin['unit'] );
 			}
 
 			if ( ! empty( $margin['right'] ) ) {
-				$model['marginRight'] = $margin['right'] . $margin['unit'];
+				$model['marginRight'] = self::get_string_value( $margin['right'] ) . self::get_string_value( $margin['unit'] );
 			}
 
 			if ( ! empty( $margin['bottom'] ) ) {
-				$model['marginBottom'] = $margin['bottom'] . $margin['unit'];
+				$model['marginBottom'] = self::get_string_value( $margin['bottom'] ) . self::get_string_value( $margin['unit'] );
 			}
 
 			if ( ! empty( $margin['left'] ) ) {
-				$model['marginLeft'] = $margin['left'] . $margin['unit'];
+				$model['marginLeft'] = self::get_string_value( $margin['left'] ) . self::get_string_value( $margin['unit'] );
 			}
 		}
 
@@ -222,32 +237,49 @@ trait Document {
 			$post_id = get_the_ID();
 		}
 
+		if ( ! $post_id ) {
+			return $fallback_value;
+		}
+
 		// Get the page settings manager
 		$page_settings_manager = \Elementor\Core\Settings\Manager::get_settings_managers( 'page' );
 
+		// Ensure we have a Manager object, not an array or null
+		if ( ! $page_settings_manager || is_array( $page_settings_manager ) ) {
+			return $fallback_value;
+		}
+
 		// Get the settings model for current post
 		$page_settings_model = $page_settings_manager->get_model( $post_id );
-		$settings            = $page_settings_model->get_settings();
 
-		if ( array_key_exists( '__globals__', $settings ) ) {
+		if ( ! $page_settings_model ) {
+			return $fallback_value;
+		}
+
+		$settings = $page_settings_model->get_settings();
+
+		if ( is_array( $settings ) && array_key_exists( '__globals__', $settings ) ) {
 			$settings = $settings['__globals__'];
 		}
 
 		if ( is_array( $settings ) && array_key_exists( $option_name, $settings ) ) {
-			$color_control_id = self::get_global_color_control_id( $settings[ $option_name ] );
+			$color_control_id = self::get_global_color_control_id( self::get_string_value( $settings[ $option_name ] ) );
 
 			if ( $color_control_id ) {
+				if ( ! \Elementor\Plugin::$instance || ! \Elementor\Plugin::$instance->kits_manager ) {
+					return $fallback_value;
+				}
+
 				$kit_manager = \Elementor\Plugin::$instance->kits_manager;
 
-				$settings = array_merge(
-					$kit_manager->get_current_settings( 'system_colors' ),
-					$kit_manager->get_current_settings( 'custom_colors' )
-				);
+			$system_colors = self::get_array_value( $kit_manager->get_current_settings( 'system_colors' ) );
+			$custom_colors = self::get_array_value( $kit_manager->get_current_settings( 'custom_colors' ) );
+			$settings      = array_merge( $system_colors, $custom_colors );
 
 				$index = array_search( $color_control_id, array_column( $settings, '_id' ) );
 
-				if ( is_int( $index ) && array_key_exists( $index, $settings ) && $settings[ $index ]['color'] ) {
-					return $settings[ $index ]['color'];
+				if ( is_int( $index ) && array_key_exists( $index, $settings ) && is_array( $settings[ $index ] ) && isset( $settings[ $index ]['color'] ) ) {
+					return self::get_string_value( $settings[ $index ]['color'], $fallback_value );
 				} else {
 					return $fallback_value;
 				}

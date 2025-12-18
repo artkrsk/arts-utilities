@@ -40,17 +40,26 @@ trait ThemeBuilder {
 			} elseif ( is_single() ) {
 				$location = 'single';
 			} elseif ( is_singular() || is_404() ) {
-				return get_the_ID();
+				$current_id = get_the_ID();
+				return $current_id !== false ? $current_id : null;
 			}
 
 			if ( $location ) {
-				$theme_builder_module = \ElementorPro\Plugin::instance()->modules_manager->get_modules( 'theme-builder' );
-				/** @disregard P1013 The method exists */
-				$document = $theme_builder_module->get_conditions_manager()->get_documents_for_location( $location );
-				$IDs      = array_keys( $document );
+				$elementor_pro_instance = \ElementorPro\Plugin::instance();
+				if ( is_object( $elementor_pro_instance ) && isset( $elementor_pro_instance->modules_manager ) && is_object( $elementor_pro_instance->modules_manager ) && method_exists( $elementor_pro_instance->modules_manager, 'get_modules' ) ) {
+					$theme_builder_module = $elementor_pro_instance->modules_manager->get_modules( 'theme-builder' );
+					if ( is_object( $theme_builder_module ) && method_exists( $theme_builder_module, 'get_conditions_manager' ) ) {
+						/** @disregard P1013 The method exists */
+						$conditions_manager = $theme_builder_module->get_conditions_manager();
+						if ( is_object( $conditions_manager ) && method_exists( $conditions_manager, 'get_documents_for_location' ) ) {
+							$document = self::get_array_value( $conditions_manager->get_documents_for_location( $location ) );
+							$IDs      = array_keys( $document );
 
-				if ( ! empty( $IDs ) && $IDs[0] ) {
-					$post_id = $IDs[0];
+							if ( ! empty( $IDs ) && $IDs[0] ) {
+								$post_id = is_numeric( $IDs[0] ) ? (int) $IDs[0] : null;
+							}
+						}
+					}
 				}
 			}
 		}

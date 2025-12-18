@@ -7,6 +7,7 @@
 .gitignore export-ignore
 .git export-ignore
 .gitattributes export-ignore
+.claude export-ignore
 node_modules export-ignore
 dist export-ignore
 vendor export-ignore
@@ -22,6 +23,10 @@ coverage-report export-ignore
 .phpunit.result.cache export-ignore
 patchwork.json export-ignore
 
+# PHPStan
+.phpstan export-ignore
+phpstan.neon export-ignore
+
 # Config files
 /*.yml export-ignore
 /*.yaml export-ignore
@@ -34,6 +39,10 @@ patchwork.json export-ignore
 /.prettierrc export-ignore
 /.prettierignore export-ignore
 /.tsbuildinfo export-ignore
+/.editorconfig export-ignore
+/.eslintrc.json export-ignore
+/cypress.config.ts export-ignore
+/vitest.config.ts export-ignore
 
 # Source files not needed in the Composer package
 src/ts export-ignore

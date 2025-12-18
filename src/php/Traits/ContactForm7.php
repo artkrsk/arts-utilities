@@ -26,9 +26,9 @@ trait ContactForm7 {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param int   $post_id The post ID of the Contact Form 7 form.
-	 * @param array $options Optional. Array of options for form rendering. Defaults to array with 'html_id', 'html_name', 'html_title', 'html_class', and 'output' keys.
-	 * @param bool  $echo    Optional. Whether to echo the form HTML. Defaults to true.
+	 * @param int                     $post_id The post ID of the Contact Form 7 form.
+	 * @param array<string, string>   $options Optional. Array of options for form rendering. Defaults to array with 'html_id', 'html_name', 'html_title', 'html_class', and 'output' keys.
+	 * @param bool                    $echo    Optional. Whether to echo the form HTML. Defaults to true.
 	 *
 	 * @return string|void The form HTML if $echo is false, void otherwise.
 	 */
@@ -44,11 +44,12 @@ trait ContactForm7 {
 		}
 
 		$contact_form = wpcf7_contact_form( $post_id );
-		if ( $contact_form ) {
+		if ( $contact_form && is_object( $contact_form ) && method_exists( $contact_form, 'form_html' ) ) {
+			$form_html = $contact_form->form_html( $options );
 			if ( $echo ) {
-				echo $contact_form->form_html( $options );
+				echo self::get_string_value( $form_html );
 			} else {
-				return $contact_form->form_html( $options );
+				return self::get_string_value( $form_html );
 			}
 		}
 	}

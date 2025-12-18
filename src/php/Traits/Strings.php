@@ -17,6 +17,24 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 trait Strings {
 	/**
+	 * Converts a camelCase string to lowercase with separators.
+	 *
+	 * @since 1.0.24
+	 *
+	 * @param string $string The input string to be converted.
+	 * @return string The converted string in lowercase with hyphens.
+	 */
+	private static function convert_camel_case_base( $string ) {
+		$result = preg_replace( '/([a-z])([A-Z])/', "\\1-\\2", $string );
+		$string = is_string( $result ) ? $result : $string;
+
+		$result = preg_replace( '/([a-z])([A-Z])/', "\\1 - \\2", $string );
+		$string = is_string( $result ) ? $result : $string;
+
+		return strtolower( $string );
+	}
+
+	/**
 	 * Converts a string from camel case to kebab case.
 	 *
 	 * @since 1.0.0
@@ -27,11 +45,7 @@ trait Strings {
 	 * @return string The converted string in kebab case.
 	 */
 	public static function convert_camel_to_kebab_case( $string ) {
-		$string = preg_replace( '/([a-z])([A-Z])/', "\\1-\\2", $string );
-		$string = preg_replace( '/([a-z])([A-Z])/', "\\1 - \\2", $string );
-		$string = strtolower( $string );
-
-		return $string;
+		return self::convert_camel_case_base( $string );
 	}
 
 	/**
@@ -45,9 +59,7 @@ trait Strings {
 	 * @return string The converted string in snake case.
 	 */
 	public static function convert_camel_to_snake_case( $string ) {
-		$string = preg_replace( '/([a-z])([A-Z])/', "\\1-\\2", $string );
-		$string = preg_replace( '/([a-z])([A-Z])/', "\\1 - \\2", $string );
-		$string = strtolower( $string );
+		$string = self::convert_camel_case_base( $string );
 		$string = str_replace( '-', '_', $string );
 		$string = str_replace( '\\', '_', $string );
 
@@ -120,7 +132,10 @@ trait Strings {
 	 */
 	public static function get_asset_url_file_extension( $url ) {
 		$url_path = parse_url( $url, PHP_URL_PATH );
-		$ext      = pathinfo( $url_path, PATHINFO_EXTENSION );
+		if ( ! is_string( $url_path ) ) {
+			return '';
+		}
+		$ext = pathinfo( $url_path, PATHINFO_EXTENSION );
 
 		return $ext;
 	}

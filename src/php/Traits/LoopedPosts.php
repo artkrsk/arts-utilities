@@ -11,7 +11,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * Provides utility methods for working with posts in a loop-like manner,
  * including retrieving previous and next posts with looping functionality.
- * Also includes methods for manual post iteration similar to WP_Query.
  *
  * @package Arts\Utilities\Traits
  * @since 1.0.0
@@ -22,7 +21,7 @@ trait LoopedPosts {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array $args {
+	 * @param array<string, mixed> $args {
 	 *   Optional. An array of arguments for retrieving the previous and next posts.
 	 *
 	 *   @type int    $post_id        The ID of the post. Default is the ID of the current post in global $post.
@@ -32,7 +31,7 @@ trait LoopedPosts {
 	 *   @type string $taxonomy       The taxonomy to use for retrieving the previous and next posts. Default is 'category'.
 	 * }
 	 *
-	 * @return array An array containing the previous and next posts. If no previous or next posts are found, the corresponding key will be null.
+	 * @return array{previous: \WP_Post|null, next: \WP_Post|null} An array containing the previous and next posts. If no previous or next posts are found, the corresponding key will be null.
 	 */
 	public static function get_prev_next_posts_looped( $args = array() ) {
 		$current_post_index = null;
@@ -50,14 +49,18 @@ trait LoopedPosts {
 		);
 
 		$args = wp_parse_args( $args, $defaults );
+		/** @var array<string, mixed> $args */
 
 		$posts = self::get_posts( $args );
 
 		if ( ! empty( $posts ) ) {
-			$current_post_index = self::get_current_post_index( $posts, $args['post_id'] );
+			$post_id_value = self::get_int_value( $args['post_id'] );
+			$current_post_index = self::get_current_post_index( $posts, $post_id_value );
 
-			$prev_next_posts['next']     = self::get_next_post_in_loop( $posts, $current_post_index );
+		if ( $current_post_index !== null ) {
+			$prev_next_posts['next'] = self::get_next_post_in_loop( $posts, $current_post_index );
 			$prev_next_posts['previous'] = self::get_previous_post_in_loop( $posts, $current_post_index );
+		}
 		}
 
 		return $prev_next_posts;
@@ -68,8 +71,8 @@ trait LoopedPosts {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array $args The arguments to customize the query.
-	 * @return array The retrieved posts.
+	 * @param array<string, mixed> $args The arguments to customize the query.
+	 * @return list<\WP_Post> The retrieved posts.
 	 */
 	private static function get_posts( $args ) {
 		$query_args = self::get_query_args( $args );
@@ -85,8 +88,8 @@ trait LoopedPosts {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array $args The arguments for retrieving posts.
-	 * @return array The query arguments.
+	 * @param array<string, mixed> $args The arguments for retrieving posts.
+	 * @return array<string, mixed> The query arguments.
 	 */
 	private static function get_query_args( $args ) {
 		$query_args = array(
@@ -96,7 +99,14 @@ trait LoopedPosts {
 		);
 
 		if ( $args['in_same_term'] ) {
-			$current_terms = get_taxonomy_term_names( $args['post_id'], $args['taxonomy'] );
+			$post_id  = self::get_post_id( $args['post_id'] );
+			$taxonomy = self::get_string_value( $args['taxonomy'] );
+
+			if ( $post_id !== null ) {
+				$current_terms = self::get_taxonomy_term_names( $post_id, $taxonomy );
+			} else {
+				$current_terms = array();
+			}
 
 			if ( ! empty( $current_terms ) ) {
 				$terms = array_map(
@@ -124,8 +134,8 @@ trait LoopedPosts {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param WP_Query $loop The WordPress loop object.
-	 * @return array An array of post objects.
+	 * @param \WP_Query $loop The WordPress loop object.
+	 * @return list<\WP_Post> An array of post objects.
 	 */
 	private static function get_posts_from_loop( $loop ) {
 		$posts = array();
@@ -133,7 +143,10 @@ trait LoopedPosts {
 		if ( $loop->have_posts() ) {
 			while ( $loop->have_posts() ) {
 				$loop->the_post();
-				$posts[] = get_post();
+				$post = get_post();
+				if ( $post instanceof \WP_Post ) {
+					$posts[] = $post;
+				}
 			}
 		}
 
@@ -145,13 +158,13 @@ trait LoopedPosts {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array $posts   An array of post objects.
+	 * @param list<\WP_Post> $posts   An array of post objects.
 	 * @param int   $post_id The ID of the post to find.
 	 * @return int|null The index of the post in the array, or null if not found.
 	 */
 	private static function get_current_post_index( $posts, $post_id ) {
 		foreach ( $posts as $index => $post ) {
-			if ( is_object( $post ) && isset( $post->ID ) && $post->ID === $post_id ) {
+			if ( is_object( $post ) && $post->ID === $post_id ) {
 				return $index;
 			}
 		}
@@ -169,9 +182,9 @@ trait LoopedPosts {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array $posts              The array of posts.
+	 * @param list<\WP_Post> $posts              The array of posts.
 	 * @param int   $current_post_index The index of the current post.
-	 * @return mixed|null The next post in the loop, or null if there is no next post.
+	 * @return \WP_Post|null The next post in the loop, or null if there is no next post.
 	 */
 	private static function get_next_post_in_loop( $posts, $current_post_index ) {
 		$next_index      = $current_post_index + 1;
@@ -195,9 +208,9 @@ trait LoopedPosts {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array $posts             The array of posts.
+	 * @param list<\WP_Post> $posts             The array of posts.
 	 * @param int   $current_post_index The index of the current post.
-	 * @return mixed|null The previous post in the loop, or null if not found.
+	 * @return \WP_Post|null The previous post in the loop, or null if not found.
 	 */
 	private static function get_previous_post_in_loop( $posts, $current_post_index ) {
 		$prev_index = $current_post_index - 1;
@@ -211,151 +224,4 @@ trait LoopedPosts {
 		return null;
 	}
 
-	/**
-	 * Setup looped posts for iteration.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param array $posts Array of post objects.
-	 * @return bool True if setup was successful, false otherwise.
-	 */
-	public function setup_looped_posts( $posts ) {
-		global $MOCK_DATA;
-
-		$MOCK_DATA['looped_posts']        = $posts;
-		$MOCK_DATA['looped_posts_index']  = 0;
-		$MOCK_DATA['looped_posts_count']  = count( $posts );
-		$MOCK_DATA['current_looped_post'] = null;
-
-		return ! empty( $posts );
-	}
-
-	/**
-	 * Check if there are more posts in the loop.
-	 *
-	 * Similar to WP_Query's have_posts() method, this function checks
-	 * if there are more posts available in the current loop and advances
-	 * the internal index if there are.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return bool True if there are more posts, false otherwise.
-	 */
-	public function have_looped_posts() {
-		global $MOCK_DATA;
-
-		if ( ! isset( $MOCK_DATA['looped_posts_index'] ) || ! isset( $MOCK_DATA['looped_posts_count'] ) ) {
-			return false;
-		}
-
-		$have_posts = $MOCK_DATA['looped_posts_index'] < $MOCK_DATA['looped_posts_count'];
-
-		if ( $have_posts ) {
-			$MOCK_DATA['looped_posts_index']++;
-		}
-
-		return $have_posts;
-	}
-
-	/**
-	 * Get the current post in the loop.
-	 *
-	 * Similar to WP_Query's the_post() method, this function
-	 * sets up the current post in the loop and returns it.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return object|null The current post, or null if no current post.
-	 */
-	public function the_looped_post() {
-		global $MOCK_DATA;
-
-		if ( ! isset( $MOCK_DATA['looped_posts'] ) || ! isset( $MOCK_DATA['looped_posts_index'] ) ) {
-			return null;
-		}
-
-		$index = $MOCK_DATA['looped_posts_index'] - 1;
-
-		if ( $index >= 0 && isset( $MOCK_DATA['looped_posts'][ $index ] ) ) {
-			$MOCK_DATA['current_looped_post'] = $MOCK_DATA['looped_posts'][ $index ];
-			return $MOCK_DATA['current_looped_post'];
-		}
-
-		return null;
-	}
-
-	/**
-	 * Get a specific post from the loop by index.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param int $index The index of the post to retrieve.
-	 * @return object|null The post at the specified index, or null if not found.
-	 */
-	public function get_looped_post( $index ) {
-		global $MOCK_DATA;
-
-		if ( ! isset( $MOCK_DATA['looped_posts'] ) || ! isset( $MOCK_DATA['looped_posts'][ $index ] ) ) {
-			return null;
-		}
-
-		return $MOCK_DATA['looped_posts'][ $index ];
-	}
-
-	/**
-	 * Rewind the looped posts to the beginning.
-	 *
-	 * Similar to WP_Query's rewind_posts() method, this function
-	 * resets the loop to the beginning.
-	 *
-	 * @since 1.0.0
-	 */
-	public function rewind_looped_posts() {
-		global $MOCK_DATA;
-
-		$MOCK_DATA['looped_posts_index']  = 0;
-		$MOCK_DATA['current_looped_post'] = null;
-	}
-
-	/**
-	 * Reset all looped posts data.
-	 *
-	 * Completely clears all looped posts data from the global variable.
-	 *
-	 * @since 1.0.0
-	 */
-	public function reset_looped_posts() {
-		global $MOCK_DATA;
-
-		unset( $MOCK_DATA['looped_posts'] );
-		unset( $MOCK_DATA['looped_posts_index'] );
-		unset( $MOCK_DATA['looped_posts_count'] );
-		unset( $MOCK_DATA['current_looped_post'] );
-	}
-
-	/**
-	 * Get the total number of posts in the loop.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return int The total number of posts.
-	 */
-	public function get_looped_posts_count() {
-		global $MOCK_DATA;
-
-		return isset( $MOCK_DATA['looped_posts_count'] ) ? $MOCK_DATA['looped_posts_count'] : 0;
-	}
-
-	/**
-	 * Get the current post index in the loop.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return int The current post index.
-	 */
-	public function get_looped_post_index() {
-		global $MOCK_DATA;
-
-		return isset( $MOCK_DATA['looped_posts_index'] ) ? $MOCK_DATA['looped_posts_index'] : 0;
-	}
 }

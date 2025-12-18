@@ -40,22 +40,20 @@ trait Fonts {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array<string, mixed>  $types    File data array containing 'ext' and 'type' keys.
-	 * @param string $file     Full path to the file.
-	 * @param string $filename The name of the file.
-	 * @param array<string, string>  $mimes    MIME types keyed by the file extension regex corresponding to those types.
+	 * @param array<string, mixed>       $types    File data array containing 'ext' and 'type' keys.
+	 * @param string                     $file     Full path to the file.
+	 * @param string                     $filename The name of the file.
+	 * @param array<string, string>|null $mimes    MIME types keyed by the file extension regex corresponding to those types. Can be null.
 	 *
 	 * @return array<string, mixed> Modified file data array with 'ext' and 'type' keys.
 	 */
-	public static function get_fonts_custom_file_extensions( array $types, string $file, string $filename, array $mimes ): array {
-		if ( false !== strpos( $filename, '.woff' ) ) {
-			$types['ext']  = 'woff';
-			$types['type'] = 'font/woff|application/font-woff|application/x-font-woff|application/octet-stream';
-		}
-
+	public static function get_fonts_custom_file_extensions( array $types, string $file, string $filename, ?array $mimes ): array {
 		if ( false !== strpos( $filename, '.woff2' ) ) {
 			$types['ext']  = 'woff2';
 			$types['type'] = 'font/woff2|application/octet-stream|font/x-woff2';
+		} elseif ( false !== strpos( $filename, '.woff' ) ) {
+			$types['ext']  = 'woff';
+			$types['type'] = 'font/woff|application/font-woff|application/x-font-woff|application/octet-stream';
 		}
 
 		return $types;

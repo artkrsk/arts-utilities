@@ -22,12 +22,12 @@ trait Markup {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array|object $args           Array or object that contains the user-defined values.
-	 * @param array|object $defaults       Array, Object that serves as the defaults or string.
+	 * @param array<int|string, mixed>|object $args           Array or object that contains the user-defined values.
+	 * @param array<int|string, mixed>|object $defaults       Array, Object that serves as the defaults or string.
 	 * @param boolean      $preserve_type  Optional. Convert output array into object if $args or $defaults if it is. Default true.
 	 * @param boolean      $preserve_integer_keys Optional. If given, integer keys will be preserved and merged instead of appended.
 	 *
-	 * @return array|object $output Merged user defined values with defaults.
+	 * @return array<int|string, mixed>|object $output Merged user defined values with defaults.
 	 */
 	public static function parse_args_recursive( $args, $defaults, $preserve_type = true, $preserve_integer_keys = false ) {
 		$output = array();
@@ -77,10 +77,9 @@ trait Markup {
 
 		if ( ! empty( $args['name'] ) ) {
 			if ( ! in_array( $args['name'], $exclude_names, true ) ) {
-				$kebab_case_name = self::convert_camel_to_kebab_case( $args['name'] );
-				$class_is_array  = array_key_exists( 'class', $attributes ) && is_array( $attributes['class'] );
+				$kebab_case_name = self::convert_camel_to_kebab_case( self::get_string_value( $args['name'] ) );
 
-				if ( $class_is_array ) {
+				if ( array_key_exists( 'class', $attributes ) && is_array( $attributes['class'] ) ) {
 					$attributes['class'][] = $kebab_case_name;
 					$attributes['class'][] = 'js-' . $kebab_case_name;
 				} else {
@@ -88,21 +87,21 @@ trait Markup {
 				}
 			}
 
-			$attribute_component_name                = esc_attr( apply_filters( 'arts/utilities/markup/add_component_attributes/attribute_name', 'data-arts-component-name' ) );
-			$attributes[ $attribute_component_name ] = esc_attr( $args['name'] );
+			$attribute_component_name                = esc_attr( self::get_string_value( apply_filters( 'arts/utilities/markup/add_component_attributes/attribute_name', 'data-arts-component-name' ) ) );
+			$attributes[ $attribute_component_name ] = esc_attr( self::get_string_value( $args['name'] ) );
 
 			if ( is_array( $args['options'] ) && ! empty( $args['options'] ) ) {
-				$attribute_component_options                = esc_attr( apply_filters( 'arts/utilities/markup/add_component_attributes/attribute_options', 'data-arts-component-options' ) );
+				$attribute_component_options                = esc_attr( self::get_string_value( apply_filters( 'arts/utilities/markup/add_component_attributes/attribute_options', 'data-arts-component-options' ) ) );
 				$attributes[ $attribute_component_options ] = wp_json_encode( $args['options'] );
 			}
 
 			if ( is_array( $args['dependencies'] ) && ! empty( $args['dependencies'] ) ) {
-				$attribute_component_dependencies                = esc_attr( apply_filters( 'arts/utilities/markup/add_component_attributes/attribute_dependencies', 'data-arts-component-dependencies' ) );
+				$attribute_component_dependencies                = esc_attr( self::get_string_value( apply_filters( 'arts/utilities/markup/add_component_attributes/attribute_dependencies', 'data-arts-component-dependencies' ) ) );
 				$attributes[ $attribute_component_dependencies ] = wp_json_encode( $args['dependencies'] );
 			}
 
 			if ( $args['hasAnimation'] ) {
-				$attribute_component_animation                = esc_attr( apply_filters( 'arts/utilities/markup/add_component_attributes/attribute_animation', 'data-arts-os-animation' ) );
+				$attribute_component_animation                = esc_attr( self::get_string_value( apply_filters( 'arts/utilities/markup/add_component_attributes/attribute_animation', 'data-arts-os-animation' ) ) );
 				$attributes[ $attribute_component_animation ] = 'true';
 			}
 		}
@@ -154,7 +153,7 @@ trait Markup {
 			if ( is_int( $key ) ) {
 				$attribute_pairs[] = $val;
 			} else {
-				$val = htmlspecialchars( $val, ENT_QUOTES | ENT_HTML5 );
+				$val = htmlspecialchars( self::get_string_value( $val ), ENT_QUOTES | ENT_HTML5 );
 
 				// Different escaping function for URLs
 				if ( $key === 'href' ) {
@@ -168,8 +167,9 @@ trait Markup {
 		if ( $echo ) {
 			// All attributes and values are escaped and are safe to output
 			echo join( ' ', $attribute_pairs ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			return null;
 		} else {
-			return ! is_array( $attributes ) || empty( $attributes ) ? '' : join( ' ', $attribute_pairs );
+			return join( ' ', $attribute_pairs );
 		}
 	}
 
@@ -188,11 +188,6 @@ trait Markup {
 	 * @return array<string, mixed> Modified attributes with added classes.
 	 */
 	public static function add_classes_to_attributes( array $attributes, $classes ): array {
-		// Validate attributes parameter
-		if ( ! is_array( $attributes ) ) {
-			$attributes = array();
-		}
-
 		// Normalize classes to array
 		if ( is_string( $classes ) ) {
 			$classes = explode( ' ', trim( $classes ) );
@@ -201,7 +196,7 @@ trait Markup {
 		}
 
 		// Filter out empty strings
-		$classes = array_filter( $classes, 'strlen' );
+		$classes = array_filter( $classes, fn( $s ) => $s !== '' );
 
 		if ( empty( $classes ) ) {
 			return $attributes;
@@ -216,7 +211,7 @@ trait Markup {
 				$existing_classes = $attributes['class'];
 			}
 			// Filter out empty strings from existing classes
-			$existing_classes = array_filter( $existing_classes, 'strlen' );
+			$existing_classes = array_filter( $existing_classes, fn( $s ) => $s !== '' );
 		}
 
 		// Merge and assign
@@ -242,17 +237,32 @@ trait Markup {
 	public static function get_post_terms_classes( array $post, string $divider = '-' ): array {
 		$terms_classes = array();
 
-		if ( is_array( $post ) && isset( $post['taxonomies'] ) && ! empty( $post['taxonomies'] ) ) {
+		if ( isset( $post['taxonomies'] ) && ! empty( $post['taxonomies'] ) ) {
 			$post_taxonomies = $post['taxonomies'];
 
-			foreach ( $post_taxonomies as $taxonomy ) {
-				$tax_id = $taxonomy['id'];
+			if ( ! is_array( $post_taxonomies ) ) {
+				return $terms_classes;
+			}
 
-				if ( isset( $taxonomy['terms'] ) && ! empty( $taxonomy['terms'] ) ) {
+			foreach ( $post_taxonomies as $taxonomy ) {
+				if ( ! is_array( $taxonomy ) || ! isset( $taxonomy['id'], $taxonomy['terms'] ) ) {
+					continue;
+				}
+
+				$tax_id = self::get_string_value( $taxonomy['id'] );
+
+				if ( ! empty( $taxonomy['terms'] ) ) {
 					$tax_terms = $taxonomy['terms'];
 
+					if ( ! is_array( $tax_terms ) ) {
+						continue;
+					}
+
 					foreach ( $tax_terms as $term ) {
-						$term_slug       = $term['slug'];
+						if ( ! is_array( $term ) || ! isset( $term['slug'] ) ) {
+							continue;
+						}
+						$term_slug       = self::get_string_value( $term['slug'] );
 						$terms_classes[] = "{$tax_id}{$divider}{$term_slug}";
 					}
 				}
@@ -267,13 +277,16 @@ trait Markup {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array|object $output              The initial list to merge into.
-	 * @param array|object $list                The list to merge from.
+	 * @param array<int|string, mixed>|object $output              The initial list to merge into.
+	 * @param array<int|string, mixed>|object $list                The list to merge from.
 	 * @param bool         $preserve_integer_keys Whether to preserve integer keys.
 	 *
-	 * @return array|object The merged list.
+	 * @return array<int|string, mixed>|object The merged list.
 	 */
 	private static function merge_lists( $output, $list, $preserve_integer_keys ) {
+		if ( ! is_array( $output ) ) {
+			$output = (array) $output;
+		}
 		foreach ( (array) $list as $key => $value ) {
 			$output = self::merge_list_item( $output, $key, $value, $preserve_integer_keys );
 		}
@@ -286,18 +299,30 @@ trait Markup {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array $output               The output array to merge into.
+	 * @param array<int|string, mixed> $output               The output array to merge into.
 	 * @param mixed $key                  The key of the item to merge.
 	 * @param mixed $value                The value of the item to merge.
 	 * @param bool  $preserve_integer_keys Whether to preserve integer keys.
 	 *
-	 * @return array The merged output array.
+	 * @return array<int|string, mixed> The merged output array.
 	 */
 	private static function merge_list_item( $output, $key, $value, $preserve_integer_keys ) {
+		// Type guard for array key
+		if ( ! is_string( $key ) && ! is_int( $key ) ) {
+			return $output;
+		}
+
 		if ( is_integer( $key ) && ! $preserve_integer_keys ) {
 			$output[] = $value;
 		} elseif ( self::should_merge_recursively( $output, $key, $value ) ) {
-			$output[ $key ] = self::merge_lists( $output[ $key ], $value, $preserve_integer_keys );
+			// Validate before recursion
+			if ( ! is_array( $output ) || ! isset( $output[ $key ] ) ) {
+				$output[ $key ] = $value;
+			} else {
+				$safe_current    = self::get_array_value( $output[ $key ] );
+				$safe_new        = self::get_array_value( $value );
+				$output[ $key ] = self::merge_lists( $safe_current, $safe_new, $preserve_integer_keys );
+			}
 		} else {
 			$output[ $key ] = $value;
 		}
@@ -309,12 +334,12 @@ trait Markup {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param mixed $output       The output to be converted.
+	 * @param array<int|string, mixed>|object $output       The output to be converted.
 	 * @param mixed $args         The arguments to check for object type.
 	 * @param mixed $defaults     The default values to check for object type.
 	 * @param bool  $preserve_type Whether to preserve the object type.
 	 *
-	 * @return mixed The converted output, either as an object or the original type.
+	 * @return array<int|string, mixed>|object The converted output, either as an object or the original type.
 	 */
 	private static function convert_output_type( $output, $args, $defaults, $preserve_type ) {
 		return $preserve_type && ( is_object( $args ) || is_object( $defaults ) ) ? (object) $output : $output;
@@ -325,16 +350,30 @@ trait Markup {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array|object $output The output array or object.
+	 * @param array<int|string, mixed>|object $output The output array or object.
 	 * @param mixed        $key    The key of the item to check.
 	 * @param mixed        $value  The value of the item to check.
 	 *
 	 * @return bool True if the items should be merged recursively, false otherwise.
 	 */
 	private static function should_merge_recursively( $output, $key, $value ) {
-		return ( is_array( $output ) || is_object( $output ) ) &&
-						( is_array( $value ) || is_object( $value ) ) &&
-						isset( $output[ $key ] ) &&
+		if ( ! ( is_array( $output ) || is_object( $output ) ) ) {
+			return false;
+		}
+
+		if ( ! ( is_array( $value ) || is_object( $value ) ) ) {
+			return false;
+		}
+
+		if ( ! is_array( $output ) ) {
+			return false;
+		}
+
+	if ( ! is_string( $key ) && ! is_int( $key ) ) {
+		return false;
+	}
+
+		return isset( $output[ $key ] ) &&
 						( is_array( $output[ $key ] ) || is_object( $output[ $key ] ) );
 	}
 
@@ -346,7 +385,7 @@ trait Markup {
 	 *
 	 * @since 1.0.25
 	 *
-	 * @param array $link_data {
+	 * @param array<string, mixed> $link_data {
 	 *     Optional. Link data array.
 	 *
 	 *     @type string $url         The URL for the link. Default empty string.
@@ -400,10 +439,10 @@ trait Markup {
 	 *
 	 * @since 1.0.25
 	 *
-	 * @param array $attributes Existing HTML attributes array.
-	 * @param array $link_data  Link data array (same format as get_link_attributes).
+	 * @param array<string, mixed> $attributes Existing HTML attributes array.
+	 * @param array<string, mixed> $link_data  Link data array (same format as get_link_attributes).
 	 *
-	 * @return array Modified attributes array with link attributes added.
+	 * @return array<string, mixed> Modified attributes array with link attributes added.
 	 */
 	public static function add_link_attributes( $attributes = array(), $link_data = array() ) {
 		// Validate attributes parameter
@@ -431,7 +470,7 @@ trait Markup {
 	 *
 	 * @since 1.0.25
 	 *
-	 * @param array  $attributes   HTML attributes array.
+	 * @param array<string, mixed>  $attributes   HTML attributes array.
 	 * @param string $fallback_tag Optional. Fallback tag to use if no valid link. Default 'div'.
 	 * @param bool   $echo         Optional. Whether to echo the tag. Default true.
 	 *
@@ -474,6 +513,7 @@ trait Markup {
 
 		if ( $echo ) {
 			echo esc_html( $tag );
+		return null;
 		} else {
 			return esc_html( $tag );
 		}
@@ -500,27 +540,29 @@ trait Markup {
 			return 'div';
 		}
 
-		$allowed_html_tags = apply_filters(
-			'arts/utilities/markup/allows_html_tags',
-			array(
-				'a',
-				'article',
-				'aside',
-				'button',
-				'div',
-				'footer',
-				'h1',
-				'h2',
-				'h3',
-				'h4',
-				'h5',
-				'h6',
-				'header',
-				'main',
-				'nav',
-				'p',
-				'section',
-				'span',
+		$allowed_html_tags = self::get_array_value(
+			apply_filters(
+				'arts/utilities/markup/allows_html_tags',
+				array(
+					'a',
+					'article',
+					'aside',
+					'button',
+					'div',
+					'footer',
+					'h1',
+					'h2',
+					'h3',
+					'h4',
+					'h5',
+					'h6',
+					'header',
+					'main',
+					'nav',
+					'p',
+					'section',
+					'span',
+				)
 			)
 		);
 
@@ -536,7 +578,7 @@ trait Markup {
 	 * @since 1.0.0
 	 *
 	 * @param string       $attributes Current HTML element attributes.
-	 * @param string|array $classes    One or more classes to add.
+	 * @param list<string>|string $classes    One or more classes to add.
 	 * @return string Modified attributes with added classes.
 	 */
 	public static function add_root_html_classes( $attributes, $classes ) {
@@ -558,7 +600,8 @@ trait Markup {
 		// Check if class attribute already exists
 		if ( strpos( $attributes, 'class=' ) !== false ) {
 			// Add our classes to existing class attribute
-			$attributes = preg_replace( '/class="([^"]*)"/', 'class="$1 ' . $class_string . '"', $attributes );
+			$result = preg_replace( '/class="([^"]*)"/', 'class="$1 ' . $class_string . '"', $attributes );
+			$attributes = is_string( $result ) ? $result : $attributes;
 		} else {
 			// Add new class attribute
 			$attributes .= ' class="' . $class_string . '"';
