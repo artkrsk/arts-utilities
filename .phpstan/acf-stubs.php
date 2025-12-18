@@ -16,7 +16,10 @@ if ( ! function_exists( 'get_field' ) ) {
 	 * @param boolean $format_value Whether or not to format the value.
 	 * @param boolean $escape_html  If formatting, make sure it's HTML safe.
 	 *
-	 * @return mixed
+	 * @return mixed|false|null
+	 *   - mixed: Field value (string|int|float|array|object) depending on field type
+	 *   - false: When $escape_html=true but $format_value=false (security measure since ACF 6.2.6)
+	 *   - null: When field doesn't exist and has no default_value set
 	 */
 	function get_field( $selector, $post_id = false, $format_value = true, $escape_html = false ) {
 		return null;

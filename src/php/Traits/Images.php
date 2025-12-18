@@ -33,7 +33,7 @@ trait Images {
 		$intrinsic_image = wp_get_attachment_image_src( $image_id, $size );
 		$aspect_ratio    = 1;
 
-		if ( isset( $intrinsic_image[1] ) && isset( $intrinsic_image[2] ) && $intrinsic_image[2] !== 0 ) {
+		if ( is_array( $intrinsic_image ) && isset( $intrinsic_image[1] ) && isset( $intrinsic_image[2] ) && $intrinsic_image[2] !== 0 ) {
 			$aspect_ratio = $intrinsic_image[1] / $intrinsic_image[2];
 		}
 
