@@ -44,7 +44,7 @@ trait Kit {
 			return $fallback_value;
 		}
 
-		$color_control_id = self::get_global_color_control_id( $globals[ $option_name ] );
+		$color_control_id = self::get_global_color_control_id( self::get_string_value( $globals[ $option_name ] ) );
 
 		if ( ! $color_control_id ) {
 			return $fallback_value;
@@ -64,7 +64,7 @@ trait Kit {
 		$index = array_search( $color_control_id, array_column( $global_settings, '_id' ) );
 
 		if ( $index !== false && isset( $global_settings[ $index ] ) && isset( $global_settings[ $index ]['color'] ) ) {
-			return $global_settings[ $index ]['color'];
+			return self::get_string_value( $global_settings[ $index ]['color'], $fallback_value );
 		}
 
 		return $fallback_value;

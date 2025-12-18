@@ -112,13 +112,15 @@ trait Query {
 		} elseif ( self::is_woocommerce_archive() ) {
 			$page_title = self::get_woocommerce_page_title();
 		} elseif ( is_category() ) {
-			$category = get_category( get_query_var( 'cat' ) );
+			$cat_id   = self::get_int_value( get_query_var( 'cat' ) );
+		$category = get_category( $cat_id );
 			if ( $category && ! is_wp_error( $category ) ) {
 				$page_title = $category->name;
 			}
 			$page_subtitle = $strings['category'];
 		} elseif ( is_author() ) {
-			$userdata = get_userdata( get_query_var( 'author' ) );
+			$author_id = self::get_int_value( get_query_var( 'author' ) );
+		$userdata  = get_userdata( $author_id );
 			if ( $userdata ) {
 				$page_title = $userdata->display_name;
 			}
@@ -136,7 +138,7 @@ trait Query {
 			$page_title    = get_the_date( 'Y' );
 			$page_subtitle = $strings['year'];
 		} elseif ( is_home() ) {
-			$posts_page_id = get_option( 'page_for_posts' );
+			$posts_page_id = self::get_int_value( get_option( 'page_for_posts' ) );
 			if ( $posts_page_id ) {
 				$page_title = get_the_title( $posts_page_id );
 
@@ -246,7 +248,7 @@ trait Query {
 			$_GET['orderby'] = 'post__in';
 		}
 
-		return $get_orderby;
+		return self::get_string_value( $get_orderby );
 	}
 
 	/**

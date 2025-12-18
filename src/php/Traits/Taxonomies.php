@@ -260,6 +260,13 @@ trait Taxonomies {
 	 * @return array{term_id: int, name: string, slug: string, taxonomy: string}|false Term array on success, false on failure.
 	 */
 	public static function get_term_by( $field, $value, $taxonomy ) {
+		// Validate $value type based on $field
+		if ( $field === 'id' || $field === 'term_id' || $field === 'term_taxonomy_id' ) {
+			$value = self::get_int_value( $value );
+		} else {
+			$value = self::get_string_value( $value );
+		}
+
 		$term = get_term_by( $field, $value, $taxonomy );
 
 		if ( $term && ! is_wp_error( $term ) ) {

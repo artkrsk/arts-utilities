@@ -116,7 +116,7 @@ trait Document {
 
 				// Return the actual background color
 				if ( ! empty( $document_background_color ) ) {
-					return $document_background_color;
+					return self::get_string_value( $document_background_color, $fallback_value );
 				} else { // Look for color in global colors
 					return self::get_global_color_value( $option_name, $post_id, $fallback_value );
 				}
@@ -263,7 +263,7 @@ trait Document {
 		}
 
 		if ( is_array( $settings ) && array_key_exists( $option_name, $settings ) ) {
-			$color_control_id = self::get_global_color_control_id( $settings[ $option_name ] );
+			$color_control_id = self::get_global_color_control_id( self::get_string_value( $settings[ $option_name ] ) );
 
 			if ( $color_control_id ) {
 				if ( ! \Elementor\Plugin::$instance || ! \Elementor\Plugin::$instance->kits_manager ) {
@@ -280,7 +280,7 @@ trait Document {
 				$index = array_search( $color_control_id, array_column( $settings, '_id' ) );
 
 				if ( is_int( $index ) && array_key_exists( $index, $settings ) && $settings[ $index ]['color'] ) {
-					return $settings[ $index ]['color'];
+					return self::get_string_value( $settings[ $index ]['color'], $fallback_value );
 				} else {
 					return $fallback_value;
 				}

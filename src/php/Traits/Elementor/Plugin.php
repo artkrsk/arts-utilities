@@ -59,7 +59,7 @@ trait Plugin {
 				return false;
 			}
 
-			$document = \Elementor\Plugin::$instance->documents->get( $post_id );
+			$document = \Elementor\Plugin::$instance->documents->get( self::get_post_id( $post_id ) );
 
 			return $document && $document->is_built_with_elementor();
 		}
