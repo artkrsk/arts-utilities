@@ -160,7 +160,7 @@ trait WooCommerce {
 			);
 
 			// Add WooCommerce page URLs to the array
-			foreach ( $woocommerce_pages as $page => $page_id ) {
+			foreach ( $woocommerce_pages as $page_id ) {
 				if ( ! empty( $page_id ) && is_int( $page_id ) ) {
 					$permalink = get_permalink( $page_id );
 					if ( is_string( $permalink ) ) {
@@ -183,7 +183,7 @@ trait WooCommerce {
 				'attribute_base' => 'attribute_base',
 			);
 
-			foreach ( $permalink_bases as $base_key => $base_value ) {
+			foreach ( $permalink_bases as $base_key ) {
 				if ( array_key_exists( $base_key, $woocommerce_permalinks ) && ! empty( $woocommerce_permalinks[ $base_key ] ) ) {
 					$woocommerce_urls[] = untrailingslashit( $site_base_url . self::get_string_value( $woocommerce_permalinks[ $base_key ] ) );
 				}

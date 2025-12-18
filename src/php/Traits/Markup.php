@@ -96,8 +96,8 @@ trait Markup {
 			}
 
 			if ( is_array( $args['dependencies'] ) && ! empty( $args['dependencies'] ) ) {
-				$attribute_component_dependencies                = esc_attr( self::get_string_value( apply_filters( 'arts/utilities/markup/add_component_attributes/attribute_dependencies', 'data-arts-component-dependencies' ) ) );
-				$attributes[ $attribute_component_dependencies ] = wp_json_encode( $args['dependencies'] );
+				$attr_deps                = esc_attr( self::get_string_value( apply_filters( 'arts/utilities/markup/add_component_attributes/attribute_dependencies', 'data-arts-component-dependencies' ) ) );
+				$attributes[ $attr_deps ] = wp_json_encode( $args['dependencies'] );
 			}
 
 			if ( $args['hasAnimation'] ) {
@@ -196,7 +196,7 @@ trait Markup {
 		}
 
 		// Filter out empty strings
-		$classes = array_filter( $classes, fn( $s ) => $s !== '' );
+		$classes = array_filter( $classes, fn( $class ) => $class !== '' );
 
 		if ( empty( $classes ) ) {
 			return $attributes;
@@ -211,7 +211,7 @@ trait Markup {
 				$existing_classes = $attributes['class'];
 			}
 			// Filter out empty strings from existing classes
-			$existing_classes = array_filter( $existing_classes, fn( $s ) => $s !== '' );
+			$existing_classes = array_filter( $existing_classes, fn( $class ) => $class !== '' );
 		}
 
 		// Merge and assign

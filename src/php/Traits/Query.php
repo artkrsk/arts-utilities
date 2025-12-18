@@ -2,6 +2,8 @@
 
 namespace Arts\Utilities\Traits;
 
+use WP_Query;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
@@ -28,7 +30,7 @@ trait Query {
 	 * @return mixed|null The retrieved page object or null if not found.
 	 */
 	public static function get_page_by_title( $page_title, $output = OBJECT, $post_type = 'page' ) {
-		$query = new \WP_Query(
+		$query = new WP_Query(
 			array(
 				'post_type'              => $post_type,
 				'title'                  => $page_title,
@@ -202,7 +204,7 @@ trait Query {
 			'fields'         => 'ids', // Optimize query by retrieving only IDs
 		);
 
-		$loop = new \WP_Query( $query_args );
+		$loop = new WP_Query( $query_args );
 
 		if ( $loop->have_posts() ) {
 			while ( $loop->have_posts() ) {
@@ -354,7 +356,7 @@ trait Query {
 			}
 		}
 
-		$loop = new \WP_Query( $query_args );
+		$loop = new WP_Query( $query_args );
 
 		if ( $loop->have_posts() ) {
 			if ( $mode === 'current_page' ) {
