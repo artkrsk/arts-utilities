@@ -55,8 +55,8 @@ trait Taxonomies {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param list<object>  $taxonomies List of taxonomy objects.
-	 * @param int|\WP_Post  $post       Post ID or WP_Post object.
+	 * @param list<\WP_Taxonomy>  $taxonomies List of taxonomy objects.
+	 * @param int|\WP_Post        $post       Post ID or WP_Post object.
 	 *
 	 * @return list<array{id: string, name: string, terms: list<array{id: int, slug: string, name: string}>}> List of terms grouped by taxonomy.
 	 */
