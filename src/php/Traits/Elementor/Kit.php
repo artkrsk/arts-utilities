@@ -56,10 +56,9 @@ trait Kit {
 
 		$kit_manager = \Elementor\Plugin::$instance->kits_manager;
 
-		$global_settings = array_merge(
-			$kit_manager->get_current_settings( 'system_colors' ),
-			$kit_manager->get_current_settings( 'custom_colors' )
-		);
+	$system_colors   = self::get_array_value( $kit_manager->get_current_settings( 'system_colors' ) );
+	$custom_colors   = self::get_array_value( $kit_manager->get_current_settings( 'custom_colors' ) );
+	$global_settings = array_merge( $system_colors, $custom_colors );
 
 		$index = array_search( $color_control_id, array_column( $global_settings, '_id' ) );
 

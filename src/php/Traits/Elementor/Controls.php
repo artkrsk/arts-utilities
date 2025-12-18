@@ -62,11 +62,11 @@ trait Controls {
 
 		// If custom size is selected, build an array with BFITHUMB cropping & aspect ratio logic.
 		if ( array_key_exists( "{$group_control_prefix}_{$size_control_suffix}", $settings ) && $settings[ "{$group_control_prefix}_{$size_control_suffix}" ] === 'custom' ) {
-			$aspect_ratio = self::get_image_aspect_ratio( $image_id );
+			$aspect_ratio = self::get_image_aspect_ratio( self::get_int_value( $image_id ) );
 
 			$dimensions    = self::get_group_control_value( $settings, $group_control_prefix, $custom_dimension_suffix, array() );
-			$custom_width  = $dimensions && array_key_exists( 'width', $dimensions ) ? $dimensions['width'] : 0;
-			$custom_height = $dimensions && array_key_exists( 'height', $dimensions ) ? $dimensions['height'] : 0;
+			$custom_width  = is_array( $dimensions ) && array_key_exists( 'width', $dimensions ) ? $dimensions['width'] : 0;
+			$custom_height = is_array( $dimensions ) && array_key_exists( 'height', $dimensions ) ? $dimensions['height'] : 0;
 
 			// Convert to floats or set them to null if zero.
 			$float_width  = null;
