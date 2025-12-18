@@ -86,7 +86,12 @@ trait ACF {
 	 */
 	public static function acf_get_field_objects( $post_id = false, bool $format_value = true, bool $load_value = true, bool $escape_html = false ) {
 		if ( self::acf_function_exists( 'get_field_objects' ) ) {
-			return get_field_objects( $post_id, $format_value, $load_value, $escape_html );
+			$result = get_field_objects( $post_id, $format_value, $load_value, $escape_html );
+			if ( is_array( $result ) ) {
+				/** @var array<string, array<string, mixed>> $result */
+			return $result;
+			}
+			return false;
 		} else {
 			return false;
 		}
