@@ -81,6 +81,35 @@ trait Theme {
 	}
 
 	/**
+	 * Get a theme property from parent theme, fallback to current theme.
+	 *
+	 * @since 1.0.24
+	 *
+	 * @param string $property The property name to retrieve ('Version', 'Name', or 'stylesheet').
+	 * @return string The property value.
+	 */
+	private static function get_parent_theme_property( $property ) {
+		$current_theme = self::get_current_theme();
+
+		if ( $property === 'stylesheet' ) {
+			$value = $current_theme->get_stylesheet();
+		} else {
+			$value = $current_theme->get( $property );
+		}
+
+		$parent_theme = self::get_parent_theme();
+		if ( $parent_theme ) {
+			if ( $property === 'stylesheet' ) {
+				$value = $parent_theme->get_stylesheet();
+			} else {
+				$value = $parent_theme->get( $property );
+			}
+		}
+
+		return self::get_string_value( $value );
+	}
+
+	/**
 	 * Get the version of the parent theme.
 	 *
 	 * Retrieves the version from the parent theme if available,
@@ -91,16 +120,7 @@ trait Theme {
 	 * @return string The version of the parent theme.
 	 */
 	public static function get_parent_theme_version() {
-		$current_theme = self::get_current_theme();
-		$theme_version = $current_theme->get( 'Version' );
-
-		// Use parent theme version if available
-		$parent_theme = self::get_parent_theme();
-		if ( $parent_theme ) {
-			$theme_version = $parent_theme->get( 'Version' );
-		}
-
-		return $theme_version;
+		return self::get_parent_theme_property( 'Version' );
 	}
 
 	/**
@@ -114,16 +134,7 @@ trait Theme {
 	 * @return string The slug of the parent theme.
 	 */
 	public static function get_parent_theme_slug() {
-		$current_theme = self::get_current_theme();
-		$theme_slug    = $current_theme->get_stylesheet();
-
-		// Use parent theme slug if available
-		$parent_theme = self::get_parent_theme();
-		if ( $parent_theme ) {
-			$theme_slug = $parent_theme->get_stylesheet();
-		}
-
-		return $theme_slug;
+		return self::get_parent_theme_property( 'stylesheet' );
 	}
 
 	/**
@@ -137,15 +148,6 @@ trait Theme {
 	 * @return string The name of the parent theme.
 	 */
 	public static function get_parent_theme_name() {
-		$current_theme = self::get_current_theme();
-		$theme_name    = $current_theme->get( 'Name' );
-
-		// Use parent theme name if available
-		$parent_theme = self::get_parent_theme();
-		if ( $parent_theme ) {
-			$theme_name = $parent_theme->get( 'Name' );
-		}
-
-		return $theme_name;
+		return self::get_parent_theme_property( 'Name' );
 	}
 }

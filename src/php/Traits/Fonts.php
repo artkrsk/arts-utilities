@@ -48,14 +48,12 @@ trait Fonts {
 	 * @return array<string, mixed> Modified file data array with 'ext' and 'type' keys.
 	 */
 	public static function get_fonts_custom_file_extensions( array $types, string $file, string $filename, array $mimes ): array {
-		if ( false !== strpos( $filename, '.woff' ) ) {
-			$types['ext']  = 'woff';
-			$types['type'] = 'font/woff|application/font-woff|application/x-font-woff|application/octet-stream';
-		}
-
 		if ( false !== strpos( $filename, '.woff2' ) ) {
 			$types['ext']  = 'woff2';
 			$types['type'] = 'font/woff2|application/octet-stream|font/x-woff2';
+		} elseif ( false !== strpos( $filename, '.woff' ) ) {
+			$types['ext']  = 'woff';
+			$types['type'] = 'font/woff|application/font-woff|application/x-font-woff|application/octet-stream';
 		}
 
 		return $types;

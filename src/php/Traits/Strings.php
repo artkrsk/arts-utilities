@@ -17,6 +17,24 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 trait Strings {
 	/**
+	 * Converts a camelCase string to lowercase with separators.
+	 *
+	 * @since 1.0.24
+	 *
+	 * @param string $string The input string to be converted.
+	 * @return string The converted string in lowercase with hyphens.
+	 */
+	private static function convert_camel_case_base( $string ) {
+		$result = preg_replace( '/([a-z])([A-Z])/', "\\1-\\2", $string );
+		$string = is_string( $result ) ? $result : $string;
+
+		$result = preg_replace( '/([a-z])([A-Z])/', "\\1 - \\2", $string );
+		$string = is_string( $result ) ? $result : $string;
+
+		return strtolower( $string );
+	}
+
+	/**
 	 * Converts a string from camel case to kebab case.
 	 *
 	 * @since 1.0.0
@@ -27,13 +45,7 @@ trait Strings {
 	 * @return string The converted string in kebab case.
 	 */
 	public static function convert_camel_to_kebab_case( $string ) {
-		$result = preg_replace( '/([a-z])([A-Z])/', "\\1-\\2", $string );
-		$string = is_string( $result ) ? $result : $string;
-
-		$result = preg_replace( '/([a-z])([A-Z])/', "\\1 - \\2", $string );
-		$string = is_string( $result ) ? $result : $string;
-
-		return strtolower( $string );
+		return self::convert_camel_case_base( $string );
 	}
 
 	/**
@@ -47,13 +59,7 @@ trait Strings {
 	 * @return string The converted string in snake case.
 	 */
 	public static function convert_camel_to_snake_case( $string ) {
-		$result = preg_replace( '/([a-z])([A-Z])/', "\\1-\\2", $string );
-		$string = is_string( $result ) ? $result : $string;
-
-		$result = preg_replace( '/([a-z])([A-Z])/', "\\1 - \\2", $string );
-		$string = is_string( $result ) ? $result : $string;
-
-		$string = strtolower( $string );
+		$string = self::convert_camel_case_base( $string );
 		$string = str_replace( '-', '_', $string );
 		$string = str_replace( '\\', '_', $string );
 

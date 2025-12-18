@@ -41,7 +41,7 @@ trait Taxonomies {
 				);
 
 				// don't add the same item multiple times
-				if ( ! in_array( $result, $current_item ) ) {
+				if ( ! in_array( $current_item, $result, true ) ) {
 					array_push( $result, $current_item );
 				}
 			}
