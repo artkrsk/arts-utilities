@@ -80,7 +80,7 @@ trait Taxonomies {
 		$exclude_taxonomies = self::get_array_value( apply_filters( 'arts/utilities/taxonomies/get_post_terms/exclude_taxonomies', $exclude_taxonomies ) );
 
 		foreach ( $taxonomies as $taxonomy ) {
-			if ( ! is_object( $taxonomy ) || ! isset( $taxonomy->name ) || ! is_string( $taxonomy->name ) ) {
+			if ( ! is_object( $taxonomy ) || ! is_string( $taxonomy->name ) ) {
 				continue;
 			}
 
@@ -105,7 +105,7 @@ trait Taxonomies {
 				}
 
 				$taxonomy_label_name = '';
-				if ( isset( $taxonomy->labels ) && is_object( $taxonomy->labels ) && isset( $taxonomy->labels->name ) && is_string( $taxonomy->labels->name ) ) {
+				if ( is_object( $taxonomy->labels ) && is_string( $taxonomy->labels->name ) ) {
 					$taxonomy_label_name = $taxonomy->labels->name;
 				}
 
