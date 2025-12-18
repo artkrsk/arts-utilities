@@ -6,8 +6,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-use \Arts\Utilities\Traits\Images;
-
 /**
  * Controls Trait
  *
@@ -27,11 +25,11 @@ trait Controls {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array<string, mixed>  $settings              The settings array.
-	 * @param mixed  $image_id              The image ID or array containing the image ID.
-	 * @param string $group_control_prefix  The prefix for the group control.
-	 * @param string $size_control_suffix   The suffix for the size control. Default is 'size'.
-	 * @param string $custom_dimension_suffix The suffix for the custom dimension control. Default is 'custom_dimension'.
+	 * @param array<string, mixed> $settings              The settings array.
+	 * @param mixed                $image_id              The image ID or array containing the image ID.
+	 * @param string               $group_control_prefix  The prefix for the group control.
+	 * @param string               $size_control_suffix   The suffix for the size control. Default is 'size'.
+	 * @param string               $custom_dimension_suffix The suffix for the custom dimension control. Default is 'custom_dimension'.
 	 *
 	 * @return mixed The thumbnail size settings or 'full' if no custom size is set.
 	 */
@@ -111,10 +109,10 @@ trait Controls {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array<string, mixed>  $settings            The settings array.
-	 * @param string                $group_control_prefix The prefix for the group control.
-	 * @param string $type                The type of control value to retrieve. Default is 'size'.
-	 * @param mixed  $fallback            The fallback value if the setting is not found. Default is 'full'.
+	 * @param array<string, mixed> $settings            The settings array.
+	 * @param string               $group_control_prefix The prefix for the group control.
+	 * @param string               $type                The type of control value to retrieve. Default is 'size'.
+	 * @param mixed                $fallback            The fallback value if the setting is not found. Default is 'full'.
 	 *
 	 * @return mixed The value of the group control setting or the fallback value.
 	 */

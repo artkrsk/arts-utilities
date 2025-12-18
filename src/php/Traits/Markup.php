@@ -319,8 +319,8 @@ trait Markup {
 			if ( ! is_array( $output ) || ! isset( $output[ $key ] ) ) {
 				$output[ $key ] = $value;
 			} else {
-				$safe_current    = self::get_array_value( $output[ $key ] );
-				$safe_new        = self::get_array_value( $value );
+				$safe_current   = self::get_array_value( $output[ $key ] );
+				$safe_new       = self::get_array_value( $value );
 				$output[ $key ] = self::merge_lists( $safe_current, $safe_new, $preserve_integer_keys );
 			}
 		} else {
@@ -369,9 +369,9 @@ trait Markup {
 			return false;
 		}
 
-	if ( ! is_string( $key ) && ! is_int( $key ) ) {
-		return false;
-	}
+		if ( ! is_string( $key ) && ! is_int( $key ) ) {
+			return false;
+		}
 
 		return isset( $output[ $key ] ) &&
 						( is_array( $output[ $key ] ) || is_object( $output[ $key ] ) );
@@ -487,8 +487,8 @@ trait Markup {
 
 		// Check if we have a valid link
 		$has_valid_link = isset( $attributes['href'] ) &&
-						  is_string( $attributes['href'] ) &&
-						  ! empty( trim( $attributes['href'] ) );
+							is_string( $attributes['href'] ) &&
+							! empty( trim( $attributes['href'] ) );
 
 		$tag = $has_valid_link ? 'a' : $fallback_tag;
 
@@ -513,7 +513,7 @@ trait Markup {
 
 		if ( $echo ) {
 			echo esc_html( $tag );
-		return null;
+			return null;
 		} else {
 			return esc_html( $tag );
 		}
@@ -566,7 +566,7 @@ trait Markup {
 			)
 		);
 
-		return $tag && in_array( strtolower( $tag ), $allowed_html_tags ) ? $tag : 'div';
+		return $tag && in_array( strtolower( $tag ), $allowed_html_tags, true ) ? $tag : 'div';
 	}
 
 	/**
@@ -600,7 +600,7 @@ trait Markup {
 		// Check if class attribute already exists
 		if ( strpos( $attributes, 'class=' ) !== false ) {
 			// Add our classes to existing class attribute
-			$result = preg_replace( '/class="([^"]*)"/', 'class="$1 ' . $class_string . '"', $attributes );
+			$result     = preg_replace( '/class="([^"]*)"/', 'class="$1 ' . $class_string . '"', $attributes );
 			$attributes = is_string( $result ) ? $result : $attributes;
 		} else {
 			// Add new class attribute

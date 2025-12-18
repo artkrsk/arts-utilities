@@ -118,32 +118,31 @@ trait ResponsiveControls {
 		$has_widescreen_breakpoint = false;
 		$queries                   = array();
 
-	foreach ( $breakpoints_config as $breakpoint => $config ) {
-		if ( ! is_array( $config ) || ! isset( $config['is_enabled'], $config['direction'], $config['value'] ) ) {
-			continue;
-		}
+		foreach ( $breakpoints_config as $breakpoint => $config ) {
+			if ( ! is_array( $config ) || ! isset( $config['is_enabled'], $config['direction'], $config['value'] ) ) {
+				continue;
+			}
 
-		if ( in_array( $breakpoint, array_keys( $enabled_map ) ) && $config['is_enabled'] ) {
-			if ( $enabled_map[ $breakpoint ] === 'yes' ) {
-				if ( $config['direction'] === 'max' ) {
-					$min_width = $elementor_breakpoints->get_device_min_breakpoint( $breakpoint );
-					$queries[] = '(min-width: ' . self::get_string_value( $min_width ) . 'px) and (max-width: ' . self::get_string_value( $config['value'] ) . 'px)';
+			if ( in_array( $breakpoint, array_keys( $enabled_map ), true ) && $config['is_enabled'] ) {
+				if ( $enabled_map[ $breakpoint ] === 'yes' ) {
+					if ( $config['direction'] === 'max' ) {
+						$min_width = $elementor_breakpoints->get_device_min_breakpoint( $breakpoint );
+						$queries[] = '(min-width: ' . self::get_string_value( $min_width ) . 'px) and (max-width: ' . self::get_string_value( $config['value'] ) . 'px)';
+					} else {
+						$queries[] = '(min-width: ' . self::get_string_value( $config['value'] ) . 'px)';
+					}
 				} else {
-					$queries[] = '(min-width: ' . self::get_string_value( $config['value'] ) . 'px)';
+					if ( $config['direction'] === 'min' ) {
+						// $min_width = $elementor_breakpoints->get_device_min_breakpoint( $breakpoint );
+						$queries[] = 'not (min-width: ' . self::get_string_value( $config['value'] ) . 'px)';
+					}
 				}
-			} else {
-				if ( $config['direction'] === 'min' ) {
-					// $min_width = $elementor_breakpoints->get_device_min_breakpoint( $breakpoint );
-					$queries[] = 'not (min-width: ' . self::get_string_value( $config['value'] ) . 'px)';
-				}
-			}
 
-			if ( $breakpoint === $widescreen_key ) {
-				$has_widescreen_breakpoint = true;
+				if ( $breakpoint === $widescreen_key ) {
+					$has_widescreen_breakpoint = true;
+				}
 			}
 		}
-	}
-
 
 		if ( array_key_exists( 'desktop', $enabled_map ) ) {
 			if ( $enabled_map['desktop'] === 'yes' ) {

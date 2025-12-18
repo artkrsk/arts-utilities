@@ -70,7 +70,7 @@ trait Frontend {
 
 		$files_deps = array();
 		/** @var array<string> $deps */
-		$deps = is_array( $args['deps'] ) ? $args['deps'] : array();
+		$deps                  = TypeGuards::get_array_value( $args['deps'] );
 		$allowed_preload_types = array(
 			'preload',
 			'modulepreload',
@@ -221,7 +221,7 @@ trait Frontend {
 		}
 		$deps_value = self::get_array_value( $args['deps'] );
 		/** @var array<string> $deps */
-		$deps   = $deps_value;
+		$deps = $deps_value;
 		// Validate $ver: must be string|false|null
 		$ver = null;
 		if ( is_string( $args['ver'] ) ) {
@@ -229,7 +229,7 @@ trait Frontend {
 		} elseif ( $args['ver'] === false ) {
 			$ver = false;
 		}
-		$media  = self::get_string_value( $args['media'] );
+		$media = self::get_string_value( $args['media'] );
 
 		wp_register_style( $handle, $src, $deps, $ver, $media );
 		wp_style_add_data( $handle, 'dynamic_load_enabled', true );

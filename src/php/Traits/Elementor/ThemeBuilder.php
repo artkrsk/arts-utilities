@@ -53,10 +53,10 @@ trait ThemeBuilder {
 						$conditions_manager = $theme_builder_module->get_conditions_manager();
 						if ( is_object( $conditions_manager ) && method_exists( $conditions_manager, 'get_documents_for_location' ) ) {
 							$document = self::get_array_value( $conditions_manager->get_documents_for_location( $location ) );
-							$IDs      = array_keys( $document );
+							$ids      = array_keys( $document );
 
-							if ( ! empty( $IDs ) && $IDs[0] ) {
-								$post_id = is_numeric( $IDs[0] ) ? (int) $IDs[0] : null;
+							if ( ! empty( $ids ) && $ids[0] ) {
+								$post_id = is_numeric( $ids[0] ) ? (int) $ids[0] : null;
 							}
 						}
 					}
