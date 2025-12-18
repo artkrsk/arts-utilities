@@ -146,7 +146,7 @@ trait Frontend {
 			}
 			/** @var array{in_footer?: bool, fetchpriority?: 'auto'|'high'|'low'} $script_module_args */
 			// For script modules, $src must be string and $deps must be properly formatted
-			$module_src = is_string( $src ) ? $src : '';
+			$module_src = self::get_string_value( $src );
 			/** @var array<int|string, array{id: string, import?: string}> $module_deps */
 			$module_deps = array();
 			wp_register_script_module( $handle, $module_src, $module_deps, $ver, $script_module_args );

@@ -47,9 +47,9 @@ trait ContactForm7 {
 		if ( $contact_form && is_object( $contact_form ) && method_exists( $contact_form, 'form_html' ) ) {
 			$form_html = $contact_form->form_html( $options );
 			if ( $echo ) {
-				echo is_string( $form_html ) ? $form_html : '';
+				echo self::get_string_value( $form_html );
 			} else {
-				return is_string( $form_html ) ? $form_html : '';
+				return self::get_string_value( $form_html );
 			}
 		}
 	}

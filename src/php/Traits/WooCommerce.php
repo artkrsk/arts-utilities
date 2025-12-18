@@ -205,7 +205,7 @@ trait WooCommerce {
 	public static function get_woocommerce_page_title() {
 		if ( function_exists( 'woocommerce_page_title' ) ) {
 			$title = woocommerce_page_title( false );
-			return is_string( $title ) ? $title : '';
+			return self::get_string_value( $title );
 		}
 		return '';
 	}

@@ -292,8 +292,8 @@ trait LoopedPosts {
 			return false;
 		}
 
-		$index = is_int( $MOCK_DATA['looped_posts_index'] ) ? $MOCK_DATA['looped_posts_index'] : 0;
-		$count = is_int( $MOCK_DATA['looped_posts_count'] ) ? $MOCK_DATA['looped_posts_count'] : 0;
+		$index = self::get_int_value( $MOCK_DATA['looped_posts_index'] );
+		$count = self::get_int_value( $MOCK_DATA['looped_posts_count'] );
 
 		$have_posts = $index < $count;
 
@@ -426,7 +426,7 @@ trait LoopedPosts {
 		}
 
 		$count = $MOCK_DATA['looped_posts_count'];
-		return is_int( $count ) ? $count : 0;
+		return self::get_int_value( $count );
 	}
 
 	/**
@@ -447,6 +447,6 @@ trait LoopedPosts {
 		}
 
 		$index = $MOCK_DATA['looped_posts_index'];
-		return is_int( $index ) ? $index : 0;
+		return self::get_int_value( $index );
 	}
 }
