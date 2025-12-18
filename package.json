@@ -20,20 +20,20 @@
     "@arts/elementor-types": "../elementor-types"
   },
   "devDependencies": {
-    "@eslint/js": "^9.39.1",
-    "@types/node": "^25.0.1",
-    "@vitest/coverage-v8": "^4.0.15",
-    "@vitest/ui": "4.0.15",
-    "cypress": "^15.7.1",
+    "@eslint/js": "^9.39.2",
+    "@types/node": "^25.0.3",
+    "@vitest/coverage-v8": "^4.0.16",
+    "@vitest/ui": "4.0.16",
+    "cypress": "^15.8.0",
     "depcheck": "^1.4.7",
-    "eslint": "^9.39.1",
+    "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
     "jsdom": "^27.3.0",
     "npm-check-updates": "^19.2.0",
     "prettier": "^3.7.4",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.49.0",
-    "vitest": "^4.0.15"
+    "typescript-eslint": "^8.50.0",
+    "vitest": "^4.0.16"
   },
   "scripts": {
     "dev": "node __builder__/src/scripts/dev.js",
@@ -58,7 +58,8 @@
     "overrides": {
       "vite": ">=7.2.7",
       "brace-expansion": ">=4.0.1",
-      "js-yaml": ">=4.1.1"
+      "js-yaml": ">=4.1.1",
+      "systeminformation": ">=5.27.14"
     }
   }
 }
