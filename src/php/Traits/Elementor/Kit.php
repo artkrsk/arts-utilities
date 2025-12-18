@@ -56,11 +56,11 @@ trait Kit {
 
 		$kit_manager = \Elementor\Plugin::$instance->kits_manager;
 
-	$system_colors   = self::get_array_value( $kit_manager->get_current_settings( 'system_colors' ) );
-	$custom_colors   = self::get_array_value( $kit_manager->get_current_settings( 'custom_colors' ) );
-	$global_settings = array_merge( $system_colors, $custom_colors );
+		$system_colors   = self::get_array_value( $kit_manager->get_current_settings( 'system_colors' ) );
+		$custom_colors   = self::get_array_value( $kit_manager->get_current_settings( 'custom_colors' ) );
+		$global_settings = array_merge( $system_colors, $custom_colors );
 
-		$index = array_search( $color_control_id, array_column( $global_settings, '_id' ) );
+		$index = array_search( $color_control_id, array_column( $global_settings, '_id' ), true );
 
 		if ( $index !== false && isset( $global_settings[ $index ] ) && is_array( $global_settings[ $index ] ) && isset( $global_settings[ $index ]['color'] ) ) {
 			return self::get_string_value( $global_settings[ $index ]['color'], $fallback_value );
@@ -183,7 +183,7 @@ trait Kit {
 		);
 
 		if ( $recent_edited_post->post_count ) {
-			$posts = $recent_edited_post->get_posts();
+			$posts      = $recent_edited_post->get_posts();
 			$first_post = reset( $posts );
 
 			// Ensure we have a WP_Post object

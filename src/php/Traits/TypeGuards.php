@@ -134,7 +134,7 @@ trait TypeGuards {
 	 * @return array<string, mixed> The parsed args array.
 	 */
 	public static function parse_template_args( $args, $defaults = array() ) {
-		$args = is_array( $args ) ? $args : array();
+		$args   = is_array( $args ) ? $args : array();
 		$result = wp_parse_args( $args, $defaults );
 		/** @var array<string, mixed> $result */
 		return $result;

@@ -72,8 +72,8 @@ trait Theme {
 	 */
 	private static function get_parent_theme() {
 		if ( null === self::$parent_theme ) {
-			$current_theme = self::get_current_theme();
-			$parent        = $current_theme->parent();
+			$current_theme      = self::get_current_theme();
+			$parent             = $current_theme->parent();
 			self::$parent_theme = $parent !== false ? $parent : null;
 		}
 

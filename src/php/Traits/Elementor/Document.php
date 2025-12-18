@@ -272,11 +272,11 @@ trait Document {
 
 				$kit_manager = \Elementor\Plugin::$instance->kits_manager;
 
-			$system_colors = self::get_array_value( $kit_manager->get_current_settings( 'system_colors' ) );
-			$custom_colors = self::get_array_value( $kit_manager->get_current_settings( 'custom_colors' ) );
-			$settings      = array_merge( $system_colors, $custom_colors );
+				$system_colors = self::get_array_value( $kit_manager->get_current_settings( 'system_colors' ) );
+				$custom_colors = self::get_array_value( $kit_manager->get_current_settings( 'custom_colors' ) );
+				$settings      = array_merge( $system_colors, $custom_colors );
 
-				$index = array_search( $color_control_id, array_column( $settings, '_id' ) );
+				$index = array_search( $color_control_id, array_column( $settings, '_id' ), true );
 
 				if ( is_int( $index ) && array_key_exists( $index, $settings ) && is_array( $settings[ $index ] ) && isset( $settings[ $index ]['color'] ) ) {
 					return self::get_string_value( $settings[ $index ]['color'], $fallback_value );

@@ -54,13 +54,13 @@ trait LoopedPosts {
 		$posts = self::get_posts( $args );
 
 		if ( ! empty( $posts ) ) {
-			$post_id_value = self::get_int_value( $args['post_id'] );
+			$post_id_value      = self::get_int_value( $args['post_id'] );
 			$current_post_index = self::get_current_post_index( $posts, $post_id_value );
 
-		if ( $current_post_index !== null ) {
-			$prev_next_posts['next'] = self::get_next_post_in_loop( $posts, $current_post_index );
-			$prev_next_posts['previous'] = self::get_previous_post_in_loop( $posts, $current_post_index );
-		}
+			if ( $current_post_index !== null ) {
+				$prev_next_posts['next']     = self::get_next_post_in_loop( $posts, $current_post_index );
+				$prev_next_posts['previous'] = self::get_previous_post_in_loop( $posts, $current_post_index );
+			}
 		}
 
 		return $prev_next_posts;
@@ -110,7 +110,7 @@ trait LoopedPosts {
 
 			if ( ! empty( $current_terms ) ) {
 				$terms = array_map(
-					function( $term ) {
+					function ( $term ) {
 						return $term['slug'];
 					},
 					$current_terms
@@ -223,5 +223,4 @@ trait LoopedPosts {
 
 		return null;
 	}
-
 }

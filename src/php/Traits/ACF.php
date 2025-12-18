@@ -236,8 +236,8 @@ trait ACF {
 		if ( is_array( $acf_fields ) ) {
 			foreach ( $acf_fields as $field ) {
 				if ( is_array( $field ) && isset( $field['name'], $field['value'] ) && is_string( $field['name'] ) ) {
-				$result[ $field['name'] ] = $field['value'];
-			}
+					$result[ $field['name'] ] = $field['value'];
+				}
 			}
 		}
 
