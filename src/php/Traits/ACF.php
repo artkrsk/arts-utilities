@@ -18,23 +18,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 trait ACF {
 	/**
-	 * Check if an ACF function exists
-	 *
-	 * This method can be mocked in tests
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param string $function_name The function name to check
-	 * @return bool Whether the function exists
-	 */
-	protected static function acf_function_exists( $function_name ) {
-		if ( function_exists( 'acf_function_exists' ) ) {
-			return (bool) acf_function_exists( $function_name );
-		}
-		return function_exists( $function_name );
-	}
-
-	/**
 	 * Proxy for `get_field()` function from ACF.
 	 *
 	 * @since 1.0.0
@@ -47,7 +30,7 @@ trait ACF {
 	 * @return mixed|false The value of the field or false if not found.
 	 */
 	public static function acf_get_field( $selector, $post_id = false, $format_value = true, $escape_html = false ) {
-		if ( self::acf_function_exists( 'get_field' ) ) {
+		if ( function_exists( 'get_field' ) ) {
 			return get_field( $selector, $post_id, $format_value, $escape_html );
 		} else {
 			return false;
@@ -65,7 +48,7 @@ trait ACF {
 	 * @return bool Whether the field has rows or not.
 	 */
 	public static function acf_have_rows( $selector, $post_id = false ) {
-		if ( self::acf_function_exists( 'have_rows' ) ) {
+		if ( function_exists( 'have_rows' ) ) {
 			return have_rows( $selector, $post_id );
 		} else {
 			return false;
@@ -85,7 +68,7 @@ trait ACF {
 	 * @return array<string, array<string, mixed>>|false The field objects or false if not found.
 	 */
 	public static function acf_get_field_objects( $post_id = false, bool $format_value = true, bool $load_value = true, bool $escape_html = false ) {
-		if ( self::acf_function_exists( 'get_field_objects' ) ) {
+		if ( function_exists( 'get_field_objects' ) ) {
 			$result = get_field_objects( $post_id, $format_value, $load_value, $escape_html );
 			if ( is_array( $result ) ) {
 				/** @var array<string, array<string, mixed>> $result */
@@ -107,7 +90,7 @@ trait ACF {
 	 * @return array<string, mixed>|false The options page configuration array or false if not found.
 	 */
 	public static function acf_add_options_page( $page = '' ) {
-		if ( self::acf_function_exists( 'acf_add_options_page' ) ) {
+		if ( function_exists( 'acf_add_options_page' ) ) {
 			$result = acf_add_options_page( $page );
 			if ( is_array( $result ) ) {
 				/** @var array<string, mixed> $result */
@@ -131,7 +114,7 @@ trait ACF {
 	 * @return mixed|false The value of the sub field or false if not found.
 	 */
 	public static function acf_get_sub_field( $selector, $format_value = true, $escape_html = false ) {
-		if ( self::acf_function_exists( 'get_sub_field' ) ) {
+		if ( function_exists( 'get_sub_field' ) ) {
 			return get_sub_field( $selector, $format_value, $escape_html );
 		} else {
 			return false;
@@ -150,7 +133,7 @@ trait ACF {
 	 * @return bool Whether the field was updated successfully or false if not found.
 	 */
 	public static function acf_update_field( $selector, $value, $post_id = false ) {
-		if ( self::acf_function_exists( 'update_field' ) ) {
+		if ( function_exists( 'update_field' ) ) {
 			return update_field( $selector, $value, $post_id );
 		} else {
 			return false;
@@ -226,7 +209,7 @@ trait ACF {
 	 */
 	public static function acf_get_field_bool( $selector, $post_id = false, $default = false, $format_value = true, $escape_html = false ): bool {
 		$value = self::acf_get_field( $selector, $post_id, $format_value, $escape_html );
-		if ( $value === false && ! self::acf_function_exists( 'get_field' ) ) {
+		if ( $value === false && ! function_exists( 'get_field' ) ) {
 			return $default;
 		}
 		return (bool) $value;
