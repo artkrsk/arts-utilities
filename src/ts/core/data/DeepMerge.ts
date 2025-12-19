@@ -40,7 +40,7 @@ import type { IDeepMerge, IDeepMergeAll } from '../interfaces'
  * // }
  * ```
  */
-export const deepmerge: IDeepMerge = <T extends Record<string, any>, U extends Record<string, any>>(
+export const deepmerge: IDeepMerge = <T extends Record<string, unknown>, U extends Record<string, unknown>>(
   target: T,
   source: U
 ): T & U => {
@@ -66,6 +66,7 @@ export const deepmerge: IDeepMerge = <T extends Record<string, any>, U extends R
       output[key as keyof (T & U)] = deepmerge(targetValue, sourceValue)
     } else if (Array.isArray(targetValue) && Array.isArray(sourceValue)) {
       // If both are arrays, concatenate them
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       output[key as keyof (T & U)] = [...targetValue, ...sourceValue] as any
     } else if (sourceValue !== undefined) {
       // Otherwise just take the source value
@@ -119,9 +120,9 @@ export const deepmerge: IDeepMerge = <T extends Record<string, any>, U extends R
  * // Result: { colors: { primary: '#000', secondary: '#fff', accent: '#f00' } }
  * ```
  */
-export const deepmergeAll: IDeepMergeAll = <T extends Record<string, any>[]>(
+export const deepmergeAll: IDeepMergeAll = <T extends Record<string, unknown>[]>(
   ...objects: T
-): Record<string, any> => {
+): Record<string, unknown> => {
   return objects.reduce((result, current) => {
     return deepmerge(result, current)
   }, {})

@@ -94,6 +94,7 @@ function isElementorSettingEvent(event: CustomEvent): event is IElementorSetting
  * ```
  */
 export class ElementorSettingsHandler {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private options: Record<any, any>
   private callback: TSettingsChangeCallback
   private isChanging = false
@@ -105,6 +106,7 @@ export class ElementorSettingsHandler {
    * @param options - Configuration object mapping component options to Elementor setting names.
    *                  Supports simple string mappings, conditional mappings, and nested structures.
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   constructor(callback: TSettingsChangeCallback, options: Record<any, any>) {
     this.callback = callback
     this.options = options
@@ -203,6 +205,7 @@ export class ElementorSettingsHandler {
    *
    * @param settings - Raw Elementor settings object from the editor
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private async applySettingsChange(settings: Record<string, any>): Promise<void> {
     const options = convertSettings(settings, this.options)
     await this.callback(options)

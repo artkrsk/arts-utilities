@@ -16,7 +16,7 @@
  * // Check specifically for HTMLDivElement
  * if (isHTMLElement(el, 'HTMLDivElement')) { ... }
  */
-export function isHTMLElement(subject: any, typeName = 'Element'): subject is HTMLElement {
+export function isHTMLElement(subject: unknown, typeName = 'Element'): subject is HTMLElement {
   if (!subject || typeof subject !== 'object') {
     return false
   }

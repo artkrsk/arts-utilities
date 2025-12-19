@@ -20,7 +20,7 @@ import type { IDispatchEvent, IDispatchEventOptions } from '../interfaces'
  * dispatchEvent('modal-open', { detail: { modalId: 'settings' } }, modal);
  * ```
  */
-export const dispatchEvent: IDispatchEvent = <T = any>(
+export const dispatchEvent: IDispatchEvent = <T = unknown>(
   name: string,
   options: IDispatchEventOptions<T> = {},
   target: EventTarget | null = null

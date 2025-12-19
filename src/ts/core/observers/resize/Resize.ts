@@ -91,7 +91,7 @@ export class Resize implements IResize {
    * Handles the ResizeObserver callback with entry processing.
    * Extracts target elements and calls both immediate and debounced callbacks.
    */
-  private handleResize = (entries: Array<ResizeObserverEntry>) => {
+  private handleResize = (entries: Array<ResizeObserverEntry>): void => {
     const targets: Array<Element> = []
 
     for (const entry of entries) {
@@ -155,7 +155,7 @@ export class Resize implements IResize {
    * observer.init(); // Manual initialization
    * ```
    */
-  public init() {
+  public init(): void {
     // Prevent re-initialization
     if (this.instance) {
       return
@@ -184,7 +184,7 @@ export class Resize implements IResize {
    * resizeObserver.init();
    * ```
    */
-  public destroy() {
+  public destroy(): void {
     this.disconnectObserver()
     this.instance = null
   }
@@ -215,7 +215,7 @@ export class Resize implements IResize {
    * Automatically filters out invalid elements using type checking.
    * Safely handles cases where the observer instance is not available.
    */
-  private observeElements() {
+  private observeElements(): void {
     if (!this.instance) {
       return
     }
@@ -235,7 +235,7 @@ export class Resize implements IResize {
    * Safely disconnects the ResizeObserver from all observed elements.
    * This stops all resize monitoring and clears the observer's internal state.
    */
-  private disconnectObserver() {
+  private disconnectObserver(): void {
     if (this.instance) {
       this.instance.disconnect()
     }

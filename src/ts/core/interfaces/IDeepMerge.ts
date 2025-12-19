@@ -61,7 +61,7 @@ export interface IDeepMerge {
    * @param source - The source object to merge from
    * @returns New object with merged properties from both target and source
    */
-  <T extends Record<string, any>, U extends Record<string, any>>(target: T, source: U): T & U
+  <T extends Record<string, unknown>, U extends Record<string, unknown>>(target: T, source: U): T & U
 }
 
 /**
@@ -116,5 +116,5 @@ export interface IDeepMergeAll {
    * @param objects - Variable number of objects to merge
    * @returns New object with all properties merged
    */
-  <T extends Record<string, any>[]>(...objects: T): Record<string, any>
+  <T extends Record<string, unknown>[]>(...objects: T): Record<string, unknown>
 }

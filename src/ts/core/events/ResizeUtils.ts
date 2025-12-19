@@ -31,7 +31,7 @@ export const attachResponsiveResize: IResponsiveResize = (
   immediateCall = true
 ) => {
   if (typeof callback !== 'function') {
-    return { clear: () => {} }
+    return { clear: (): void => {} }
   }
 
   // Create MediaQueryList for detecting pointer type

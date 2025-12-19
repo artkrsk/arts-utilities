@@ -3,7 +3,7 @@ import type { IPreventKeyboard } from '../interfaces'
 /**
  * Modern key names for navigation keys that should be prevented during page lock
  */
-const NAVIGATION_KEYS = [
+const NAVIGATION_KEYS = new Set([
   ' ', // Space
   'PageUp', // Page Up
   'PageDown', // Page Down
@@ -13,12 +13,12 @@ const NAVIGATION_KEYS = [
   'ArrowUp', // Arrow Up
   'ArrowRight', // Arrow Right
   'ArrowDown' // Arrow Down
-] as const
+])
 
 /**
  * Legacy key codes for fallback browser support
  */
-const LEGACY_KEY_CODES = [
+const LEGACY_KEY_CODES = new Set([
   32, // Space
   33, // Page Up
   34, // Page Down
@@ -28,7 +28,7 @@ const LEGACY_KEY_CODES = [
   38, // Arrow Up
   39, // Arrow Right
   40 // Arrow Down
-] as const
+])
 
 /**
  * Check if the event target is an input field where typing should be allowed
@@ -82,8 +82,7 @@ export const preventKeyboard: IPreventKeyboard = (event: KeyboardEvent): void =>
   }
 
   // Check using modern event.key first, fallback to legacy keyCode
-  const shouldPrevent =
-    NAVIGATION_KEYS.includes(event.key as any) || LEGACY_KEY_CODES.includes(event.keyCode as any)
+  const shouldPrevent = NAVIGATION_KEYS.has(event.key) || LEGACY_KEY_CODES.has(event.keyCode)
 
   if (shouldPrevent) {
     event.preventDefault()

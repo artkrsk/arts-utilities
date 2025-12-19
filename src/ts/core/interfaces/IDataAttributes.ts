@@ -86,6 +86,7 @@ export interface IDataAttribute {
  * @returns Object with nested structure reflecting the data attribute hierarchy
  */
 export interface IParseDataAttributes {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (element: HTMLElement, options?: IDataAttributeOptions): Record<string, any>
 }
 
@@ -98,6 +99,7 @@ export interface IParseDataAttributes {
  * @param separator - Character used to split attribute name into nested path
  */
 export interface IParseAttribute {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (attr: IDataAttribute, result: Record<string, any>, separator: string): void
 }
 

@@ -25,7 +25,7 @@
  * };
  * ```
  */
-export interface IDispatchEventOptions<T = any> {
+export interface IDispatchEventOptions<T = unknown> {
   /**
    * Custom data to include with the event.
    * This data will be available in event listeners via event.detail.
@@ -163,7 +163,7 @@ export interface IDispatchEvent {
    * });
    * ```
    */
-  <T = any>(
+  <T = unknown>(
     eventName: string,
     options?: IDispatchEventOptions<T>,
     target?: EventTarget | null

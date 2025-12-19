@@ -152,7 +152,7 @@ export class Intersection implements IIntersection {
    * Handles the IntersectionObserver callback with entry processing.
    * Separates intersecting and non-intersecting entries and calls appropriate callbacks.
    */
-  private handleIntersection = (entries: Array<IntersectionObserverEntry>) => {
+  private handleIntersection = (entries: Array<IntersectionObserverEntry>): void => {
     const intersectingTargets: Array<Element> = []
     const nonIntersectingTargets: Array<Element> = []
     const intersectingEntries: Array<IntersectionObserverEntry> = []
@@ -256,7 +256,7 @@ export class Intersection implements IIntersection {
    * observer.init(); // Manual initialization
    * ```
    */
-  public init() {
+  public init(): void {
     // Prevent re-initialization
     if (this.instance) {
       return
@@ -285,7 +285,7 @@ export class Intersection implements IIntersection {
    * intersectionObserver.init();
    * ```
    */
-  public destroy() {
+  public destroy(): void {
     this.disconnectObserver()
     this.instance = null
   }
@@ -316,7 +316,7 @@ export class Intersection implements IIntersection {
    * Automatically filters out invalid elements using type checking.
    * Safely handles cases where the observer instance is not available.
    */
-  private observeElements() {
+  private observeElements(): void {
     if (!this.instance) {
       return
     }
@@ -336,7 +336,7 @@ export class Intersection implements IIntersection {
    * Safely disconnects the IntersectionObserver from all observed elements.
    * This stops all intersection monitoring and clears the observer's internal state.
    */
-  private disconnectObserver() {
+  private disconnectObserver(): void {
     if (this.instance) {
       this.instance.disconnect()
     }

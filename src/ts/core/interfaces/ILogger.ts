@@ -123,6 +123,7 @@ export interface ILogger {
    * logger.error('Unhandled exception', error, { userId: 123 })
    * ```
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   error(message: string, ...args: any[]): void
 
   /**
@@ -139,6 +140,7 @@ export interface ILogger {
    * logger.warn('Cache miss for frequently accessed data', { key: 'user:123' })
    * ```
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   warn(message: string, ...args: any[]): void
 
   /**
@@ -155,6 +157,7 @@ export interface ILogger {
    * logger.info('Background job completed', { jobId: 'cleanup-001', duration: 5000 })
    * ```
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   info(message: string, ...args: any[]): void
 
   /**
@@ -171,6 +174,7 @@ export interface ILogger {
    * logger.debug('State transition', { from: 'loading', to: 'loaded', data: response })
    * ```
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   debug(message: string, ...args: any[]): void
 
   /**

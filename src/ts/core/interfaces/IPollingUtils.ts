@@ -129,5 +129,5 @@ export interface IPollingUtils {
    * }
    * ```
    */
-  waitForVariable: (variable: string, options?: IWaitForVariableOptions) => Promise<any>
+  waitForVariable: (variable: string, options?: IWaitForVariableOptions) => Promise<unknown>
 }

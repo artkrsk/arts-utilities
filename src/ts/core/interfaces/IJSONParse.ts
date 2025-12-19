@@ -52,5 +52,6 @@ export interface IJSONParse {
    * - Mixed quotes: `{key: 'value', "other": "data"}`
    * - Numbers and booleans: `{count: 42, enabled: true}`
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (text: string): Record<string, any>
 }

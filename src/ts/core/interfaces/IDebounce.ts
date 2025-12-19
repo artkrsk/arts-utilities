@@ -70,5 +70,6 @@ export interface IDebounce {
    * debouncedOperation([7, 8, 9]) // Executes after 200ms
    * ```
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   <T extends (...args: any[]) => any>(fn: T, wait: number): T
 }

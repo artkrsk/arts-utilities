@@ -16,12 +16,14 @@ import type {
  */
 export const parseAttribute: IParseAttribute = (
   attr: IDataAttribute,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   result: Record<string, any>,
   separator: string
 ): void => {
   // Remove 'data-' prefix and split by separator
   const path = attr.name.slice(5).split(separator)
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   path.reduce((obj: Record<string, any>, part: string, idx: number, fullPath: string[]) => {
     // Skip the 'data' part if it somehow remains
     if (part === 'data') {
@@ -77,7 +79,9 @@ export const filterDataAttributes: IFilterDataAttributes = (
 export const parseDataAttributes: IParseDataAttributes = (
   element: HTMLElement,
   options: IDataAttributeOptions = {}
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): Record<string, any> => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const result: Record<string, any> = {}
 
   // Set default options

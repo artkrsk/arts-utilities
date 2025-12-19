@@ -59,14 +59,14 @@ export const loadMedia = async (
       }, timeout)
     }
 
-    const resolveWithCleanup = (result: HTMLElement) => {
+    const resolveWithCleanup = (result: HTMLElement): void => {
       if (timeoutId) {
         clearTimeout(timeoutId)
       }
       resolve(result)
     }
 
-    const rejectWithCleanup = (error: Error) => {
+    const rejectWithCleanup = (error: Error): void => {
       if (timeoutId) {
         clearTimeout(timeoutId)
       }
@@ -92,13 +92,13 @@ export const loadMedia = async (
       }
 
       // Set up event listeners
-      const handleLoad = () => {
+      const handleLoad = (): void => {
         imgElement.removeEventListener('load', handleLoad)
         imgElement.removeEventListener('error', handleError)
         resolveWithCleanup(imgElement)
       }
 
-      const handleError = (_event: Event) => {
+      const handleError = (_event: Event): void => {
         imgElement.removeEventListener('load', handleLoad)
         imgElement.removeEventListener('error', handleError)
         rejectWithCleanup(new Error(`Image failed to load: ${imgElement.src || 'unknown source'}`))
@@ -124,13 +124,13 @@ export const loadMedia = async (
       }
 
       // Set up event listeners
-      const handleCanPlay = () => {
+      const handleCanPlay = (): void => {
         videoElement.removeEventListener('canplaythrough', handleCanPlay)
         videoElement.removeEventListener('error', handleError)
         resolveWithCleanup(videoElement)
       }
 
-      const handleError = (_event: Event) => {
+      const handleError = (_event: Event): void => {
         videoElement.removeEventListener('canplaythrough', handleCanPlay)
         videoElement.removeEventListener('error', handleError)
         rejectWithCleanup(

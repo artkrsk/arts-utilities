@@ -51,7 +51,7 @@ export class MatchMedia implements IMatchMedia {
    * Handles the media query change event.
    * Supports both MediaQueryListEvent (modern) and MediaQueryList (legacy) APIs.
    */
-  private handleChange = (event: MediaQueryListEvent | MediaQueryList) => {
+  private handleChange = (event: MediaQueryListEvent | MediaQueryList): void => {
     const matches = 'matches' in event ? event.matches : this.mediaQuery?.matches
 
     if (matches) {
@@ -97,7 +97,7 @@ export class MatchMedia implements IMatchMedia {
    * Automatically checks the initial state and triggers appropriate callbacks.
    * Prevents double initialization for safety.
    */
-  public init() {
+  public init(): void {
     // Prevent re-initialization
     if (this.mediaQuery) {
       return
@@ -131,7 +131,7 @@ export class MatchMedia implements IMatchMedia {
    * breakpointWatcher.destroy();
    * ```
    */
-  public destroy() {
+  public destroy(): void {
     this.detachEvents()
     this.mediaQuery = null
   }
@@ -160,7 +160,7 @@ export class MatchMedia implements IMatchMedia {
    * Evaluates the current state of the media query and executes the appropriate callback.
    * This method is called immediately after initialization to handle the initial state.
    */
-  private checkInitialState() {
+  private checkInitialState(): void {
     if (!this.mediaQuery) {
       return
     }
@@ -174,7 +174,7 @@ export class MatchMedia implements IMatchMedia {
    * Supports both modern (addEventListener) and legacy (addListener) APIs
    * for maximum browser compatibility.
    */
-  private attachEvents() {
+  private attachEvents(): void {
     if (!this.mediaQuery) {
       return
     }
@@ -193,7 +193,7 @@ export class MatchMedia implements IMatchMedia {
    * Supports both modern (removeEventListener) and legacy (removeListener) APIs
    * for clean teardown across all browsers.
    */
-  private detachEvents() {
+  private detachEvents(): void {
     if (!this.mediaQuery) {
       return
     }

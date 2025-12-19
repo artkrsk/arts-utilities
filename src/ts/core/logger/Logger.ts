@@ -34,6 +34,7 @@ export class LoggerClass implements ILogger {
   /**
    * Log error message
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public error(message: string, ...args: any[]): void {
     if (this.config.enabled && this.config.level >= LogLevel.ERROR) {
       console.error(`${this.config.prefix} [ERROR] ${message}`, ...args)
@@ -43,6 +44,7 @@ export class LoggerClass implements ILogger {
   /**
    * Log warning message
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public warn(message: string, ...args: any[]): void {
     if (this.config.enabled && this.config.level >= LogLevel.WARN) {
       console.warn(`${this.config.prefix} [WARN] ${message}`, ...args)
@@ -52,8 +54,10 @@ export class LoggerClass implements ILogger {
   /**
    * Log info message
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public info(message: string, ...args: any[]): void {
     if (this.config.enabled && this.config.level >= LogLevel.INFO) {
+      // eslint-disable-next-line no-console
       console.info(`${this.config.prefix} [INFO] ${message}`, ...args)
     }
   }
@@ -61,8 +65,10 @@ export class LoggerClass implements ILogger {
   /**
    * Log debug message
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public debug(message: string, ...args: any[]): void {
     if (this.config.enabled && this.config.level >= LogLevel.DEBUG) {
+      // eslint-disable-next-line no-console
       console.debug(`${this.config.prefix} [DEBUG] ${message}`, ...args)
     }
   }

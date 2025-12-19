@@ -31,6 +31,7 @@ export type TElementorSettings = Utils.ElementSettings
  * const cssValue: TElementorSettingValue = { size: 20, unit: 'px' }
  * ```
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type TElementorSettingValue = any
 
 /**
@@ -76,7 +77,9 @@ export type TElementorSetting = string
  * }
  * ```
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type TMappingValue = Record<string, any> & {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   value?: string | Record<string, any>
   return_size?: boolean
   condition?: string
@@ -133,6 +136,7 @@ export type TSettingsMap = Record<string, string | TMappingValue>
  * }
  * ```
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type TValueMapping = string | Record<string, string | Record<string, any>>
 
 /**
