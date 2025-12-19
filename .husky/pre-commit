@@ -1,4 +1,32 @@
 #!/bin/sh
+# Version validation: ensure version is bumped when src files change (master branch only)
+CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+
+if [ "$CURRENT_BRANCH" = "master" ]; then
+  STAGED_SRC_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep '^src/' || true)
+  STAGED_PACKAGE_JSON=$(git diff --cached --name-only --diff-filter=M | grep '^package.json$' || true)
+
+  if [ -n "$STAGED_SRC_FILES" ] && [ -z "$STAGED_PACKAGE_JSON" ]; then
+    echo "❌ Source files modified but package.json version not updated!"
+    echo "   Please bump the version in package.json before committing to master."
+    echo ""
+    echo "   Modified src files:"
+    echo "$STAGED_SRC_FILES" | sed 's/^/   - /'
+    exit 1
+  fi
+
+  if [ -n "$STAGED_SRC_FILES" ] && [ -n "$STAGED_PACKAGE_JSON" ]; then
+    # Check if version field was actually modified
+    VERSION_CHANGED=$(git diff --cached package.json | grep '"version":' || true)
+    if [ -z "$VERSION_CHANGED" ]; then
+      echo "❌ Source files modified but package.json version field unchanged!"
+      echo "   Please bump the version in package.json before committing to master."
+      exit 1
+    fi
+    echo "✅ Version validation passed!"
+  fi
+fi
+
 # Get staged PHP files
 STAGED_PHP_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep '\.php$' || true)
 
