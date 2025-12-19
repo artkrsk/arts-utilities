@@ -9,7 +9,7 @@ const AUDIO_PATTERN = /\.(mp3|wav|ogg|m4a|aac|wma|flac)$/i
 
 // URL-based detection patterns for streaming platforms
 const YOUTUBE_PATTERN =
-  /^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube(?:-nocookie)?\.com|youtu\.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$/i
+  /^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube(?:-nocookie)?\.com|youtu\.be))(\/(?:[\w-]+\?v=|embed\/|v\/)?)([\w-]+)(\S+)?$/i
 const VIMEO_PATTERN =
   /^((?:https?:)?\/\/)?(?:(?:www|player)\.)?vimeo\.com\/(?:(?:channels\/[A-z]+\/)|(?:groups\/[A-z]+\/videos\/)|(?:video\/))?(\d+)/i
 

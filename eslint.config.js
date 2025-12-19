@@ -14,6 +14,7 @@ export default tseslint.config(
       'node_modules/',
       'dist/',
       'coverage/',
+      'coverage-report/',
       '__e2e__/',
       '__tests__/',
       'vendor/',
@@ -43,7 +44,7 @@ export default tseslint.config(
     // TypeScript-specific rules
     files: ['**/*.{ts,tsx}'],
     rules: {
-      'no-console': 'warn',
+      'no-console': ['warn', { allow: ['warn', 'error'] }],
       '@typescript-eslint/explicit-function-return-type': 'warn',
       '@typescript-eslint/no-unused-vars': ['off', { argsIgnorePattern: '^_' }],
       '@typescript-eslint/no-explicit-any': 'warn'

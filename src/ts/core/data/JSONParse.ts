@@ -14,6 +14,7 @@ import type { IJSONParse } from '../interfaces'
  * @param strObj - String to parse
  * @returns Parsed object or empty object if parsing fails
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const JSONParse: IJSONParse = (strObj: string): Record<string, any> => {
   if (!strObj || typeof strObj !== 'string') {
     return {}
@@ -50,7 +51,7 @@ export function convertToStandardJSON(strObj: string): string {
   filteredStr = filteredStr.replace(/'/g, '"')
 
   // Fix property names without quotes
-  filteredStr = filteredStr.replace(/(?<=\{|\,)(\s*)([a-zA-Z0-9_$]+)(\s*):/g, '$1"$2"$3:')
+  filteredStr = filteredStr.replace(/(?<=\{|,)(\s*)([a-zA-Z0-9_$]+)(\s*):/g, '$1"$2"$3:')
 
   // Handle missing commas between properties
   filteredStr = filteredStr

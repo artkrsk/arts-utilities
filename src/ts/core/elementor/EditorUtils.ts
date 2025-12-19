@@ -11,7 +11,7 @@ interface ElementorWindow extends Window {
 const getElementorWindow = (): ElementorWindow => window as ElementorWindow
 
 // Local type guard for CSS values
-function isCSSValue(value: any): value is { size: number; unit: string } {
+function isCSSValue(value: unknown): value is { size: number; unit: string } {
   return (
     value &&
     typeof value === 'object' &&
@@ -27,6 +27,7 @@ function isCSSValue(value: any): value is { size: number; unit: string } {
  * @param obj - The object to extract keys from
  * @param keys - Array to collect the extracted keys
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function extractFromObject(obj: any, keys: string[]): void {
   if (typeof obj === 'string') {
     keys.push(obj)
@@ -95,12 +96,14 @@ function extractFromObject(obj: any, keys: string[]): void {
 export const processComplexValue = (
   valueMapping: TValueMapping,
   settings: TElementorSettings
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): any => {
   if (typeof valueMapping === 'string') {
     // For simple string mappings, get the value directly
     return settings[valueMapping]
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const result: Record<string, any> = {}
 
   Object.entries(valueMapping).forEach(([key, mapping]) => {
@@ -204,7 +207,9 @@ export const processComplexValue = (
 export const convertSettings = (
   settings: TElementorSettings,
   settingsMap: TSettingsMap
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): Record<string, any> => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const result: Record<string, any> = {}
 
   // Process each property in the map
@@ -289,7 +294,7 @@ let elementorInitPromise: Promise<boolean> | null = null
 export const elementorEditorLoaded = async (): Promise<boolean> => {
   // If Elementor is already initialized, check immediately
   if (typeof window !== 'undefined' && getElementorWindow().elementorFrontend?.elementsHandler) {
-    return getElementorWindow().elementorFrontend!.isEditMode()
+    return getElementorWindow().elementorFrontend?.isEditMode() ?? false
   }
 
   // If window is undefined, we're not in a browser
@@ -308,7 +313,7 @@ export const elementorEditorLoaded = async (): Promise<boolean> => {
     window.addEventListener('elementor/frontend/init', () => {
       elementorInitPromise = null
       if (getElementorWindow().elementorFrontend?.elementsHandler) {
-        resolve(getElementorWindow().elementorFrontend!.isEditMode())
+        resolve(getElementorWindow().elementorFrontend?.isEditMode() ?? false)
       } else {
         resolve(false)
       }
