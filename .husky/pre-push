@@ -1,0 +1,28 @@
+#!/bin/sh
+echo "Running pre-push checks..."
+
+# Run PHPStan
+echo "Running PHPStan..."
+composer phpstan || {
+  echo "❌ PHPStan failed. Please fix the errors before pushing."
+  exit 1
+}
+echo "✅ PHPStan passed!"
+
+# Run TypeScript type checking
+echo "Running TypeScript type checking..."
+npm run types || {
+  echo "❌ TypeScript type checking failed. Please fix the errors before pushing."
+  exit 1
+}
+echo "✅ TypeScript type checking passed!"
+
+# Run tests
+echo "Running tests..."
+npm run test || {
+  echo "❌ Tests failed. Please fix the tests before pushing."
+  exit 1
+}
+echo "✅ Tests passed!"
+
+echo "✅ All pre-push checks passed! Pushing..."
