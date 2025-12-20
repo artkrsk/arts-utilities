@@ -70,7 +70,7 @@ trait Frontend {
 
 		$files_deps = array();
 		/** @var array<string> $deps */
-		$deps                  = TypeGuards::get_array_value( $args['deps'] );
+		$deps                  = self::get_array_value( $args['deps'] );
 		$allowed_preload_types = array(
 			'preload',
 			'modulepreload',
