@@ -198,6 +198,7 @@ trait Kit {
 			$post_id = $first_post->ID;
 			$kit_id  = \Elementor\Plugin::$instance->kits_manager->get_active_id();
 
+			/** @var int|string $kit_id */
 			$url = admin_url( 'post.php?post=' . $post_id . '&action=elementor&active-document=' . $kit_id );
 
 			if ( ! empty( $tab_id ) ) {

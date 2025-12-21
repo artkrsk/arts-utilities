@@ -53,6 +53,7 @@ trait ResponsiveControls {
 			}
 		}
 
+		/** @var array<string, mixed> */
 		return array_reverse( $enabled_map, true );
 	}
 
