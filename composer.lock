@@ -13,7 +13,7 @@
             "dist": {
                 "type": "path",
                 "url": "../elementor-stubs",
-                "reference": "c3a9f61aef92ca68abb41e808fc1757d3eb045e5"
+                "reference": "d027419df4162c83b09a47c5f607f5754035d8c3"
             },
             "require": {
                 "ergebnis/composer-normalize": "^2.48",
