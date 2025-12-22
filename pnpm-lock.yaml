@@ -31,8 +31,8 @@ importers:
         specifier: 4.0.16
         version: 4.0.16(vitest@4.0.16)
       cypress:
-        specifier: ^15.8.0
-        version: 15.8.0
+        specifier: ^15.8.1
+        version: 15.8.1
       depcheck:
         specifier: ^1.4.7
         version: 1.4.7
@@ -888,8 +888,8 @@ packages:
     resolution: {integrity: sha512-KyOS/kJMEq5O9GdPnaf82noigg5X5DYn0kZPJTaAsCUaBizp6Xa1y9D4Qoqf/JazEXWuruErHgVXwjN5391ZJw==}
     engines: {node: '>=20'}
 
-  cypress@15.8.0:
-    resolution: {integrity: sha512-/k/KT8IIvcxarRSNb5AIhT1Yxx1pXsNIrL96Ht/c0pBOO/XcsjgjD4ZlG16V/08dRmvU/gT7PW8FBz5YV+ahsA==}
+  cypress@15.8.1:
+    resolution: {integrity: sha512-ogc62stTQGh1395ipKxfCE5hQuSApTzeH5e0d9U6m7wYO9HQeCpgnkYtBtd0MbkN2Fnch5Od2mX9u4hoTlrH4Q==}
     engines: {node: ^20.1.0 || ^22.0.0 || >=24.0.0}
     hasBin: true
 
@@ -2916,7 +2916,7 @@ snapshots:
     transitivePeerDependencies:
       - postcss
 
-  cypress@15.8.0:
+  cypress@15.8.1:
     dependencies:
       '@cypress/request': 3.0.9
       '@cypress/xvfb': 1.2.4(supports-color@8.1.1)
