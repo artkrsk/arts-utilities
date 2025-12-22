@@ -58,3 +58,4 @@ src/ts export-ignore
 fixtures export-ignore
 captainhook.json export-ignore
 phpstan.neon export-ignore
+.husky export-ignore
