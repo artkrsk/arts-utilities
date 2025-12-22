@@ -265,6 +265,8 @@ trait WooCommerce {
 	public static function get_cart_contents() {
 		if ( function_exists( 'WC' ) ) {
 			$wc = WC();
+			// Defensive check - cart may not be initialized in all contexts
+			/** @phpstan-ignore-next-line isset.property */
 			if ( is_object( $wc ) && isset( $wc->cart ) && is_object( $wc->cart ) && method_exists( $wc->cart, 'get_cart' ) ) {
 				$cart = $wc->cart->get_cart();
 				if ( is_array( $cart ) ) {
@@ -287,6 +289,8 @@ trait WooCommerce {
 	public static function get_cart_total() {
 		if ( function_exists( 'WC' ) ) {
 			$wc = WC();
+			// Defensive check - cart may not be initialized in all contexts
+			/** @phpstan-ignore-next-line isset.property */
 			if ( is_object( $wc ) && isset( $wc->cart ) && is_object( $wc->cart ) && method_exists( $wc->cart, 'get_cart_contents_total' ) ) {
 				$total = $wc->cart->get_cart_contents_total();
 				return is_numeric( $total ) ? (float) $total : 0.0;

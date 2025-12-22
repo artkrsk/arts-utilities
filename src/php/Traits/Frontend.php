@@ -160,6 +160,8 @@ trait Frontend {
 		wp_script_add_data( $handle, 'dynamic_load_type', $type );
 
 		if ( $args['dynamic_load_handle'] ) {
+			// WordPress accepts custom keys beyond stubs' definition
+			/** @phpstan-ignore-next-line argument.type */
 			wp_style_add_data( $handle, 'dynamic_load_handle', self::get_string_value( $args['dynamic_load_handle'] ) );
 		}
 
@@ -232,16 +234,22 @@ trait Frontend {
 		$media = self::get_string_value( $args['media'] );
 
 		wp_register_style( $handle, $src, $deps, $ver, $media );
+		// WordPress accepts custom keys beyond stubs' definition
+		/** @phpstan-ignore-next-line argument.type */
 		wp_style_add_data( $handle, 'dynamic_load_enabled', true );
 
 		if ( $args['dynamic_load_handle'] ) {
+			// WordPress accepts custom keys beyond stubs' definition
+			/** @phpstan-ignore-next-line argument.type */
 			wp_style_add_data( $handle, 'dynamic_load_handle', self::get_string_value( $args['dynamic_load_handle'] ) );
 		}
 
 		if ( $args['preload_type'] && in_array( $args['preload_type'], $allowed_preload_types, true ) ) {
+			/** @phpstan-ignore-next-line argument.type */
 			wp_style_add_data( $handle, 'preload_type', self::get_string_value( $args['preload_type'] ) );
 		}
 
+		/** @phpstan-ignore-next-line argument.type */
 		wp_style_add_data( $handle, 'dynamic_load_prevent_autoload', boolval( $args['dynamic_load_prevent_autoload'] ) );
 
 		wp_enqueue_style( $handle );

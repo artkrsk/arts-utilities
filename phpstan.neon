@@ -13,32 +13,5 @@ parameters:
 		- vendor/php-stubs/acf-pro-stubs/acf-pro-stubs.php
 		- vendor/arts/elementor-stubs/elementor-stubs.php
 
-	excludePaths:
-		analyse:
-			- __tests__/*
-
 	# Treat PHPDoc types as uncertain for better WordPress compatibility
 	treatPhpDocTypesAsCertain: false
-
-	ignoreErrors:
-		# wp_style_add_data() accepts any string key for custom metadata
-		# WordPress stubs restrict to core keys, but custom keys are supported
-		# Verified in WordPress core: wp-includes/functions.wp-styles.php
-		- '#Parameter \#2 \$key of function wp_style_add_data expects .+, .+ given#'
-
-		# Defensive runtime checks - stubs don't account for edge cases
-		# These isset() checks are intentional for runtime safety
-		-
-			identifier: isset.property
-			path: src/php/Traits/WooCommerce.php
-		-
-			identifier: isset.property
-			path: src/php/Traits/Elementor/ThemeBuilder.php
-		-
-			identifier: function.alreadyNarrowedType
-			path: src/php/Traits/Elementor/ThemeBuilder.php
-
-		# ElementorPro\Modules_Manager - internal class not in public stubs
-		-
-			identifier: class.notFound
-			path: src/php/Traits/Elementor/ThemeBuilder.php

@@ -46,6 +46,8 @@ trait ThemeBuilder {
 
 			if ( $location ) {
 				$elementor_pro_instance = \ElementorPro\Plugin::instance();
+				// Defensive check - plugin may not be fully initialized in all contexts
+				/** @phpstan-ignore-next-line function.alreadyNarrowedType, isset.property */
 				if ( is_object( $elementor_pro_instance ) && isset( $elementor_pro_instance->modules_manager ) && is_object( $elementor_pro_instance->modules_manager ) && method_exists( $elementor_pro_instance->modules_manager, 'get_modules' ) ) {
 					$theme_builder_module = $elementor_pro_instance->modules_manager->get_modules( 'theme-builder' );
 					if ( is_object( $theme_builder_module ) && method_exists( $theme_builder_module, 'get_conditions_manager' ) ) {

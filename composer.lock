@@ -4,16 +4,22 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "86795eb8e545ad634ef3dcb5c78794c3",
+    "content-hash": "63e82e8b274d33f759af0445a42196dc",
     "packages": [],
     "packages-dev": [
         {
             "name": "arts/elementor-stubs",
             "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/artkrsk/elementor-stubs.git",
+                "reference": "4a993235b89e87a7aa4f0f3915393e4531de38c1"
+            },
             "dist": {
-                "type": "path",
-                "url": "../elementor-stubs",
-                "reference": "d027419df4162c83b09a47c5f607f5754035d8c3"
+                "type": "zip",
+                "url": "https://api.github.com/repos/artkrsk/elementor-stubs/zipball/4a993235b89e87a7aa4f0f3915393e4531de38c1",
+                "reference": "4a993235b89e87a7aa4f0f3915393e4531de38c1",
+                "shasum": ""
             },
             "require": {
                 "ergebnis/composer-normalize": "^2.48",
@@ -31,38 +37,9 @@
                 "vlucas/phpdotenv": "^5.6",
                 "wp-coding-standards/wpcs": "^3.0"
             },
+            "default-branch": true,
             "type": "library",
-            "scripts": {
-                "post-install-cmd": [
-                    "vendor/bin/captainhook install -f -s"
-                ],
-                "post-update-cmd": [
-                    "vendor/bin/captainhook install -f -s"
-                ],
-                "generate": [
-                    "php generate.php"
-                ],
-                "normalize": [
-                    "composer-normalize"
-                ],
-                "test": [
-                    "@test:phpunit",
-                    "@test:phpstan",
-                    "@test:cs"
-                ],
-                "test:cs": [
-                    "phpcs"
-                ],
-                "test:cs:fix": [
-                    "phpcbf"
-                ],
-                "test:phpstan": [
-                    "phpstan analyze -c tests/phpstan.neon"
-                ],
-                "test:phpunit": [
-                    "phpunit"
-                ]
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "GPL-3.0-or-later"
             ],
@@ -74,18 +51,20 @@
             ],
             "description": "Comprehensive PHPStan stubs for Elementor and Elementor Pro WordPress page builder - auto-generated, self-contained, plug & play",
             "keywords": [
+                "PHPStan",
                 "elementor",
                 "elementor-pro",
                 "page-builder",
-                "phpstan",
                 "static-analysis",
                 "stubs",
                 "type-definitions",
                 "wordpress"
             ],
-            "transport-options": {
-                "relative": true
-            }
+            "support": {
+                "issues": "https://github.com/artkrsk/elementor-stubs/issues",
+                "source": "https://github.com/artkrsk/elementor-stubs/tree/master"
+            },
+            "time": "2025-12-22T04:47:32+00:00"
         },
         {
             "name": "dealerdirect/phpcodesniffer-composer-installer",
@@ -1486,7 +1465,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=7.2"
+        "php": ">=8.0"
     },
     "platform-dev": {},
     "plugin-api-version": "2.6.0"

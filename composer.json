@@ -10,7 +10,7 @@
     }
   ],
   "require": {
-    "php": ">=7.2"
+    "php": ">=8.0"
   },
   "require-dev": {
     "arts/elementor-stubs": "@dev",
@@ -22,12 +22,6 @@
     "szepeviktor/phpstan-wordpress": "^2.0",
     "wp-coding-standards/wpcs": "^3.0"
   },
-  "repositories": [
-    {
-      "type": "path",
-      "url": "../elementor-stubs"
-    }
-  ],
   "autoload": {
     "psr-4": {
       "Arts\\Utilities\\": "src/php/"
@@ -51,7 +45,7 @@
     "normalize": "composer-normalize",
     "phpcbf": "phpcbf --standard=phpcs.xml",
     "phpcs": "phpcs --standard=phpcs.xml",
-    "phpstan": "phpstan analyse --memory-limit=1G",
+    "phpstan": "phpstan analyse --memory-limit=2G",
     "phpstan:baseline": "phpstan analyse --memory-limit=1G --generate-baseline"
   }
 }
