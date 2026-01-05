@@ -94,16 +94,29 @@ trait Blog {
 	 *
 	 * This method can be used as a callback for the 'get_archives_link' filter
 	 * to wrap archive post counts in span elements for better styling control.
+	 * Only processes list format - dropdown options are skipped as they don't
+	 * support inner HTML elements.
 	 *
 	 * @since 1.0.16
 	 *
-	 * @param string $links The archive links.
+	 * @param string $link_html The archive HTML link content.
+	 * @param string $url       URL to archive.
+	 * @param string $text      Archive text description.
+	 * @param string $format    Link format. Can be 'link', 'option', 'html', or custom.
+	 * @param string $before    Content to prepend to the description.
+	 * @param string $after     Content to append to the description.
+	 * @param bool   $selected  True if the current page is the selected archive.
 	 * @return string Modified archive links with post count wrapped in a span.
 	 */
-	public static function archive_count_span( $links ) {
-		$links = str_replace( '</a>&nbsp;(', '</a><span>', $links );
-		$links = str_replace( ')', '</span>', $links );
+	public static function archive_count_span( $link_html, $url = '', $text = '', $format = '', $before = '', $after = '', $selected = false ) {
+		// Skip dropdown format - spans don't work inside <option> tags
+		if ( 'option' === $format ) {
+			return $link_html;
+		}
 
-		return $links;
+		$link_html = str_replace( '</a>&nbsp;(', '</a><span>', $link_html );
+		$link_html = str_replace( ')', '</span>', $link_html );
+
+		return $link_html;
 	}
 }
