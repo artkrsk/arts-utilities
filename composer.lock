@@ -13,23 +13,23 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/artkrsk/elementor-stubs.git",
-                "reference": "4a993235b89e87a7aa4f0f3915393e4531de38c1"
+                "reference": "f51ad248f93200c17e8870a4d380d224ee339a1e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/artkrsk/elementor-stubs/zipball/4a993235b89e87a7aa4f0f3915393e4531de38c1",
-                "reference": "4a993235b89e87a7aa4f0f3915393e4531de38c1",
+                "url": "https://api.github.com/repos/artkrsk/elementor-stubs/zipball/f51ad248f93200c17e8870a4d380d224ee339a1e",
+                "reference": "f51ad248f93200c17e8870a4d380d224ee339a1e",
                 "shasum": ""
             },
             "require": {
-                "ergebnis/composer-normalize": "^2.48",
-                "php": ">=7.2",
+                "php": ">=8.0",
                 "php-stubs/woocommerce-stubs": "^10.4",
                 "php-stubs/wordpress-stubs": "^6.9",
                 "php-stubs/wp-cli-stubs": "^2.12"
             },
             "require-dev": {
                 "captainhook/captainhook": "^5.27",
+                "ergebnis/composer-normalize": "^2.48",
                 "php-stubs/generator": "^0.8",
                 "phpstan/phpstan": "^2.0",
                 "phpunit/phpunit": "^9.5",
@@ -54,17 +54,26 @@
                 "PHPStan",
                 "elementor",
                 "elementor-pro",
+                "ide-autocomplete",
+                "intellisense",
                 "page-builder",
                 "static-analysis",
                 "stubs",
                 "type-definitions",
+                "type-safety",
                 "wordpress"
             ],
             "support": {
                 "issues": "https://github.com/artkrsk/elementor-stubs/issues",
                 "source": "https://github.com/artkrsk/elementor-stubs/tree/master"
             },
-            "time": "2025-12-22T04:47:32+00:00"
+            "funding": [
+                {
+                    "url": "https://www.buymeacoffee.com/artemsemkin",
+                    "type": "buy_me_a_coffee"
+                }
+            ],
+            "time": "2026-01-02T14:58:38+00:00"
         },
         {
             "name": "dealerdirect/phpcodesniffer-composer-installer",
@@ -628,16 +637,16 @@
         },
         {
             "name": "justinrainbow/json-schema",
-            "version": "6.6.3",
+            "version": "6.6.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jsonrainbow/json-schema.git",
-                "reference": "134e98916fa2f663afa623970af345cd788e8967"
+                "reference": "2eeb75d21cf73211335888e7f5e6fd7440723ec7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jsonrainbow/json-schema/zipball/134e98916fa2f663afa623970af345cd788e8967",
-                "reference": "134e98916fa2f663afa623970af345cd788e8967",
+                "url": "https://api.github.com/repos/jsonrainbow/json-schema/zipball/2eeb75d21cf73211335888e7f5e6fd7440723ec7",
+                "reference": "2eeb75d21cf73211335888e7f5e6fd7440723ec7",
                 "shasum": ""
             },
             "require": {
@@ -697,9 +706,9 @@
             ],
             "support": {
                 "issues": "https://github.com/jsonrainbow/json-schema/issues",
-                "source": "https://github.com/jsonrainbow/json-schema/tree/6.6.3"
+                "source": "https://github.com/jsonrainbow/json-schema/tree/6.6.4"
             },
-            "time": "2025-12-02T10:21:33+00:00"
+            "time": "2025-12-19T15:01:32+00:00"
         },
         {
             "name": "localheinz/diff",

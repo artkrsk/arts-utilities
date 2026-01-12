@@ -105,6 +105,40 @@ trait Strings {
 	}
 
 	/**
+	 * Converts a string to PascalCase format suitable for filenames.
+	 *
+	 * Sanitizes the input by trimming whitespace and normalizing all whitespace
+	 * characters (spaces, tabs, newlines, etc.) to dashes, then converts to PascalCase.
+	 * This is useful for generating consistent filenames from user-provided titles.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $string The input string to be converted.
+	 * @example `Regular` becomes `Regular`
+	 * @example `My Custom Skin` becomes `MyCustomSkin`
+	 * @example `my custom skin` becomes `MyCustomSkin`
+	 *
+	 * @return string The converted string in PascalCase format.
+	 */
+	public static function convert_to_pascal_case( $string ) {
+		if ( empty( $string ) || ! is_string( $string ) ) {
+			return '';
+		}
+
+		// Normalize all whitespace sequences to single dashes
+		$string = preg_replace( '/\s+/', '-', trim( $string ) );
+
+		if ( empty( $string ) ) {
+			return '';
+		}
+
+		// Convert to PascalCase: capitalize first letter of each dash-separated word, remove dashes
+		$string = str_replace( '-', '', ucwords( $string, '-' ) );
+
+		return $string;
+	}
+
+	/**
 	 * Replaces special characters in a string and converts it to a slug format.
 	 *
 	 * This function replaces characters like '_', '-', '/', '&', ' ', '.', '?', '#', and '=' with a specified replacement character
