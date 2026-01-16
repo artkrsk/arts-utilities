@@ -65,6 +65,36 @@ export interface IPageLockOptions {
    * ```
    */
   lockKeyboard?: boolean
+
+  /**
+   * Whether to allow nested scrollable elements to scroll while keeping the page locked.
+   * When true, uses smart scroll prevention that detects scrollable containers and allows
+   * them to scroll if they haven't reached their scroll boundaries. The page remains locked.
+   * When false, blocks all scrolling including nested elements.
+   *
+   * @default false
+   *
+   * @example
+   * ```typescript
+   * // Modal with scrollable content
+   * pageLock(true, {
+   *   allowNestedScroll: true  // Modal content can scroll, page stays locked
+   * });
+   *
+   * // Fullscreen overlay - block everything
+   * pageLock(true, {
+   *   allowNestedScroll: false // Nothing can scroll
+   * });
+   *
+   * // Sidebar with scrollable content
+   * pageLock(true, {
+   *   passive: false,
+   *   allowNestedScroll: true,
+   *   lockKeyboard: false
+   * });
+   * ```
+   */
+  allowNestedScroll?: boolean
 }
 
 /**
