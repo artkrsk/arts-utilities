@@ -50,7 +50,7 @@ src/ts export-ignore
 
 # Markdown files except README.md
 /*.md export-ignore
-.claude export-ignore
+README.md -export-ignore
 .github export-ignore
 .taskmaster export-ignore
 .vscode export-ignore
