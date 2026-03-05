@@ -13,16 +13,17 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/artkrsk/elementor-stubs.git",
-                "reference": "26cd66e02c77a525e3035318d87de5452529c36f"
+                "reference": "b0b8942f0464de7b757f29161c3db17b229bdd2c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/artkrsk/elementor-stubs/zipball/26cd66e02c77a525e3035318d87de5452529c36f",
-                "reference": "26cd66e02c77a525e3035318d87de5452529c36f",
+                "url": "https://api.github.com/repos/artkrsk/elementor-stubs/zipball/b0b8942f0464de7b757f29161c3db17b229bdd2c",
+                "reference": "b0b8942f0464de7b757f29161c3db17b229bdd2c",
                 "shasum": ""
             },
             "require": {
                 "php": ">=8.0",
+                "php-stubs/woocommerce-stubs": "^10.5",
                 "php-stubs/wordpress-stubs": "^6.9",
                 "php-stubs/wp-cli-stubs": "^2.12"
             },
@@ -30,7 +31,6 @@
                 "captainhook/captainhook": "^5.27",
                 "ergebnis/composer-normalize": "^2.48",
                 "php-stubs/generator": "^0.8",
-                "php-stubs/woocommerce-stubs": "10.5.2",
                 "phpstan/phpstan": "^2.0",
                 "phpunit/phpunit": "^9.5",
                 "squizlabs/php_codesniffer": "^3.0",
@@ -73,7 +73,7 @@
                     "type": "buy_me_a_coffee"
                 }
             ],
-            "time": "2026-03-04T05:21:31+00:00"
+            "time": "2026-03-05T12:11:09+00:00"
         },
         {
             "name": "dealerdirect/phpcodesniffer-composer-installer",
