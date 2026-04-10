@@ -13,7 +13,7 @@ const getElementorWindow = (): ElementorWindow => window as ElementorWindow
 // Local type guard for CSS values
 function isCSSValue(value: unknown): value is { size: number; unit: string } {
   return (
-    value &&
+    !!value &&
     typeof value === 'object' &&
     'size' in value &&
     'unit' in value &&

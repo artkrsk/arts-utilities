@@ -32,7 +32,7 @@ export function isHTMLElement(subject: unknown, typeName = 'Element'): subject i
     }
 
     // Fallback check for node type if available (works in most DOM environments)
-    if (typeName === 'Element' && subject.nodeType === 1) {
+    if (typeName === 'Element' && (subject as { nodeType?: number }).nodeType === 1) {
       return true
     }
 

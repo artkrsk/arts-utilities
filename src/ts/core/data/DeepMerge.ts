@@ -63,14 +63,16 @@ export const deepmerge: IDeepMerge = <T extends Record<string, unknown>, U exten
       !Array.isArray(sourceValue)
     ) {
       // If both values are objects, merge them recursively
-      output[key as keyof (T & U)] = deepmerge(targetValue, sourceValue)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      output[key as keyof (T & U)] = deepmerge(targetValue as any, sourceValue as any) as any
     } else if (Array.isArray(targetValue) && Array.isArray(sourceValue)) {
       // If both are arrays, concatenate them
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       output[key as keyof (T & U)] = [...targetValue, ...sourceValue] as any
     } else if (sourceValue !== undefined) {
       // Otherwise just take the source value
-      output[key as keyof (T & U)] = sourceValue
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      output[key as keyof (T & U)] = sourceValue as any
     }
   })
 
