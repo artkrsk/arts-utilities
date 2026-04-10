@@ -129,6 +129,7 @@ trait Markup {
 			return '';
 		}
 
+		/** @var list<string> $attribute_pairs */
 		$attribute_pairs = array();
 
 		foreach ( $attributes as $key => $val ) {
@@ -140,18 +141,19 @@ trait Markup {
 			// We remove duplicates, filter out empty values, and then convert the array to a space-separated string.
 			// Usually we prepare a class set in this way
 			if ( is_array( $val ) ) {
-				// Remove duplicates
-				$val = array_unique( $val );
-
-				// Remove all the empty elements, zeros, false, null values, and an empty array (arr()) from the array
-				$val = array_filter( $val );
+				// Cast all values to strings, remove duplicates, and filter empty values
+				$string_values = array_filter( $val, 'is_scalar' );
+				/** @var array<scalar> $string_values */
+				$string_values = array_map( 'strval', $string_values );
+				$string_values = array_unique( $string_values );
+				$string_values = array_filter( $string_values );
 
 				// Convert the array to a space-separated string
-				$val = implode( ' ', $val );
+				$val = implode( ' ', $string_values );
 			}
 
 			if ( is_int( $key ) ) {
-				$attribute_pairs[] = $val;
+				$attribute_pairs[] = self::get_string_value( $val );
 			} else {
 				$val = htmlspecialchars( self::get_string_value( $val ), ENT_QUOTES | ENT_HTML5 );
 
@@ -481,7 +483,9 @@ trait Markup {
 		// This matches the pattern used in print_attributes() for all attribute values
 		foreach ( $attributes as $key => $value ) {
 			if ( is_array( $value ) ) {
-				$attributes[ $key ] = implode( ' ', $value );
+				$scalar_values = array_filter( $value, 'is_scalar' );
+				/** @var array<scalar> $scalar_values */
+				$attributes[ $key ] = implode( ' ', array_map( 'strval', $scalar_values ) );
 			}
 		}
 

@@ -99,10 +99,12 @@ describe('pageLock', () => {
     it('should remove event listeners when unlocking with default options', () => {
       pageLock(false)
 
+      // Defensively removes both preventDefault variants + touchstart + keydown
       expect(removeEventListenerSpy).toHaveBeenCalledWith('wheel', expect.any(Function))
       expect(removeEventListenerSpy).toHaveBeenCalledWith('touchmove', expect.any(Function))
+      expect(removeEventListenerSpy).toHaveBeenCalledWith('touchstart', expect.any(Function))
       expect(removeEventListenerSpy).toHaveBeenCalledWith('keydown', expect.any(Function))
-      expect(removeEventListenerSpy).toHaveBeenCalledTimes(3)
+      expect(removeEventListenerSpy).toHaveBeenCalledTimes(6)
     })
 
     it('should not remove keyboard listener when lockKeyboard is false', () => {
@@ -110,7 +112,8 @@ describe('pageLock', () => {
 
       expect(removeEventListenerSpy).toHaveBeenCalledWith('wheel', expect.any(Function))
       expect(removeEventListenerSpy).toHaveBeenCalledWith('touchmove', expect.any(Function))
-      expect(removeEventListenerSpy).toHaveBeenCalledTimes(2)
+      expect(removeEventListenerSpy).toHaveBeenCalledWith('touchstart', expect.any(Function))
+      expect(removeEventListenerSpy).toHaveBeenCalledTimes(5)
     })
 
     it('should remove keyboard listener when lockKeyboard is true', () => {
@@ -118,8 +121,9 @@ describe('pageLock', () => {
 
       expect(removeEventListenerSpy).toHaveBeenCalledWith('wheel', expect.any(Function))
       expect(removeEventListenerSpy).toHaveBeenCalledWith('touchmove', expect.any(Function))
+      expect(removeEventListenerSpy).toHaveBeenCalledWith('touchstart', expect.any(Function))
       expect(removeEventListenerSpy).toHaveBeenCalledWith('keydown', expect.any(Function))
-      expect(removeEventListenerSpy).toHaveBeenCalledTimes(3)
+      expect(removeEventListenerSpy).toHaveBeenCalledTimes(6)
     })
 
     it('should handle passive option when unlocking', () => {
@@ -128,8 +132,9 @@ describe('pageLock', () => {
 
       expect(removeEventListenerSpy).toHaveBeenCalledWith('wheel', expect.any(Function))
       expect(removeEventListenerSpy).toHaveBeenCalledWith('touchmove', expect.any(Function))
+      expect(removeEventListenerSpy).toHaveBeenCalledWith('touchstart', expect.any(Function))
       expect(removeEventListenerSpy).toHaveBeenCalledWith('keydown', expect.any(Function))
-      expect(removeEventListenerSpy).toHaveBeenCalledTimes(3)
+      expect(removeEventListenerSpy).toHaveBeenCalledTimes(6)
     })
   })
 
@@ -259,8 +264,8 @@ describe('pageLock', () => {
       pageLock(false)
       pageLock(false)
 
-      // Should remove listeners twice
-      expect(removeEventListenerSpy).toHaveBeenCalledTimes(6)
+      // Should remove listeners twice (6 per unlock call)
+      expect(removeEventListenerSpy).toHaveBeenCalledTimes(12)
     })
 
     it('should handle lock then unlock', () => {
@@ -270,7 +275,7 @@ describe('pageLock', () => {
       addEventListenerSpy.mockClear()
 
       pageLock(false)
-      expect(removeEventListenerSpy).toHaveBeenCalledTimes(3)
+      expect(removeEventListenerSpy).toHaveBeenCalledTimes(6)
       expect(addEventListenerSpy).not.toHaveBeenCalled()
     })
   })

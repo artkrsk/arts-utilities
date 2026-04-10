@@ -297,8 +297,8 @@ class DOMServiceClass {
 
     try {
       return document.createElement(tagName)
-    } catch (_error) {
-      throw new Error(`Failed to create element with tag name: ${tagName}`)
+    } catch (error) {
+      throw new Error(`Failed to create element with tag name: ${tagName}`, { cause: error })
     }
   }
 
@@ -315,8 +315,8 @@ class DOMServiceClass {
 
     try {
       return parent.appendChild(child) as TElement
-    } catch (_error) {
-      throw new Error('Failed to append child element')
+    } catch (error) {
+      throw new Error('Failed to append child element', { cause: error })
     }
   }
 }

@@ -82,9 +82,9 @@ class MockHTMLVideoElement {
     // Simulate loading
   }
 
-  simulateCanPlayThrough() {
-    this.readyState = 4 // HAVE_ENOUGH_DATA
-    const handlers = this.eventListeners.get('canplaythrough') || []
+  simulateLoadedData() {
+    this.readyState = 2 // HAVE_CURRENT_DATA
+    const handlers = this.eventListeners.get('loadeddata') || []
     handlers.forEach((handler) => handler())
   }
 
@@ -209,7 +209,7 @@ describe('MediaUtils', () => {
       const promise = loadMedia(mockVideo as any)
 
       setTimeout(() => {
-        mockVideo.simulateCanPlayThrough()
+        mockVideo.simulateLoadedData()
       }, 100)
 
       vi.advanceTimersByTime(100)
@@ -226,7 +226,7 @@ describe('MediaUtils', () => {
 
       expect(mockVideo.preload).toBe('auto')
 
-      setTimeout(() => mockVideo.simulateCanPlayThrough(), 50)
+      setTimeout(() => mockVideo.simulateLoadedData(), 50)
       vi.advanceTimersByTime(50)
       await promise
     })

@@ -124,21 +124,21 @@ export const loadMedia = async (
       }
 
       // Set up event listeners
-      const handleCanPlay = (): void => {
-        videoElement.removeEventListener('canplaythrough', handleCanPlay)
+      const handleLoaded = (): void => {
+        videoElement.removeEventListener('loadeddata', handleLoaded)
         videoElement.removeEventListener('error', handleError)
         resolveWithCleanup(videoElement)
       }
 
       const handleError = (_event: Event): void => {
-        videoElement.removeEventListener('canplaythrough', handleCanPlay)
+        videoElement.removeEventListener('loadeddata', handleLoaded)
         videoElement.removeEventListener('error', handleError)
         rejectWithCleanup(
           new Error(`Video failed to load: ${videoElement.src || 'unknown source'}`)
         )
       }
 
-      videoElement.addEventListener('canplaythrough', handleCanPlay)
+      videoElement.addEventListener('loadeddata', handleLoaded)
       videoElement.addEventListener('error', handleError)
 
       // Set priority attributes for faster loading if enabled

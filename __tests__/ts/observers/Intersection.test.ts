@@ -99,7 +99,7 @@ describe('Intersection', () => {
       const mockCallback = vi.fn()
 
       // Mock IntersectionObserver to throw error
-      global.IntersectionObserver = vi.fn().mockImplementation(() => {
+      global.IntersectionObserver = vi.fn().mockImplementation(function () {
         throw new Error('IntersectionObserver not supported')
       })
 
@@ -129,7 +129,7 @@ describe('Intersection', () => {
       })
 
       // Mock IntersectionObserver to throw error
-      global.IntersectionObserver = vi.fn().mockImplementation(() => {
+      global.IntersectionObserver = vi.fn().mockImplementation(function () {
         throw new Error('IntersectionObserver not supported')
       })
 
@@ -180,7 +180,7 @@ describe('Intersection', () => {
       const mockCallback = vi.fn()
 
       // Mock IntersectionObserver to return null (failed creation)
-      global.IntersectionObserver = vi.fn().mockImplementation(() => {
+      global.IntersectionObserver = vi.fn().mockImplementation(function () {
         throw new Error('IntersectionObserver not supported')
       })
 

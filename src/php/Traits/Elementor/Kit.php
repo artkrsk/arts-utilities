@@ -253,6 +253,6 @@ trait Kit {
 		$regex = '/(?<=globals\/colors\?id=)[a-z0-9]+/i';
 		preg_match( $regex, $input, $match );
 
-		return $match && $match[0] ? $match[0] : '';
+		return $match ? $match[0] : '';
 	}
 }

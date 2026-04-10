@@ -220,9 +220,9 @@ export const parseColorString = (colorString: string): { color: string; alpha: n
   match = colorString.match(hexRegex)
   if (match && match[1]) {
     const hex = match[1]
-    let r = 0
-    let g = 0
-    let b = 0
+    let r: number
+    let g: number
+    let b: number
     let alpha = 1.0
 
     if (hex.length === 3) {

@@ -174,7 +174,7 @@ describe('dispatchEvent', () => {
     it('should return false when CustomEvent constructor throws', () => {
       const originalWindow = global.window
       global.window = {
-        CustomEvent: vi.fn().mockImplementation(() => {
+        CustomEvent: vi.fn().mockImplementation(function () {
           throw new Error('CustomEvent failed')
         })
       } as any
