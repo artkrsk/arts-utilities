@@ -22,19 +22,20 @@
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@types/node": "^25.6.0",
-    "@vitest/coverage-v8": "^4.1.4",
-    "@vitest/ui": "4.1.4",
-    "cypress": "^15.13.1",
+    "@vitest/coverage-v8": "^4.1.5",
+    "@vitest/ui": "4.1.5",
+    "cypress": "^15.14.1",
     "depcheck": "^1.4.7",
-    "eslint": "^10.2.0",
+    "eslint": "^10.2.1",
     "eslint-config-prettier": "^10.1.8",
     "husky": "^9.1.7",
-    "jsdom": "^29.0.2",
-    "npm-check-updates": "^20.0.1",
-    "prettier": "^3.8.2",
-    "typescript": "^6.0.2",
-    "typescript-eslint": "^8.58.1",
-    "vitest": "^4.1.4"
+    "jsdom": "^29.1.0",
+    "npm-check-updates": "^22.0.1",
+    "prettier": "^3.8.3",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.59.1",
+    "vite": "^8.0.10",
+    "vitest": "^4.1.5"
   },
   "scripts": {
     "dev": "node __builder__/src/scripts/dev.js",
@@ -58,10 +59,24 @@
   },
   "pnpm": {
     "overrides": {
-      "vite": ">=7.2.7",
-      "brace-expansion": ">=4.0.1",
+      "brace-expansion@>=2.0.0 <3.0.0": "2.1.0",
+      "flatted": "3.4.2",
       "js-yaml": ">=4.1.1",
-      "systeminformation": ">=5.27.14"
+      "lodash": ">=4.18.0",
+      "minimatch@>=3.0.0 <4.0.0": "3.1.5",
+      "minimatch@>=7.0.0 <8.0.0": "7.4.9",
+      "minimatch@>=9.0.0 <10.0.0": "9.0.9",
+      "picomatch@>=2.0.0 <3.0.0": "2.3.2",
+      "picomatch@>=4.0.0 <5.0.0": "4.0.4",
+      "postcss": ">=8.5.10",
+      "qs": ">=6.14.2",
+      "rollup": ">=4.59.0",
+      "serialize-javascript": "7.0.5",
+      "systeminformation": ">=5.27.14",
+      "undici": "^7.24.0",
+      "uuid": ">=14.0.0",
+      "vite": ">=8.0.0",
+      "yaml@>=1.0.0 <2.0.0": "1.10.3"
     }
   }
 }
