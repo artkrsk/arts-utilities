@@ -72,7 +72,7 @@
       "qs": ">=6.14.2",
       "rollup": ">=4.59.0",
       "serialize-javascript": "7.0.5",
-      "systeminformation": ">=5.27.14",
+      "systeminformation": ">=5.31.0",
       "undici": "^7.24.0",
       "uuid": ">=14.0.0",
       "vite": ">=8.0.0",
