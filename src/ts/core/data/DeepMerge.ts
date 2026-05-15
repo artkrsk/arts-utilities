@@ -17,6 +17,7 @@ export const deepmerge: IDeepMerge = <
 		const targetValue = target[key as keyof T];
 		const sourceValue = source[key as keyof U];
 
+		/* eslint-disable @typescript-eslint/no-explicit-any */
 		if (
 			targetValue &&
 			sourceValue &&
@@ -25,18 +26,16 @@ export const deepmerge: IDeepMerge = <
 			!Array.isArray(targetValue) &&
 			!Array.isArray(sourceValue)
 		) {
-			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			output[key as keyof (T & U)] = deepmerge(
 				targetValue as any,
 				sourceValue as any,
 			) as any;
 		} else if (Array.isArray(targetValue) && Array.isArray(sourceValue)) {
-			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			output[key as keyof (T & U)] = [...targetValue, ...sourceValue] as any;
 		} else if (sourceValue !== undefined) {
-			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			output[key as keyof (T & U)] = sourceValue as any;
 		}
+		/* eslint-enable @typescript-eslint/no-explicit-any */
 	});
 
 	return output;

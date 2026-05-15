@@ -38,9 +38,9 @@ export type TSettingsMap = Record<string, string | TMappingValue>;
  * Argument form accepted by `processComplexValue`. Either a source key (string)
  * or a nested mapping object whose leaves are source keys or further nested objects.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type TValueMapping =
 	| string
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	| Record<string, string | Record<string, any>>;
 
 /** Async callback invoked by `ElementorSettingsHandler` after a relevant setting changes. */

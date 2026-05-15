@@ -15,9 +15,9 @@ export const parseAttribute: IParseAttribute = (
 	// Drop the `data-` prefix (5 chars) before splitting into path segments.
 	const path = attr.name.slice(5).split(separator);
 
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	path.reduce(
 		(
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			obj: Record<string, any>,
 			part: string,
 			idx: number,

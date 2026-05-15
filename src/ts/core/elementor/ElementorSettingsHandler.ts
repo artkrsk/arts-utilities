@@ -82,8 +82,8 @@ export class ElementorSettingsHandler {
 		return liveSettings.includes(setting);
 	}
 
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	private async applySettingsChange(
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		settings: Record<string, any>,
 	): Promise<void> {
 		const options = convertSettings(settings, this.options);
