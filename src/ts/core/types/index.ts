@@ -1,3 +1,3 @@
-export * from './utility'
-export * from './TEditorUtils'
-export * from './TMediaTypes'
+export * from "./TEditorUtils";
+export * from "./TMediaTypes";
+export * from "./utility";

@@ -1,7 +1,3 @@
 {
-	"redefinable-internals": [
-		"class_exists",
-		"function_exists",
-		"dirname"
-	]
+	"redefinable-internals": ["class_exists", "function_exists", "dirname"]
 }

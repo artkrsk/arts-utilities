@@ -1,82 +1,82 @@
 {
-  "name": "@arts/utilities",
-  "version": "2.5.1",
-  "type": "module",
-  "description": "A collection of useful PHP and JS utility functions for developing a WordPress theme",
-  "license": "MIT",
-  "private": true,
-  "sideEffects": false,
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
-  "files": [
-    "dist",
-    "src"
-  ],
-  "engines": {
-    "node": ">=24.0.0"
-  },
-  "dependencies": {
-    "@arts/elementor-types": "../elementor-types"
-  },
-  "devDependencies": {
-    "@eslint/js": "^10.0.1",
-    "@types/node": "^25.6.0",
-    "@vitest/coverage-v8": "^4.1.5",
-    "@vitest/ui": "4.1.5",
-    "cypress": "^15.14.1",
-    "depcheck": "^1.4.7",
-    "eslint": "^10.2.1",
-    "eslint-config-prettier": "^10.1.8",
-    "husky": "^9.1.7",
-    "jsdom": "^29.1.0",
-    "npm-check-updates": "^22.0.1",
-    "prettier": "^3.8.3",
-    "typescript": "^6.0.3",
-    "typescript-eslint": "^8.59.1",
-    "vite": "^8.0.10",
-    "vitest": "^4.1.5"
-  },
-  "scripts": {
-    "dev": "node __builder__/src/scripts/dev.js",
-    "dev:cy": "npm run dev & cypress open",
-    "build": "node __builder__/src/scripts/build.js",
-    "build:prod": "NODE_ENV=production node __builder__/src/scripts/build-production.js",
-    "test": "node __builder__/src/scripts/test.js",
-    "test:coverage": "node __builder__/src/scripts/test-coverage.js",
-    "test:ci": "npm run test && npm run cypress:e2e",
-    "lint": "node __builder__/src/scripts/lint.js",
-    "types": "node __builder__/src/scripts/types.js",
-    "format": "node __builder__/src/scripts/format.js",
-    "analyze": "ANALYZE=true node __builder__/src/scripts/build.js",
-    "cypress": "node __builder__/src/scripts/cypress.js",
-    "cypress:e2e": "node __builder__/src/scripts/cypress.js e2e",
-    "cypress:components": "node __builder__/src/scripts/cypress.js component",
-    "deps:check": "npx npm-check-updates",
-    "deps:update": "npx npm-check-updates -u && pnpm install",
-    "deps:clean": "node __builder__/src/scripts/clean-deps.js",
-    "prepare": "husky"
-  },
-  "pnpm": {
-    "overrides": {
-      "brace-expansion@>=2.0.0 <3.0.0": "2.1.0",
-      "flatted": "3.4.2",
-      "js-yaml": ">=4.1.1",
-      "lodash": ">=4.18.0",
-      "minimatch@>=3.0.0 <4.0.0": "3.1.5",
-      "minimatch@>=7.0.0 <8.0.0": "7.4.9",
-      "minimatch@>=9.0.0 <10.0.0": "9.0.9",
-      "picomatch@>=2.0.0 <3.0.0": "2.3.2",
-      "picomatch@>=4.0.0 <5.0.0": "4.0.4",
-      "postcss": ">=8.5.10",
-      "qs": ">=6.14.2",
-      "rollup": ">=4.59.0",
-      "serialize-javascript": "7.0.5",
-      "systeminformation": ">=5.31.0",
-      "undici": "^7.24.0",
-      "uuid": ">=14.0.0",
-      "vite": ">=8.0.0",
-      "yaml@>=1.0.0 <2.0.0": "1.10.3"
-    }
-  }
+	"name": "@arts/utilities",
+	"version": "2.5.1",
+	"type": "module",
+	"description": "A collection of useful PHP and JS utility functions for developing a WordPress theme",
+	"license": "MIT",
+	"private": true,
+	"sideEffects": false,
+	"main": "./dist/index.cjs",
+	"module": "./dist/index.mjs",
+	"types": "./dist/index.d.ts",
+	"files": [
+		"dist",
+		"src"
+	],
+	"engines": {
+		"node": ">=24.0.0"
+	},
+	"dependencies": {
+		"@arts/elementor-types": "../elementor-types"
+	},
+	"devDependencies": {
+		"@eslint/js": "^10.0.1",
+		"@types/node": "^25.6.0",
+		"@vitest/coverage-v8": "^4.1.5",
+		"@vitest/ui": "4.1.5",
+		"cypress": "^15.14.1",
+		"depcheck": "^1.4.7",
+		"eslint": "^10.2.1",
+		"eslint-config-prettier": "^10.1.8",
+		"husky": "^9.1.7",
+		"jsdom": "^29.1.0",
+		"npm-check-updates": "^22.0.1",
+		"prettier": "^3.8.3",
+		"typescript": "^6.0.3",
+		"typescript-eslint": "^8.59.1",
+		"vite": "^8.0.10",
+		"vitest": "^4.1.5"
+	},
+	"scripts": {
+		"dev": "node __builder__/src/scripts/dev.js",
+		"dev:cy": "npm run dev & cypress open",
+		"build": "node __builder__/src/scripts/build.js",
+		"build:prod": "NODE_ENV=production node __builder__/src/scripts/build-production.js",
+		"test": "node __builder__/src/scripts/test.js",
+		"test:coverage": "node __builder__/src/scripts/test-coverage.js",
+		"test:ci": "npm run test && npm run cypress:e2e",
+		"lint": "node __builder__/src/scripts/lint.js",
+		"types": "node __builder__/src/scripts/types.js",
+		"format": "node __builder__/src/scripts/format.js",
+		"analyze": "ANALYZE=true node __builder__/src/scripts/build.js",
+		"cypress": "node __builder__/src/scripts/cypress.js",
+		"cypress:e2e": "node __builder__/src/scripts/cypress.js e2e",
+		"cypress:components": "node __builder__/src/scripts/cypress.js component",
+		"deps:check": "npx npm-check-updates",
+		"deps:update": "npx npm-check-updates -u && pnpm install",
+		"deps:clean": "node __builder__/src/scripts/clean-deps.js",
+		"prepare": "husky"
+	},
+	"pnpm": {
+		"overrides": {
+			"brace-expansion@>=2.0.0 <3.0.0": "2.1.0",
+			"flatted": "3.4.2",
+			"js-yaml": ">=4.1.1",
+			"lodash": ">=4.18.0",
+			"minimatch@>=3.0.0 <4.0.0": "3.1.5",
+			"minimatch@>=7.0.0 <8.0.0": "7.4.9",
+			"minimatch@>=9.0.0 <10.0.0": "9.0.9",
+			"picomatch@>=2.0.0 <3.0.0": "2.3.2",
+			"picomatch@>=4.0.0 <5.0.0": "4.0.4",
+			"postcss": ">=8.5.10",
+			"qs": ">=6.14.2",
+			"rollup": ">=4.59.0",
+			"serialize-javascript": "7.0.5",
+			"systeminformation": ">=5.31.0",
+			"undici": "^7.24.0",
+			"uuid": ">=14.0.0",
+			"vite": ">=8.0.0",
+			"yaml@>=1.0.0 <2.0.0": "1.10.3"
+		}
+	}
 }

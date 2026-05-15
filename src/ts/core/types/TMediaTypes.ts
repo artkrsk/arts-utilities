@@ -1,36 +1,24 @@
 /**
- * Represents the type of media file based on its extension or URL.
- * Used for categorizing files as images, videos, audio, streaming platforms, or unknown types.
- *
- * @example
- * ```typescript
- * const imageType: TMediaType = 'image'
- * const videoType: TMediaType = 'video'
- * const audioType: TMediaType = 'audio'
- * const streamType: TMediaType = 'youtube'
- * const unknownType: TMediaType = null
- * ```
+ * Result of media-type detection. `null` means unknown / unsupported.
  */
-export type TMediaType = 'image' | 'video' | 'audio' | 'youtube' | 'vimeo' | null
+export type TMediaType =
+	| "image"
+	| "video"
+	| "audio"
+	| "youtube"
+	| "vimeo"
+	| null;
 
 /**
- * Configuration options for generating video embed URLs.
- * Provides control over embed behavior and features.
+ * Options for `generateEmbedURL`.
  *
- * @example
- * ```typescript
- * const embedOptions: TVideoEmbedOptions = {
- *   autoplay: true,
- *   enablejsapi: true,
- *   privacy: true
- * }
- * ```
+ * - `privacy: true` switches YouTube to `youtube-nocookie.com` and adds `dnt=1` to Vimeo URLs.
  */
 export interface TVideoEmbedOptions {
-  /** Whether to enable autoplay (default: false) */
-  autoplay?: boolean
-  /** Whether to enable JS API for YouTube (default: true) */
-  enablejsapi?: boolean
-  /** Whether to use privacy-enhanced embedding (default: false) - Uses youtube-nocookie.com for YouTube and dnt=1 for Vimeo */
-  privacy?: boolean
+	/** @default false */
+	autoplay?: boolean;
+	/** YouTube only. @default true */
+	enablejsapi?: boolean;
+	/** @default false */
+	privacy?: boolean;
 }

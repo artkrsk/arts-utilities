@@ -1,13 +1,3 @@
-import {} from '../'
+import {} from "../";
 
-// declare global {
-//   interface Window {
-//     ArtsAssetsManager: typeof ArtsAssetsManager
-//   }
-// }
-
-// window.ArtsAssetsManager = ArtsAssetsManager
-// console.log('Exposing ArtsAssetsManager to window')
-
-// export default ArtsAssetsManager
-console.log('main.ts loaded')
+console.log("main.ts loaded");

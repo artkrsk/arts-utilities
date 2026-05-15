@@ -1,2 +1,2 @@
-export * from './MediaTypeDetection'
-export * from './VideoURLUtils'
+export * from "./MediaTypeDetection";
+export * from "./VideoURLUtils";

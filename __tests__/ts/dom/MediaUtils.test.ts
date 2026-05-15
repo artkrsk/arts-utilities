@@ -1,380 +1,404 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { loadMedia } from '../../../src/ts/core/dom/MediaUtils'
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { loadMedia } from "../../../src/ts/core/dom/MediaUtils";
 
 // Mock HTMLImageElement
 class MockHTMLImageElement {
-  src = ''
-  complete = false
-  naturalWidth = 0
-  tagName = 'IMG'
-  loading?: string
-  decoding?: string
-  fetchpriority?: string
+	src = "";
+	complete = false;
+	naturalWidth = 0;
+	tagName = "IMG";
+	loading?: string;
+	decoding?: string;
+	fetchpriority?: string;
 
-  private eventListeners = new Map<string, Function[]>()
+	private eventListeners = new Map<string, Function[]>();
 
-  addEventListener(event: string, handler: Function) {
-    if (!this.eventListeners.has(event)) {
-      this.eventListeners.set(event, [])
-    }
-    this.eventListeners.get(event)!.push(handler)
-  }
+	addEventListener(event: string, handler: Function) {
+		if (!this.eventListeners.has(event)) {
+			this.eventListeners.set(event, []);
+		}
+		this.eventListeners.get(event)!.push(handler);
+	}
 
-  removeEventListener(event: string, handler: Function) {
-    const handlers = this.eventListeners.get(event)
-    if (handlers) {
-      const index = handlers.indexOf(handler)
-      if (index > -1) {
-        handlers.splice(index, 1)
-      }
-    }
-  }
+	removeEventListener(event: string, handler: Function) {
+		const handlers = this.eventListeners.get(event);
+		if (handlers) {
+			const index = handlers.indexOf(handler);
+			if (index > -1) {
+				handlers.splice(index, 1);
+			}
+		}
+	}
 
-  setAttribute(name: string, value: string) {
-    ;(this as any)[name] = value
-  }
+	setAttribute(name: string, value: string) {
+		(this as any)[name] = value;
+	}
 
-  simulateLoad() {
-    this.complete = true
-    this.naturalWidth = 100
-    const handlers = this.eventListeners.get('load') || []
-    handlers.forEach((handler) => handler())
-  }
+	simulateLoad() {
+		this.complete = true;
+		this.naturalWidth = 100;
+		const handlers = this.eventListeners.get("load") || [];
+		handlers.forEach((handler) => handler());
+	}
 
-  simulateError() {
-    const handlers = this.eventListeners.get('error') || []
-    handlers.forEach((handler) => handler())
-  }
+	simulateError() {
+		const handlers = this.eventListeners.get("error") || [];
+		handlers.forEach((handler) => handler());
+	}
 }
 
 // Mock HTMLVideoElement
 class MockHTMLVideoElement {
-  src = ''
-  readyState = 0
-  networkState = 0
-  tagName = 'VIDEO'
-  preload?: string
+	src = "";
+	readyState = 0;
+	networkState = 0;
+	tagName = "VIDEO";
+	preload?: string;
 
-  private eventListeners = new Map<string, Function[]>()
+	private eventListeners = new Map<string, Function[]>();
 
-  addEventListener(event: string, handler: Function) {
-    if (!this.eventListeners.has(event)) {
-      this.eventListeners.set(event, [])
-    }
-    this.eventListeners.get(event)!.push(handler)
-  }
+	addEventListener(event: string, handler: Function) {
+		if (!this.eventListeners.has(event)) {
+			this.eventListeners.set(event, []);
+		}
+		this.eventListeners.get(event)!.push(handler);
+	}
 
-  removeEventListener(event: string, handler: Function) {
-    const handlers = this.eventListeners.get(event)
-    if (handlers) {
-      const index = handlers.indexOf(handler)
-      if (index > -1) {
-        handlers.splice(index, 1)
-      }
-    }
-  }
+	removeEventListener(event: string, handler: Function) {
+		const handlers = this.eventListeners.get(event);
+		if (handlers) {
+			const index = handlers.indexOf(handler);
+			if (index > -1) {
+				handlers.splice(index, 1);
+			}
+		}
+	}
 
-  setAttribute(name: string, value: string) {
-    ;(this as any)[name] = value
-  }
+	setAttribute(name: string, value: string) {
+		(this as any)[name] = value;
+	}
 
-  load() {
-    // Simulate loading
-  }
+	load() {
+		// Simulate loading
+	}
 
-  simulateLoadedData() {
-    this.readyState = 2 // HAVE_CURRENT_DATA
-    const handlers = this.eventListeners.get('loadeddata') || []
-    handlers.forEach((handler) => handler())
-  }
+	simulateLoadedData() {
+		this.readyState = 2; // HAVE_CURRENT_DATA
+		const handlers = this.eventListeners.get("loadeddata") || [];
+		handlers.forEach((handler) => handler());
+	}
 
-  simulateError() {
-    const handlers = this.eventListeners.get('error') || []
-    handlers.forEach((handler) => handler())
-  }
+	simulateError() {
+		const handlers = this.eventListeners.get("error") || [];
+		handlers.forEach((handler) => handler());
+	}
 }
 
 // Mock HTMLElement for other elements
 class MockHTMLElement {
-  tagName = 'DIV'
+	tagName = "DIV";
 }
 
-describe('MediaUtils', () => {
-  beforeEach(() => {
-    vi.useFakeTimers()
-    // Define HTML media element constants
-    global.HTMLMediaElement = {
-      HAVE_CURRENT_DATA: 2,
-      HAVE_ENOUGH_DATA: 4,
-      NETWORK_IDLE: 0
-    } as any
-  })
-
-  afterEach(() => {
-    vi.useRealTimers()
-    vi.restoreAllMocks()
-  })
-
-  describe('loadMedia', () => {
-    it('should reject when element is null', async () => {
-      await expect(loadMedia(null)).rejects.toThrow('Element is required for media loading')
-    })
+describe("MediaUtils", () => {
+	beforeEach(() => {
+		vi.useFakeTimers();
+		// Define HTML media element constants
+		global.HTMLMediaElement = {
+			HAVE_CURRENT_DATA: 2,
+			HAVE_ENOUGH_DATA: 4,
+			NETWORK_IDLE: 0,
+		} as any;
+	});
+
+	afterEach(() => {
+		vi.useRealTimers();
+		vi.restoreAllMocks();
+	});
+
+	describe("loadMedia", () => {
+		it("should reject when element is null", async () => {
+			await expect(loadMedia(null)).rejects.toThrow(
+				"Element is required for media loading",
+			);
+		});
+
+		it("should resolve immediately for already loaded image", async () => {
+			const mockImg = new MockHTMLImageElement();
+			mockImg.complete = true;
+			mockImg.naturalWidth = 100;
+			mockImg.src = "test.jpg";
+
+			const result = await loadMedia(mockImg as any);
+			expect(result).toBe(mockImg);
+		});
 
-    it('should resolve immediately for already loaded image', async () => {
-      const mockImg = new MockHTMLImageElement()
-      mockImg.complete = true
-      mockImg.naturalWidth = 100
-      mockImg.src = 'test.jpg'
+		it("should wait for image to load", async () => {
+			const mockImg = new MockHTMLImageElement();
+			mockImg.src = "test.jpg";
 
-      const result = await loadMedia(mockImg as any)
-      expect(result).toBe(mockImg)
-    })
+			const promise = loadMedia(mockImg as any);
+
+			// Simulate image loading after some time
+			setTimeout(() => {
+				mockImg.simulateLoad();
+			}, 100);
 
-    it('should wait for image to load', async () => {
-      const mockImg = new MockHTMLImageElement()
-      mockImg.src = 'test.jpg'
+			vi.advanceTimersByTime(100);
+			const result = await promise;
 
-      const promise = loadMedia(mockImg as any)
+			expect(result).toBe(mockImg);
+		});
 
-      // Simulate image loading after some time
-      setTimeout(() => {
-        mockImg.simulateLoad()
-      }, 100)
+		it("should set priority attributes for images by default", async () => {
+			const mockImg = new MockHTMLImageElement();
+			mockImg.src = "test.jpg";
 
-      vi.advanceTimersByTime(100)
-      const result = await promise
+			const promise = loadMedia(mockImg as any);
 
-      expect(result).toBe(mockImg)
-    })
+			expect(mockImg.loading).toBe("eager");
+			expect(mockImg.decoding).toBe("sync");
+			expect(mockImg.fetchpriority).toBe("high");
 
-    it('should set priority attributes for images by default', async () => {
-      const mockImg = new MockHTMLImageElement()
-      mockImg.src = 'test.jpg'
+			setTimeout(() => mockImg.simulateLoad(), 50);
+			vi.advanceTimersByTime(50);
+			await promise;
+		});
 
-      const promise = loadMedia(mockImg as any)
+		it("should not set priority attributes when setPriority is false", async () => {
+			const mockImg = new MockHTMLImageElement();
+			mockImg.src = "test.jpg";
 
-      expect(mockImg.loading).toBe('eager')
-      expect(mockImg.decoding).toBe('sync')
-      expect(mockImg.fetchpriority).toBe('high')
+			const promise = loadMedia(mockImg as any, { setPriority: false });
 
-      setTimeout(() => mockImg.simulateLoad(), 50)
-      vi.advanceTimersByTime(50)
-      await promise
-    })
+			expect(mockImg.loading).toBeUndefined();
+			expect(mockImg.decoding).toBeUndefined();
+			expect(mockImg.fetchpriority).toBeUndefined();
 
-    it('should not set priority attributes when setPriority is false', async () => {
-      const mockImg = new MockHTMLImageElement()
-      mockImg.src = 'test.jpg'
+			setTimeout(() => mockImg.simulateLoad(), 50);
+			vi.advanceTimersByTime(50);
+			await promise;
+		});
 
-      const promise = loadMedia(mockImg as any, { setPriority: false })
+		it("should reject when image fails to load", async () => {
+			const mockImg = new MockHTMLImageElement();
+			mockImg.src = "invalid.jpg";
 
-      expect(mockImg.loading).toBeUndefined()
-      expect(mockImg.decoding).toBeUndefined()
-      expect(mockImg.fetchpriority).toBeUndefined()
+			const promise = loadMedia(mockImg as any);
 
-      setTimeout(() => mockImg.simulateLoad(), 50)
-      vi.advanceTimersByTime(50)
-      await promise
-    })
+			setTimeout(() => {
+				mockImg.simulateError();
+			}, 100);
 
-    it('should reject when image fails to load', async () => {
-      const mockImg = new MockHTMLImageElement()
-      mockImg.src = 'invalid.jpg'
+			vi.advanceTimersByTime(100);
 
-      const promise = loadMedia(mockImg as any)
+			await expect(promise).rejects.toThrow(
+				"Image failed to load: invalid.jpg",
+			);
+		});
 
-      setTimeout(() => {
-        mockImg.simulateError()
-      }, 100)
+		it("should resolve immediately for ready video", async () => {
+			const mockVideo = new MockHTMLVideoElement();
+			mockVideo.readyState = 3; // HAVE_CURRENT_DATA or higher
+			mockVideo.src = "test.mp4";
 
-      vi.advanceTimersByTime(100)
+			const result = await loadMedia(mockVideo as any);
+			expect(result).toBe(mockVideo);
+		});
 
-      await expect(promise).rejects.toThrow('Image failed to load: invalid.jpg')
-    })
+		it("should wait for video to be ready", async () => {
+			const mockVideo = new MockHTMLVideoElement();
+			mockVideo.src = "test.mp4";
+			mockVideo.readyState = 1; // HAVE_METADATA
 
-    it('should resolve immediately for ready video', async () => {
-      const mockVideo = new MockHTMLVideoElement()
-      mockVideo.readyState = 3 // HAVE_CURRENT_DATA or higher
-      mockVideo.src = 'test.mp4'
+			const promise = loadMedia(mockVideo as any);
 
-      const result = await loadMedia(mockVideo as any)
-      expect(result).toBe(mockVideo)
-    })
+			setTimeout(() => {
+				mockVideo.simulateLoadedData();
+			}, 100);
 
-    it('should wait for video to be ready', async () => {
-      const mockVideo = new MockHTMLVideoElement()
-      mockVideo.src = 'test.mp4'
-      mockVideo.readyState = 1 // HAVE_METADATA
+			vi.advanceTimersByTime(100);
+			const result = await promise;
 
-      const promise = loadMedia(mockVideo as any)
+			expect(result).toBe(mockVideo);
+		});
 
-      setTimeout(() => {
-        mockVideo.simulateLoadedData()
-      }, 100)
+		it("should set preload attribute for videos by default", async () => {
+			const mockVideo = new MockHTMLVideoElement();
+			mockVideo.src = "test.mp4";
 
-      vi.advanceTimersByTime(100)
-      const result = await promise
+			const promise = loadMedia(mockVideo as any);
 
-      expect(result).toBe(mockVideo)
-    })
+			expect(mockVideo.preload).toBe("auto");
 
-    it('should set preload attribute for videos by default', async () => {
-      const mockVideo = new MockHTMLVideoElement()
-      mockVideo.src = 'test.mp4'
+			setTimeout(() => mockVideo.simulateLoadedData(), 50);
+			vi.advanceTimersByTime(50);
+			await promise;
+		});
 
-      const promise = loadMedia(mockVideo as any)
+		it("should reject when video fails to load", async () => {
+			const mockVideo = new MockHTMLVideoElement();
+			mockVideo.src = "invalid.mp4";
 
-      expect(mockVideo.preload).toBe('auto')
+			const promise = loadMedia(mockVideo as any);
 
-      setTimeout(() => mockVideo.simulateLoadedData(), 50)
-      vi.advanceTimersByTime(50)
-      await promise
-    })
+			setTimeout(() => {
+				mockVideo.simulateError();
+			}, 100);
 
-    it('should reject when video fails to load', async () => {
-      const mockVideo = new MockHTMLVideoElement()
-      mockVideo.src = 'invalid.mp4'
+			vi.advanceTimersByTime(100);
 
-      const promise = loadMedia(mockVideo as any)
+			await expect(promise).rejects.toThrow(
+				"Video failed to load: invalid.mp4",
+			);
+		});
 
-      setTimeout(() => {
-        mockVideo.simulateError()
-      }, 100)
+		it("should resolve immediately for non-media elements", async () => {
+			const mockDiv = new MockHTMLElement();
+			mockDiv.tagName = "DIV";
 
-      vi.advanceTimersByTime(100)
+			const result = await loadMedia(mockDiv as any);
+			expect(result).toBe(mockDiv);
+		});
 
-      await expect(promise).rejects.toThrow('Video failed to load: invalid.mp4')
-    })
+		it("should respect custom timeout", async () => {
+			const mockImg = new MockHTMLImageElement();
+			mockImg.src = "slow-loading.jpg";
 
-    it('should resolve immediately for non-media elements', async () => {
-      const mockDiv = new MockHTMLElement()
-      mockDiv.tagName = 'DIV'
+			const promise = loadMedia(mockImg as any, { timeout: 1000 });
 
-      const result = await loadMedia(mockDiv as any)
-      expect(result).toBe(mockDiv)
-    })
+			// Don't simulate load, let it timeout
+			vi.advanceTimersByTime(1000);
 
-    it('should respect custom timeout', async () => {
-      const mockImg = new MockHTMLImageElement()
-      mockImg.src = 'slow-loading.jpg'
+			await expect(promise).rejects.toThrow(
+				"Media loading timed out after 1000ms",
+			);
+		});
 
-      const promise = loadMedia(mockImg as any, { timeout: 1000 })
+		it("should not timeout when timeout is 0", async () => {
+			const mockImg = new MockHTMLImageElement();
+			mockImg.src = "test.jpg";
 
-      // Don't simulate load, let it timeout
-      vi.advanceTimersByTime(1000)
+			const promise = loadMedia(mockImg as any, { timeout: 0 });
 
-      await expect(promise).rejects.toThrow('Media loading timed out after 1000ms')
-    })
+			// Advance time significantly
+			vi.advanceTimersByTime(20000);
 
-    it('should not timeout when timeout is 0', async () => {
-      const mockImg = new MockHTMLImageElement()
-      mockImg.src = 'test.jpg'
+			// Simulate load after long delay
+			setTimeout(() => mockImg.simulateLoad(), 0);
+			vi.advanceTimersByTime(1);
 
-      const promise = loadMedia(mockImg as any, { timeout: 0 })
+			const result = await promise;
+			expect(result).toBe(mockImg);
+		});
 
-      // Advance time significantly
-      vi.advanceTimersByTime(20000)
+		it("should clean up event listeners on success", async () => {
+			const mockImg = new MockHTMLImageElement();
+			mockImg.src = "test.jpg";
 
-      // Simulate load after long delay
-      setTimeout(() => mockImg.simulateLoad(), 0)
-      vi.advanceTimersByTime(1)
+			const removeEventListenerSpy = vi.spyOn(mockImg, "removeEventListener");
 
-      const result = await promise
-      expect(result).toBe(mockImg)
-    })
+			const promise = loadMedia(mockImg as any);
 
-    it('should clean up event listeners on success', async () => {
-      const mockImg = new MockHTMLImageElement()
-      mockImg.src = 'test.jpg'
+			setTimeout(() => mockImg.simulateLoad(), 50);
+			vi.advanceTimersByTime(50);
+			await promise;
 
-      const removeEventListenerSpy = vi.spyOn(mockImg, 'removeEventListener')
+			expect(removeEventListenerSpy).toHaveBeenCalledWith(
+				"load",
+				expect.any(Function),
+			);
+			expect(removeEventListenerSpy).toHaveBeenCalledWith(
+				"error",
+				expect.any(Function),
+			);
+		});
 
-      const promise = loadMedia(mockImg as any)
+		it("should clean up event listeners on error", async () => {
+			const mockImg = new MockHTMLImageElement();
+			mockImg.src = "invalid.jpg";
 
-      setTimeout(() => mockImg.simulateLoad(), 50)
-      vi.advanceTimersByTime(50)
-      await promise
+			const removeEventListenerSpy = vi.spyOn(mockImg, "removeEventListener");
 
-      expect(removeEventListenerSpy).toHaveBeenCalledWith('load', expect.any(Function))
-      expect(removeEventListenerSpy).toHaveBeenCalledWith('error', expect.any(Function))
-    })
+			const promise = loadMedia(mockImg as any);
 
-    it('should clean up event listeners on error', async () => {
-      const mockImg = new MockHTMLImageElement()
-      mockImg.src = 'invalid.jpg'
+			setTimeout(() => mockImg.simulateError(), 50);
+			vi.advanceTimersByTime(50);
 
-      const removeEventListenerSpy = vi.spyOn(mockImg, 'removeEventListener')
+			try {
+				await promise;
+			} catch (error) {
+				// Expected to throw
+			}
 
-      const promise = loadMedia(mockImg as any)
+			expect(removeEventListenerSpy).toHaveBeenCalledWith(
+				"load",
+				expect.any(Function),
+			);
+			expect(removeEventListenerSpy).toHaveBeenCalledWith(
+				"error",
+				expect.any(Function),
+			);
+		});
 
-      setTimeout(() => mockImg.simulateError(), 50)
-      vi.advanceTimersByTime(50)
+		it("should handle combined options correctly", async () => {
+			const mockImg = new MockHTMLImageElement();
+			mockImg.src = "test.jpg";
 
-      try {
-        await promise
-      } catch (error) {
-        // Expected to throw
-      }
+			const promise = loadMedia(mockImg as any, {
+				timeout: 5000,
+				setPriority: false,
+			});
 
-      expect(removeEventListenerSpy).toHaveBeenCalledWith('load', expect.any(Function))
-      expect(removeEventListenerSpy).toHaveBeenCalledWith('error', expect.any(Function))
-    })
+			// Verify priority attributes are not set
+			expect(mockImg.loading).toBeUndefined();
 
-    it('should handle combined options correctly', async () => {
-      const mockImg = new MockHTMLImageElement()
-      mockImg.src = 'test.jpg'
+			setTimeout(() => mockImg.simulateLoad(), 100);
+			vi.advanceTimersByTime(100);
 
-      const promise = loadMedia(mockImg as any, {
-        timeout: 5000,
-        setPriority: false
-      })
+			const result = await promise;
+			expect(result).toBe(mockImg);
+		});
 
-      // Verify priority attributes are not set
-      expect(mockImg.loading).toBeUndefined()
+		it("should handle images with empty src", async () => {
+			const mockImg = new MockHTMLImageElement();
+			// No src set
 
-      setTimeout(() => mockImg.simulateLoad(), 100)
-      vi.advanceTimersByTime(100)
+			const promise = loadMedia(mockImg as any);
 
-      const result = await promise
-      expect(result).toBe(mockImg)
-    })
+			setTimeout(() => mockImg.simulateError(), 50);
+			vi.advanceTimersByTime(50);
 
-    it('should handle images with empty src', async () => {
-      const mockImg = new MockHTMLImageElement()
-      // No src set
+			await expect(promise).rejects.toThrow(
+				"Image failed to load: unknown source",
+			);
+		});
 
-      const promise = loadMedia(mockImg as any)
+		it("should handle videos with empty src", async () => {
+			const mockVideo = new MockHTMLVideoElement();
+			// No src set
 
-      setTimeout(() => mockImg.simulateError(), 50)
-      vi.advanceTimersByTime(50)
+			const promise = loadMedia(mockVideo as any);
 
-      await expect(promise).rejects.toThrow('Image failed to load: unknown source')
-    })
+			setTimeout(() => mockVideo.simulateError(), 50);
+			vi.advanceTimersByTime(50);
 
-    it('should handle videos with empty src', async () => {
-      const mockVideo = new MockHTMLVideoElement()
-      // No src set
+			await expect(promise).rejects.toThrow(
+				"Video failed to load: unknown source",
+			);
+		});
 
-      const promise = loadMedia(mockVideo as any)
+		it("should work with different element types", async () => {
+			const elements = [
+				{ element: new MockHTMLElement(), tagName: "SPAN" },
+				{ element: new MockHTMLElement(), tagName: "P" },
+				{ element: new MockHTMLElement(), tagName: "CANVAS" },
+			];
 
-      setTimeout(() => mockVideo.simulateError(), 50)
-      vi.advanceTimersByTime(50)
-
-      await expect(promise).rejects.toThrow('Video failed to load: unknown source')
-    })
-
-    it('should work with different element types', async () => {
-      const elements = [
-        { element: new MockHTMLElement(), tagName: 'SPAN' },
-        { element: new MockHTMLElement(), tagName: 'P' },
-        { element: new MockHTMLElement(), tagName: 'CANVAS' }
-      ]
-
-      for (const { element, tagName } of elements) {
-        element.tagName = tagName
-        const result = await loadMedia(element as any)
-        expect(result).toBe(element)
-      }
-    })
-  })
-})
+			for (const { element, tagName } of elements) {
+				element.tagName = tagName;
+				const result = await loadMedia(element as any);
+				expect(result).toBe(element);
+			}
+		});
+	});
+});

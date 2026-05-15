@@ -1,20 +1,20 @@
-import { vi, beforeAll, afterAll } from 'vitest'
-import type { ElementorFrontend, ElementorEditor } from '@arts/elementor-types'
+import type { ElementorEditor, ElementorFrontend } from "@arts/elementor-types";
+import { afterAll, beforeAll, vi } from "vitest";
 
-// Extend DOM interfaces with proper Elementor types
 declare global {
-  interface Window {
-    elementorFrontend?: ElementorFrontend
-    elementor?: ElementorEditor
-  }
+	interface Window {
+		elementorFrontend?: ElementorFrontend;
+		elementor?: ElementorEditor;
+	}
 }
 
-// Silence console errors during tests
+// Several utilities intentionally `console.warn`/`console.error` on degraded paths;
+// silence them so test output only surfaces unexpected logs.
 beforeAll(() => {
-  vi.spyOn(console, 'error').mockImplementation(() => {})
-  vi.spyOn(console, 'warn').mockImplementation(() => {})
-})
+	vi.spyOn(console, "error").mockImplementation(() => {});
+	vi.spyOn(console, "warn").mockImplementation(() => {});
+});
 
 afterAll(() => {
-  vi.restoreAllMocks()
-})
+	vi.restoreAllMocks();
+});

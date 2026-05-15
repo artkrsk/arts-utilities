@@ -1,237 +1,66 @@
-import type { TMediaType, TVideoEmbedOptions } from '../types'
+import type { TMediaType, TVideoEmbedOptions } from "../types";
 
 /**
- * Configuration options for media loading behavior with performance and reliability controls.
- * Provides fine-grained control over media loading timeouts and optimization strategies.
- *
- * @example
- * ```typescript
- * // Fast loading for critical above-the-fold images
- * const criticalOptions: ILoadMediaOptions = {
- *   timeout: 5000,      // Quick timeout
- *   setPriority: true   // Enable priority hints
- * };
- *
- * // Patient loading for background media
- * const backgroundOptions: ILoadMediaOptions = {
- *   timeout: 30000,     // Extended timeout
- *   setPriority: false  // No priority optimization
- * };
- *
- * // Mobile-optimized loading
- * const mobileOptions: ILoadMediaOptions = {
- *   timeout: 15000,
- *   setPriority: window.innerWidth < 768 // Priority only on mobile
- * };
- * ```
+ * Options for {@link IMediaUtils.loadMedia}.
  */
 export interface ILoadMediaOptions {
-  /**
-   * Timeout in milliseconds for media loading operations.
-   * Prevents indefinite loading states and provides fallback opportunities.
-   * Consider network conditions and media size when setting timeout values.
-   *
-   * @default 10000
-   *
-   * @example
-   * ```typescript
-   * // Quick timeout for thumbnails
-   * timeout: 3000
-   *
-   * // Standard timeout for images
-   * timeout: 10000   // Default value
-   *
-   * // Extended timeout for large videos
-   * timeout: 30000
-   *
-   * // No timeout (use with caution)
-   * timeout: 0
-   * ```
-   */
-  timeout?: number
+	/**
+	 * Milliseconds before the promise rejects. `0` disables the timeout.
+	 *
+	 * @default 10000
+	 */
+	timeout?: number;
 
-  /**
-   * Whether to set priority attributes for faster loading.
-   * Enables browser optimization hints like 'fetchpriority' and 'loading' attributes
-   * to improve Core Web Vitals and user experience.
-   *
-   * @default true
-   *
-   * @example
-   * ```typescript
-   * // Enable priority for hero images
-   * setPriority: true    // Sets fetchpriority="high"
-   *
-   * // Disable priority for lazy-loaded content
-   * setPriority: false   // No priority attributes
-   *
-   * // Conditional priority based on viewport
-   * setPriority: isAboveFold(element)
-   * ```
-   */
-  setPriority?: boolean
+	/**
+	 * When `true`, sets `loading="eager"`, `decoding="sync"`, `fetchpriority="high"` on images
+	 * and `preload="auto"` on videos before waiting for the load event.
+	 *
+	 * @default true
+	 */
+	setPriority?: boolean;
 }
 
 /**
- * Interface for media utility functions providing robust media loading with timeout and optimization.
- * Handles various media types including images and videos with comprehensive error handling,
- * performance optimization, and cross-browser compatibility.
- *
- * @example
- * ```typescript
- * // Progressive image loading with fallback
- * const loadImageWithFallback = async (img: HTMLImageElement) => {
- *   try {
- *     await mediaUtils.loadMedia(img, { timeout: 5000, setPriority: true });
- *     img.classList.add('loaded');
- *   } catch (error) {
- *     img.src = '/images/placeholder.jpg'; // Fallback image
- *     console.warn('Failed to load image:', error);
- *   }
- * };
- *
- * // Lazy loading implementation
- * const observer = new IntersectionObserver(async (entries) => {
- *   for (const entry of entries) {
- *     if (entry.isIntersecting) {
- *       const img = entry.target as HTMLImageElement;
- *       try {
- *         await mediaUtils.loadMedia(img, { setPriority: false });
- *         observer.unobserve(img);
- *       } catch (error) {
- *         img.style.display = 'none'; // Hide failed images
- *       }
- *     }
- *   }
- * });
- *
- * // Video preloading
- * const preloadVideo = async (video: HTMLVideoElement) => {
- *   try {
- *     await mediaUtils.loadMedia(video, { timeout: 15000 });
- *     video.play();
- *   } catch (error) {
- *     showVideoUnavailableMessage();
- *   }
- * };
- * ```
+ * Loaders for media elements that branch on tag name.
  */
 export interface IMediaUtils {
-  /**
-   * Loads a media element (image or video) and resolves when ready for display.
-   * Provides robust loading with timeout handling, priority optimization, and
-   * comprehensive error management for various media types.
-   *
-   * @param element - The media element to load (img, video, or other media element)
-   * @param options - Configuration options for loading behavior and optimization
-   * @returns Promise that resolves with the loaded element, or rejects on timeout/error
-   *
-   * @example
-   * ```typescript
-   * // Basic image loading
-   * const img = document.createElement('img');
-   * img.src = '/images/hero.jpg';
-   *
-   * try {
-   *   const loadedImg = await mediaUtils.loadMedia(img);
-   *   document.body.appendChild(loadedImg);
-   * } catch (error) {
-   *   console.error('Failed to load image:', error);
-   * }
-   *
-   * // High-priority hero image loading
-   * const heroImage = document.querySelector('.hero-image') as HTMLImageElement;
-   * await mediaUtils.loadMedia(heroImage, {
-   *   timeout: 5000,      // Quick timeout for critical content
-   *   setPriority: true   // Enable browser optimization
-   * });
-   * heroImage.classList.add('loaded');
-   *
-   * // Video loading with extended timeout
-   * const video = document.querySelector('video') as HTMLVideoElement;
-   * try {
-   *   await mediaUtils.loadMedia(video, {
-   *     timeout: 20000,     // Extended timeout for video
-   *     setPriority: false  // No priority for background video
-   *   });
-   *   video.play();
-   * } catch (error) {
-   *   video.poster = '/images/video-placeholder.jpg';
-   *   showPlayButton();
-   * }
-   *
-   * // Batch loading with Promise.all
-   * const images = document.querySelectorAll('img[data-src]');
-   * const loadPromises = Array.from(images).map(async (img) => {
-   *   img.src = img.dataset.src;
-   *   return mediaUtils.loadMedia(img, { timeout: 8000 });
-   * });
-   *
-   * const results = await Promise.allSettled(loadPromises);
-   * const failed = results.filter(r => r.status === 'rejected').length;
-   * console.log(`Loaded ${results.length - failed}/${results.length} images`);
-   *
-   * // Safe loading with null handling
-   * const optionalImage = document.querySelector('.optional-image') as HTMLImageElement | null;
-   * if (optionalImage) {
-   *   try {
-   *     await mediaUtils.loadMedia(optionalImage);
-   *   } catch (error) {
-   *     // Handle loading failure gracefully
-   *   }
-   * }
-   * ```
-   */
-  loadMedia: (element: HTMLElement | null, options?: ILoadMediaOptions) => Promise<HTMLElement>
-}
-
-// Media Detection and Video URL Processing Interfaces
-
-/**
- * Function signature for detecting media type from file URL extensions.
- * Analyzes URL pathname to determine if it's an image, video, or unknown file type.
- *
- * @param url - The file URL to analyze
- * @returns The detected media type or null if unknown/invalid
- */
-export interface IGetMediaType {
-  (url: string): TMediaType
+	/**
+	 * Resolves once the element is ready to display:
+	 * - `IMG` — resolves immediately when `complete && naturalWidth > 0`, otherwise on the `load` event. Rejects on `error`.
+	 *   When the image already has a `src` but hasn't completed, the loader forces a reload by clearing and restoring `src`.
+	 * - `VIDEO` — resolves immediately when `readyState >= HAVE_CURRENT_DATA`, otherwise on `loadeddata`. Rejects on `error`.
+	 *   Calls `.load()` when `networkState === NETWORK_IDLE`.
+	 * - Any other tag — resolves immediately with the element.
+	 *
+	 * Rejects synchronously with `"Element is required for media loading"` when `element` is null.
+	 */
+	loadMedia: (
+		element: HTMLElement | null,
+		options?: ILoadMediaOptions,
+	) => Promise<HTMLElement>;
 }
 
 /**
- * Function signature for comprehensive media detection including streaming platforms.
- * Checks URL patterns for streaming services first, then falls back to file extension detection.
- *
- * @param url - The URL to analyze
- * @returns The detected media type or null if unknown/invalid
+ * Detects media type from a URL's file extension. Returns `null` for unknown extensions.
  */
-export interface IDetectMediaFromURL {
-  (url: string): TMediaType
-}
+export type IGetMediaType = (url: string) => TMediaType;
 
 /**
- * Function signature for extracting video IDs from streaming platform URLs.
- * Parses YouTube and Vimeo URLs to extract the unique video identifier.
- *
- * @param url - The video URL to extract ID from
- * @returns The extracted video ID or null if not found/unsupported
+ * Detects media type from a URL: streaming-platform patterns are matched first, then falls back to file-extension detection.
  */
-export interface IExtractVideoID {
-  (url: string): string | null
-}
+export type IDetectMediaFromURL = (url: string) => TMediaType;
 
 /**
- * Function signature for generating embed URLs for video platforms.
- * Converts regular video URLs to their embeddable equivalents with optional parameters.
- * Supports privacy-enhanced embedding through youtube-nocookie.com and Vimeo's dnt parameter.
- *
- * @param url - The original video URL
- * @param options - Embed configuration options
- * @param options.autoplay - Whether to enable autoplay
- * @param options.enablejsapi - Whether to enable JavaScript API (YouTube only)
- * @param options.privacy - Whether to use privacy-enhanced embedding
- * @returns The embed URL or original URL if not a supported video platform
+ * Extracts the platform-specific ID from a YouTube or Vimeo URL. Returns `null` when the URL is from an unsupported platform.
  */
-export interface IGenerateEmbedURL {
-  (url: string, options?: TVideoEmbedOptions): string
-}
+export type IExtractVideoID = (url: string) => string | null;
+
+/**
+ * Converts a YouTube or Vimeo URL to its embed form, honoring privacy-mode flags
+ * (`youtube-nocookie.com` for YouTube, the `dnt` query parameter for Vimeo).
+ * Returns the original URL unchanged when the platform is not recognized.
+ */
+export type IGenerateEmbedURL = (
+	url: string,
+	options?: TVideoEmbedOptions,
+) => string;

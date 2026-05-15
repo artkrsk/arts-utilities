@@ -1,3 +1,3 @@
-export * from './DataAttributes'
-export * from './DeepMerge'
-export * from './JSONParse'
+export * from "./DataAttributes";
+export * from "./DeepMerge";
+export * from "./JSONParse";

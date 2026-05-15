@@ -83,8 +83,8 @@ $colorValue = Utilities::get_color_value($settings, 'button_color', '#000000');
 // Get kit settings
 $typographySettings = Utilities::get_kit_settings('typography_body');
 
-// Get kit setting or theme mod
-$primaryColor = Utilities::get_kit_setting_or_theme_mod('primary_color', '#default');
+// Get kit setting, falling back to a WordPress option when Elementor is inactive
+$primaryColor = Utilities::get_kit_setting_or_option('primary_color', '#default');
 
 // Update kit settings
 Utilities::update_kit_settings('primary_color', '#newcolor');
@@ -107,14 +107,12 @@ $isEnabled = Utilities::has_responsive_enabled_option($element, 'show_title');
 Work with Elementor Theme Builder templates.
 
 ```php
-// Check if Theme Builder is active
-$isActive = Utilities::is_theme_builder_active();
-
-// Get the Theme Builder location ID
+// Get the active Theme Builder document ID for the current request, or null
 $locationId = Utilities::get_theme_builder_location_id();
 
-// Check if a location has a template
-$hasTemplate = Utilities::location_has_template('single');
+// Decide whether the theme should render a fallback template for a location
+// (true when Elementor isn't handling it; pass false to allow fallbacks even when Elementor is active)
+$showFallback = Utilities::should_display_fallback_template('single');
 ```
 
 #### Plugin
@@ -218,26 +216,15 @@ $sizes = Utilities::get_available_image_sizes();
 
 #### LoopedPosts
 
-Work with post loops with automatic looping back to the beginning.
+Adjacent-post lookup that wraps around at the boundaries — the post after the last entry is the first entry, and vice versa.
 
 ```php
-// Get previous and next posts in a loop
+// Get previous and next posts in a loop. Returns ['previous' => WP_Post|null, 'next' => WP_Post|null].
 $prevNextPosts = Utilities::get_prev_next_posts_looped([
     'post_type' => 'post',
     'in_same_term' => true,
     'taxonomy' => 'category',
 ]);
-
-// Setup and iterate through a custom loop
-$posts = get_posts(['post_type' => 'product', 'posts_per_page' => 10]);
-Utilities::setup_looped_posts($posts);
-
-while (Utilities::have_looped_posts()) {
-    $post = Utilities::the_looped_post();
-    // Use $post data...
-}
-
-Utilities::reset_looped_posts();
 ```
 
 #### Markup
@@ -280,11 +267,11 @@ $titles = Utilities::get_page_titles();
 // Get uploaded fonts
 $fonts = Utilities::get_uploaded_fonts();
 
-// Get categories of posts
-$categories = Utilities::get_posts_categories('current_page', [
+// Get terms of posts (replaces deprecated get_posts_categories)
+$categories = Utilities::get_posts_terms('current_page', [
     'post_type' => 'post',
     'posts_per_page' => 10,
-]);
+], 'category');
 
 // Get post author information
 $author = Utilities::get_post_author($postId);

@@ -1,2 +1,2 @@
-export * from './BrowserService'
-export * from './PollingUtils'
+export * from "./BrowserService";
+export * from "./PollingUtils";
