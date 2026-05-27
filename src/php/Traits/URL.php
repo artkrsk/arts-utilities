@@ -56,15 +56,19 @@ trait URL {
 			return '';
 		}
 
-		$key      = get_option( $option );
+		$key      = self::get_string_value( get_option( $option ) );
 		$site_url = home_url( '/' );
 
+		// rawurlencode the key: add_query_arg() does NOT encode values, and this URL is fetched over GET,
+		// where an un-encoded key with +, %, &, # (e.g. a Freemius sk_ key) is corrupted by query parsing
+		// (+ -> space, %XX -> byte). UUID keys are unaffected (no reserved chars). esc_url_raw (not esc_url)
+		// keeps the result a real request URL rather than an HTML-encoded one.
 		$license_args_url = add_query_arg(
 			array(
-				'key' => $key,
+				'key' => rawurlencode( $key ),
 				'url' => $site_url,
 			),
-			esc_url( $url )
+			esc_url_raw( $url )
 		);
 
 		return $license_args_url;
