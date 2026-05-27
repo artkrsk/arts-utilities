@@ -107,6 +107,7 @@ trait Frontend {
 						array(
 							'handle'       => $file_handle,
 							'src'          => $file_src,
+							'ver'          => $args['ver'],
 							'dynamic_load_prevent_autoload' => isset( $file['lazy'] ) ? $file['lazy'] : $args['dynamic_load_prevent_autoload'],
 							'preload_type' => $args['preload_type'],
 						)
