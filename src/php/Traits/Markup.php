@@ -115,6 +115,9 @@ trait Markup {
 	 * Accepts mixed input for compatibility with WordPress filters that return mixed.
 	 * Non-array values are silently ignored and return empty string.
 	 *
+	 * Escaping is idempotent: values may be passed raw or already escaped
+	 * (esc_url'd href, esc_attr'd text) — entities are never double-encoded.
+	 *
 	 * @since 1.0.0
 	 *
 	 * @param mixed $attributes Associative array of attributes and their values. Non-arrays are ignored.
@@ -155,13 +158,13 @@ trait Markup {
 			if ( is_int( $key ) ) {
 				$attribute_pairs[] = self::get_string_value( $val );
 			} else {
-				$val = htmlspecialchars( self::get_string_value( $val ), ENT_QUOTES | ENT_HTML5 );
-
-				// Different escaping function for URLs
+				// esc_url() / esc_attr() are idempotent — values may arrive raw or
+				// already escaped upstream (e.g. Elementor's add_link_attributes);
+				// a double-encoding pre-pass here corrupts pre-escaped entities.
 				if ( $key === 'href' ) {
-					$attribute_pairs[] = esc_attr( $key ) . '="' . esc_attr( esc_url( $val ) ) . '"';
+					$attribute_pairs[] = esc_attr( $key ) . '="' . esc_url( self::get_string_value( $val ) ) . '"';
 				} else {
-					$attribute_pairs[] = esc_attr( $key ) . '="' . esc_attr( $val ) . '"';
+					$attribute_pairs[] = esc_attr( $key ) . '="' . esc_attr( self::get_string_value( $val ) ) . '"';
 				}
 			}
 		}
