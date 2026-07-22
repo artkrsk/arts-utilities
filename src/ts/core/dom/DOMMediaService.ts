@@ -13,7 +13,7 @@ class DOMMediaServiceClass {
 
 			const playPromise = video.play();
 
-			// Older browsers (pre-Chrome 49 / Firefox 50) return `undefined` instead of a Promise.
+			// Older browsers (pre-Chrome 50 / Firefox 53) return `undefined` instead of a Promise.
 			if (playPromise && typeof playPromise.then === "function") {
 				return playPromise.catch(() => {
 					// Autoplay policies, user interaction requirements — surface nothing.
@@ -63,7 +63,7 @@ class DOMMediaServiceClass {
 
 			iframe.contentWindow.postMessage(message, targetOrigin);
 		} catch (error) {
-			// Cross-origin frames raise SecurityError on postMessage when the target origin doesn't match.
+			// A targetOrigin mismatch is silently dropped, not thrown; only an invalid targetOrigin makes postMessage throw.
 			return;
 		}
 	}

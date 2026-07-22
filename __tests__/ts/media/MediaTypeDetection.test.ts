@@ -120,6 +120,24 @@ describe("MediaTypeDetection", () => {
 				).toBe("youtube");
 			});
 
+			it("should detect YouTube Shorts URLs", () => {
+				expect(
+					detectMediaFromURL("https://www.youtube.com/shorts/tWoS4VPn8lM"),
+				).toBe("youtube");
+				expect(
+					detectMediaFromURL("https://youtube.com/shorts/tWoS4VPn8lM"),
+				).toBe("youtube");
+			});
+
+			it("should detect YouTube live URLs", () => {
+				expect(
+					detectMediaFromURL("https://www.youtube.com/live/tWoS4VPn8lM"),
+				).toBe("youtube");
+				expect(
+					detectMediaFromURL("https://youtube.com/live/tWoS4VPn8lM"),
+				).toBe("youtube");
+			});
+
 			it("should detect YouTube mobile URLs", () => {
 				expect(
 					detectMediaFromURL("https://m.youtube.com/watch?v=dQw4w9WgXcQ"),

@@ -1,2 +1,5 @@
 allowBuilds:
   cypress: true
+minimumReleaseAgeExclude:
+  - cypress@15.19.0
+  - prettier@3.9.6

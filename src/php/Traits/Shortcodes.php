@@ -19,7 +19,7 @@ trait Shortcodes {
 	/**
 	 * Retrieves the current year.
 	 *
-	 * To be used with `add_shortcode` WordPress action.
+	 * To be used with `add_shortcode` WordPress function.
 	 * Useful for copyright notices that need to display the current year.
 	 *
 	 * @since 1.0.0

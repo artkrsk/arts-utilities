@@ -54,6 +54,7 @@ trait Markup {
 	 *
 	 *  @type string $name         Component name. Default 'MyComponent'.
 	 *  @type array  $options      Component options. Default empty array.
+	 *  @type array  $dependencies Component dependencies. Default empty array.
 	 *  @type bool   $hasAnimation Whether the component has animation. Default false.
 	 * }
 	 * @param array<int, string>|string $exclude_names Names to exclude from adding to attributes. Default empty array.

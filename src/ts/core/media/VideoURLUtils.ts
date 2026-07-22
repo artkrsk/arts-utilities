@@ -3,7 +3,7 @@ import type { TVideoEmbedOptions } from "../types";
 import { detectMediaFromURL } from "./MediaTypeDetection";
 
 const YOUTUBE_PATTERN =
-	/^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube(?:-nocookie)?\.com|youtu\.be))(\/(?:[\w-]+\?v=|embed\/|v\/)?)([\w-]+)(\S+)?$/i;
+	/^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube(?:-nocookie)?\.com|youtu\.be))(\/(?:[\w-]+\?v=|embed\/|shorts\/|live\/|v\/)?)([\w-]+)(\S+)?$/i;
 const VIMEO_PATTERN =
 	/^((?:https?:)?\/\/)?(?:(?:www|player)\.)?vimeo\.com\/(?:(?:channels\/[A-z]+\/)|(?:groups\/[A-z]+\/videos\/)|(?:video\/))?(\d+)/i;
 

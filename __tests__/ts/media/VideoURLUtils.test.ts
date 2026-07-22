@@ -45,6 +45,29 @@ describe("VideoURLUtils", () => {
 				);
 			});
 
+			it("should extract ID from YouTube Shorts URLs", () => {
+				expect(
+					extractVideoID("https://www.youtube.com/shorts/tWoS4VPn8lM"),
+				).toBe("tWoS4VPn8lM");
+				expect(extractVideoID("https://youtube.com/shorts/tWoS4VPn8lM")).toBe(
+					"tWoS4VPn8lM",
+				);
+				expect(
+					extractVideoID(
+						"https://www.youtube.com/shorts/tWoS4VPn8lM?feature=share",
+					),
+				).toBe("tWoS4VPn8lM");
+			});
+
+			it("should extract ID from YouTube live URLs", () => {
+				expect(
+					extractVideoID("https://www.youtube.com/live/tWoS4VPn8lM"),
+				).toBe("tWoS4VPn8lM");
+				expect(extractVideoID("https://youtube.com/live/tWoS4VPn8lM")).toBe(
+					"tWoS4VPn8lM",
+				);
+			});
+
 			it("should extract ID from YouTube mobile URLs", () => {
 				expect(
 					extractVideoID("https://m.youtube.com/watch?v=dQw4w9WgXcQ"),
@@ -223,6 +246,24 @@ describe("VideoURLUtils", () => {
 				const result = generateEmbedURL("https://youtu.be/dQw4w9WgXcQ");
 				expect(result).toBe(
 					"https://www.youtube.com/embed/dQw4w9WgXcQ?enablejsapi=1",
+				);
+			});
+
+			it("should work with YouTube Shorts URLs", () => {
+				const result = generateEmbedURL(
+					"https://www.youtube.com/shorts/tWoS4VPn8lM",
+				);
+				expect(result).toBe(
+					"https://www.youtube.com/embed/tWoS4VPn8lM?enablejsapi=1",
+				);
+			});
+
+			it("should work with YouTube live URLs", () => {
+				const result = generateEmbedURL(
+					"https://www.youtube.com/live/tWoS4VPn8lM",
+				);
+				expect(result).toBe(
+					"https://www.youtube.com/embed/tWoS4VPn8lM?enablejsapi=1",
 				);
 			});
 		});

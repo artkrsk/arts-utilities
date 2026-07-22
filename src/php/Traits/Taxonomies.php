@@ -72,6 +72,7 @@ trait Taxonomies {
 			// PolyLang
 			'post_translations',
 			'language',
+			// WooCommerce
 			'product_type',
 			'product_visibility',
 			'product_shipping_class',
