@@ -4,21 +4,21 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0ceea0c770381a8cba6753a448f5a2d6",
+    "content-hash": "95de31ad784f2e1fe4578a9fb100f76a",
     "packages": [],
     "packages-dev": [
         {
             "name": "arts/elementor-stubs",
-            "version": "dev-master",
+            "version": "v4.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/artkrsk/elementor-stubs.git",
-                "reference": "a63ea641ee38ede8dbd97b21a3c9e290abafb9b5"
+                "reference": "4d4860e49b7827940bc2ae308645dc21ff48c2e8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/artkrsk/elementor-stubs/zipball/a63ea641ee38ede8dbd97b21a3c9e290abafb9b5",
-                "reference": "a63ea641ee38ede8dbd97b21a3c9e290abafb9b5",
+                "url": "https://api.github.com/repos/artkrsk/elementor-stubs/zipball/4d4860e49b7827940bc2ae308645dc21ff48c2e8",
+                "reference": "4d4860e49b7827940bc2ae308645dc21ff48c2e8",
                 "shasum": ""
             },
             "require": {
@@ -37,7 +37,6 @@
                 "vlucas/phpdotenv": "^5.6",
                 "wp-coding-standards/wpcs": "^3.0"
             },
-            "default-branch": true,
             "type": "library",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -65,7 +64,7 @@
             ],
             "support": {
                 "issues": "https://github.com/artkrsk/elementor-stubs/issues",
-                "source": "https://github.com/artkrsk/elementor-stubs/tree/master"
+                "source": "https://github.com/artkrsk/elementor-stubs/tree/v4.2.1"
             },
             "funding": [
                 {
@@ -73,7 +72,7 @@
                     "type": "buy_me_a_coffee"
                 }
             ],
-            "time": "2026-07-21T03:29:21+00:00"
+            "time": "2026-08-01T13:49:57+00:00"
         },
         {
             "name": "dealerdirect/phpcodesniffer-composer-installer",
@@ -1482,9 +1481,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "arts/elementor-stubs": 20
-    },
+    "stability-flags": {},
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
