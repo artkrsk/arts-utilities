@@ -39,7 +39,15 @@ trait ThemeBuilder {
 				$location = 'archive';
 			} elseif ( is_single() ) {
 				$location = 'single';
-			} elseif ( is_singular() || is_404() ) {
+			} elseif ( is_404() ) {
+				// A 404 has no post in the loop, so `get_the_ID()` below cannot answer. Elementor Pro's
+				// own `Locations_Manager::template_include()` maps a 404 to the `single` location and
+				// lets the conditions manager find the template (`conditions/not-found404.php`, the last
+				// sub-condition of `singular`); mirror that rather than guessing an ID.
+				$location = 'single';
+			} elseif ( is_singular() ) {
+				// Deliberately NOT the theme-builder template: a singular page's own document is what
+				// describes it (`elementor-page-2`), not the template rendering it (`elementor-page-1295`).
 				$current_id = get_the_ID();
 				return $current_id !== false ? $current_id : null;
 			}
