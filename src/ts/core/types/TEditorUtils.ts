@@ -1,6 +1,6 @@
-import type { Utils } from "@arts/elementor-types";
+import type { Utils } from "@artemsemkin/elementor-types";
 
-/** Flat settings dictionary used by Elementor widgets. Aliased from `@arts/elementor-types`. */
+/** Flat settings dictionary used by Elementor widgets. Aliased from `@artemsemkin/elementor-types`. */
 export type TElementorSettings = Utils.ElementSettings;
 
 /**
@@ -48,7 +48,7 @@ export type TSettingsChangeCallback = (
 	options: Record<string, string>,
 ) => Promise<void>;
 
-// Re-exports of Utils.* from @arts/elementor-types under the project's `T`-prefixed naming convention.
+// Re-exports of Utils.* from @artemsemkin/elementor-types under the project's `T`-prefixed naming convention.
 
 export type TCSSValue = Utils.CSSValue;
 

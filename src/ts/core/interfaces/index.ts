@@ -6,6 +6,7 @@ export * from "./IDispatchEvent";
 export * from "./IDOMMediaService";
 export * from "./IDOMService";
 export * from "./IElementorSettingChangedEvent";
+export * from "./IElementorWindow";
 export * from "./IIntersection";
 export * from "./IJSONParse";
 export * from "./ILogger";

@@ -1,4 +1,4 @@
-import type { ElementorEditor, ElementorFrontend } from "@arts/elementor-types";
+import type { ElementorEditor, ElementorFrontend } from "@artemsemkin/elementor-types";
 import { afterAll, beforeAll, vi } from "vitest";
 
 declare global {

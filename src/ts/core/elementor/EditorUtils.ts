@@ -1,16 +1,11 @@
-import type { ElementorEditor, ElementorFrontend } from "@arts/elementor-types";
 import type {
 	TElementorSettings,
 	TSettingsMap,
 	TValueMapping,
 } from "../types/TEditorUtils";
+import type { IElementorWindow } from "../interfaces/IElementorWindow";
 
-interface ElementorWindow extends Window {
-	elementorFrontend?: ElementorFrontend;
-	elementor?: ElementorEditor;
-}
-
-const getElementorWindow = (): ElementorWindow => window as ElementorWindow;
+const getElementorWindow = (): IElementorWindow => window as IElementorWindow;
 
 function isCSSValue(value: unknown): value is { size: number; unit: string } {
 	return (
