@@ -93,6 +93,38 @@ trait Document {
 	}
 
 	/**
+	 * The document whose page background paints the body container.
+	 *
+	 * Two documents can name one: the theme-builder template rendering the location and, on a
+	 * singular, the post itself. Elementor Pro's `Locations_Manager::enqueue_styles()` enqueues
+	 * the post's CSS first and the template's after it "to override" — equal specificity, later
+	 * source — so a template that names a background type paints, and only a template naming none
+	 * leaves the post's own rule in charge. `get_theme_builder_location_id()` alone answers with
+	 * the `single` template for every post and never sees the post's colour.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return int|null
+	 */
+	public static function get_body_document_id() {
+		$location_id = self::get_theme_builder_location_id();
+
+		if ( $location_id && self::get_document_option( 'background_background', $location_id ) ) {
+			return $location_id;
+		}
+
+		if ( is_singular() ) {
+			$current_id = get_the_ID();
+
+			if ( $current_id ) {
+				return $current_id;
+			}
+		}
+
+		return $location_id;
+	}
+
+	/**
 	 * Retrieve the body document option for a given post.
 	 *
 	 * @since 1.0.0
@@ -105,7 +137,7 @@ trait Document {
 	 */
 	public static function get_body_document_option( $option_name = 'background_color', $post_id = null, $fallback_value = '#ffffff' ) {
 		if ( ! $post_id ) {
-			$post_id = self::get_theme_builder_location_id();
+			$post_id = self::get_body_document_id();
 		}
 
 		$document_background_type = self::get_document_option( 'background_background', $post_id );
