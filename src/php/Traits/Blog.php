@@ -76,6 +76,9 @@ trait Blog {
 	 *
 	 * This method can be used as a callback for the 'wp_list_categories' filter
 	 * to wrap category post counts in span elements for better styling control.
+	 * Only the count right after a link is touched, so a ")" in a category name
+	 * survives. WooCommerce's category walker already wraps its count in
+	 * `<span class="count">`, so that one only loses its parentheses.
 	 *
 	 * @since 1.0.16
 	 *
@@ -83,10 +86,13 @@ trait Blog {
 	 * @return string Modified category archive links with post count wrapped in a span.
 	 */
 	public static function cat_count_span( $links ) {
-		$links = str_replace( '</a> (', '</a><span>', $links );
-		$links = str_replace( ')', '</span>', $links );
+		$result = preg_replace(
+			array( '#</a> \(([^()<]+)\)#', '#<span class="count">\(([^()<]+)\)</span>#' ),
+			array( '</a><span>$1</span>', '<span class="count">$1</span>' ),
+			$links
+		);
 
-		return $links;
+		return is_string( $result ) ? $result : $links;
 	}
 
 	/**
@@ -114,9 +120,8 @@ trait Blog {
 			return $link_html;
 		}
 
-		$link_html = str_replace( '</a>&nbsp;(', '</a><span>', $link_html );
-		$link_html = str_replace( ')', '</span>', $link_html );
+		$result = preg_replace( '#</a>&nbsp;\(([^()<]+)\)#', '</a><span>$1</span>', $link_html );
 
-		return $link_html;
+		return is_string( $result ) ? $result : $link_html;
 	}
 }
