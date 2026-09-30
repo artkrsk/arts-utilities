@@ -2,6 +2,7 @@
 
 namespace Arts\Utilities\Traits;
 
+use WP_Post;
 use WP_Query;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -58,6 +59,25 @@ trait Query {
 		}
 
 		return null;
+	}
+
+	/**
+	 * Read the post's filtered title without WooCommerce's endpoint substitution.
+	 */
+	public static function get_base_post_title( WP_Post $post ): string {
+		if ( ! function_exists( 'is_wc_endpoint_url' ) || ! is_wc_endpoint_url() ) {
+			return get_the_title( $post );
+		}
+
+		$endpoint_filter = 'woocommerce_endpoint_' . WC()->query->get_current_endpoint() . '_title';
+		$keep_post_title = static fn(): string => '';
+		add_filter( $endpoint_filter, $keep_post_title, PHP_INT_MAX, 0 );
+
+		try {
+			return get_the_title( $post );
+		} finally {
+			remove_filter( $endpoint_filter, $keep_post_title, PHP_INT_MAX );
+		}
 	}
 
 	/**
