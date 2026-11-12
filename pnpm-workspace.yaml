@@ -1,7 +1,4 @@
-allowBuilds:
-  cypress: true
 minimumReleaseAgeExclude:
-  - cypress@15.19.0
   - prettier@3.9.6
 overrides:
   'brace-expansion@>=2.0.0 <3.0.0': '2.1.0'
