@@ -944,7 +944,7 @@ describe("DOMService", () => {
 		});
 
 		it("should throw error for invalid tag name", () => {
-			expect(() => DOMService.createElement("invalid-tag-with-###")).toThrow(
+			expect(() => DOMService.createElement("invalid tag")).toThrow(
 				"Failed to create element with tag name",
 			);
 		});

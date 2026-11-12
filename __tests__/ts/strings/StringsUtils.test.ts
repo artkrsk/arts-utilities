@@ -298,9 +298,9 @@ describe("StringsUtils", () => {
 			mockConsoleWarn = vi.spyOn(console, "warn").mockImplementation(() => {});
 
 			// Mock document.querySelector
-			global.document = {
+			vi.stubGlobal("document", {
 				querySelector: mockQuerySelector,
-			} as any;
+			});
 		});
 
 		afterEach(() => {

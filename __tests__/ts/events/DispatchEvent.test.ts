@@ -15,7 +15,7 @@ describe("dispatchEvent", () => {
 			dispatchEvent: vi.fn().mockReturnValue(true),
 		} as any;
 
-		global.document = mockDocument;
+		vi.stubGlobal("document", mockDocument);
 
 		mockTarget = {
 			dispatchEvent: vi.fn().mockReturnValue(true),
@@ -177,7 +177,7 @@ describe("dispatchEvent", () => {
 
 			expect(result).toBe(false);
 
-			global.document = originalDocument;
+			vi.stubGlobal("document", originalDocument);
 		});
 
 		it("should return false when CustomEvent constructor throws", () => {

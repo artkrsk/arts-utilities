@@ -28,7 +28,7 @@ describe("BrowserService", () => {
 
 		// Mock global window and document
 		global.window = mockWindow as any;
-		global.document = mockDocument as any;
+		vi.stubGlobal("document", mockDocument);
 
 		// Reset all mocks
 		vi.clearAllMocks();
@@ -119,7 +119,7 @@ describe("BrowserService", () => {
 
 		it("should return 0 when an error occurs", () => {
 			// Remove document to trigger error
-			global.document = null as any;
+			vi.stubGlobal("document", null);
 
 			const result = BrowserService.getViewportWidth();
 			expect(result).toBe(0);
@@ -159,7 +159,7 @@ describe("BrowserService", () => {
 
 		it("should return 0 when an error occurs", () => {
 			// Remove document to trigger error
-			global.document = null as any;
+			vi.stubGlobal("document", null);
 
 			const result = BrowserService.getViewportHeight();
 			expect(result).toBe(0);
@@ -239,7 +239,7 @@ describe("BrowserService", () => {
 			const originalDocument = global.document;
 
 			global.window = {} as any;
-			global.document = undefined as any;
+			vi.stubGlobal("document", undefined);
 
 			expect(BrowserService.matchMedia("test")).toBe(false);
 			expect(BrowserService.getViewportWidth()).toBe(0);
@@ -248,7 +248,7 @@ describe("BrowserService", () => {
 
 			// Restore originals
 			global.window = originalWindow;
-			global.document = originalDocument;
+			vi.stubGlobal("document", originalDocument);
 		});
 	});
 });
