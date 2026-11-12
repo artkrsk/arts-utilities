@@ -1,3 +1,5 @@
+allowBuilds:
+  esbuild: false
 minimumReleaseAgeExclude:
   - prettier@3.9.6
 overrides:

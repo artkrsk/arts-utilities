@@ -93,8 +93,5 @@ next-env.d.ts
 /dist
 /coverage-report
 
-# Building system
-__builder__
-
 .claude
 CLAUDE.md
