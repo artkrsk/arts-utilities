@@ -28,7 +28,6 @@ class Utilities {
 	use Traits\Markup;
 	use Traits\Plugin;
 	use Traits\Query;
-	use Traits\Shortcodes;
 	use Traits\Strings;
 	use Traits\Taxonomies;
 	use Traits\Theme;

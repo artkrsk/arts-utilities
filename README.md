@@ -277,15 +277,6 @@ $categories = Utilities::get_posts_terms('current_page', [
 $author = Utilities::get_post_author($postId);
 ```
 
-#### Shortcodes
-
-Custom shortcode utilities.
-
-```php
-// Register current year shortcode
-add_shortcode('current_year', [Utilities::class, 'get_shortcode_current_year']);
-```
-
 #### Strings
 
 String manipulation utilities.
@@ -380,6 +371,14 @@ $cartContents = Utilities::get_cart_contents();
 
 // Get cart total
 $total = Utilities::get_cart_total();
+```
+
+## Upgrading from 2.x
+
+3.0 removes the `Shortcodes` trait and its `get_shortcode_current_year()`: themes vendor this library, and marketplace reviews count shortcode code in a theme as plugin territory. Register the shortcode in your plugin instead:
+
+```php
+add_shortcode( 'current_year', fn() => gmdate( 'Y' ) );
 ```
 
 ## License
