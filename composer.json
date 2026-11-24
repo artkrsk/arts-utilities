@@ -15,7 +15,6 @@
 	"require-dev": {
 		"arts/elementor-stubs": "^4.2",
 		"dealerdirect/phpcodesniffer-composer-installer": "^1.0",
-		"ergebnis/composer-normalize": "^2.48",
 		"php-stubs/acf-pro-stubs": "^6.5",
 		"php-stubs/woocommerce-stubs": "^10.5",
 		"php-stubs/wp-cli-stubs": "^2.12",
@@ -32,8 +31,7 @@
 	"config": {
 		"allow-plugins": {
 			"composer/installers": true,
-			"dealerdirect/phpcodesniffer-composer-installer": true,
-			"ergebnis/composer-normalize": true
+			"dealerdirect/phpcodesniffer-composer-installer": true
 		},
 		"optimize-autoloader": true,
 		"sort-packages": true
@@ -41,7 +39,6 @@
 	"scripts": {
 		"check": ["@phpcs", "@phpstan"],
 		"fix": "@phpcbf",
-		"normalize": "composer-normalize",
 		"phpcbf": "phpcbf --standard=phpcs.xml",
 		"phpcs": "phpcs --standard=phpcs.xml",
 		"phpstan": "phpstan analyse --memory-limit=2G",
