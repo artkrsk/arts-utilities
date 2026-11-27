@@ -56,8 +56,9 @@ trait URL {
 			return '';
 		}
 
-		$key      = self::get_string_value( get_option( $option ) );
-		$site_url = home_url( '/' );
+		$key = self::get_string_value( get_option( $option ) );
+		// Not home_url(): multilingual plugins filter it per request language, and the shop compares sites by path.
+		$site_url = trailingslashit( self::get_string_value( get_option( 'home' ) ) );
 
 		// rawurlencode the key: add_query_arg() does NOT encode values, and this URL is fetched over GET,
 		// where an un-encoded key with +, %, &, # (e.g. a Freemius sk_ key) is corrupted by query parsing
