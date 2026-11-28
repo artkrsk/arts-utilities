@@ -6,20 +6,16 @@ describe("DOMMediaService", () => {
 	let iframeElement: HTMLIFrameElement;
 
 	beforeEach(() => {
-		// Reset DOM
 		document.body.innerHTML = "";
 
-		// Create test video element
 		videoElement = document.createElement("video");
 		videoElement.src = "test-video.mp4";
 		document.body.appendChild(videoElement);
 
-		// Create test iframe element
 		iframeElement = document.createElement("iframe");
 		iframeElement.src = "about:blank";
 		document.body.appendChild(iframeElement);
 
-		// Clear all mocks
 		vi.clearAllMocks();
 	});
 
@@ -256,7 +252,6 @@ describe("DOMMediaService", () => {
 		});
 
 		it("should work with different iframe types", () => {
-			// Create YouTube-like iframe
 			const youtubeIframe = document.createElement("iframe");
 			youtubeIframe.src = "https://www.youtube.com/embed/dQw4w9WgXcQ";
 

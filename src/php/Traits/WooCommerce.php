@@ -149,7 +149,6 @@ trait WooCommerce {
 		$woocommerce_urls  = array();
 		$woocommerce_pages = array();
 
-		// Retrieve WooCommerce page IDs
 		if ( function_exists( 'wc_get_page_id' ) ) {
 			$woocommerce_pages = array(
 				'shop'      => wc_get_page_id( 'shop' ),
@@ -159,7 +158,6 @@ trait WooCommerce {
 				'terms'     => wc_get_page_id( 'terms' ),
 			);
 
-			// Add WooCommerce page URLs to the array
 			foreach ( $woocommerce_pages as $page_id ) {
 				if ( ! empty( $page_id ) && is_int( $page_id ) ) {
 					$permalink = get_permalink( $page_id );
@@ -170,7 +168,6 @@ trait WooCommerce {
 			}
 		}
 
-		// Retrieve WooCommerce permalink structure URLs
 		if ( function_exists( 'wc_get_permalink_structure' ) ) {
 			$woocommerce_permalinks_raw = wc_get_permalink_structure();
 			$woocommerce_permalinks     = self::get_array_value( $woocommerce_permalinks_raw );

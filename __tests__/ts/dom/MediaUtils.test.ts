@@ -1,7 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { loadMedia } from "../../../src/ts/core/dom/MediaUtils";
 
-// Mock HTMLImageElement
 class MockHTMLImageElement {
 	src = "";
 	complete = false;
@@ -47,7 +46,6 @@ class MockHTMLImageElement {
 	}
 }
 
-// Mock HTMLVideoElement
 class MockHTMLVideoElement {
 	src = "";
 	readyState = 0;
@@ -79,7 +77,7 @@ class MockHTMLVideoElement {
 	}
 
 	load() {
-		// Simulate loading
+		// No-op: tests fire events through simulateLoadedData() and simulateError()
 	}
 
 	simulateLoadedData() {
@@ -102,7 +100,7 @@ class MockHTMLElement {
 describe("MediaUtils", () => {
 	beforeEach(() => {
 		vi.useFakeTimers();
-		// Define HTML media element constants
+		// loadMedia reads HAVE_CURRENT_DATA and NETWORK_IDLE off the global HTMLMediaElement
 		global.HTMLMediaElement = {
 			HAVE_CURRENT_DATA: 2,
 			HAVE_ENOUGH_DATA: 4,

@@ -2,7 +2,7 @@
  * Recursively merges `source` into `target`, returning a new object.
  *
  * Behavior at each key:
- * - Both values are plain objects → merged recursively
+ * - Both values are non-null, non-array objects → merged recursively
  * - Both values are arrays → concatenated (target items first)
  * - Otherwise → `source` value wins when defined
  */

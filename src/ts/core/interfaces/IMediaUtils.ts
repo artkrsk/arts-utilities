@@ -32,7 +32,7 @@ export interface IMediaUtils {
 	 *   Calls `.load()` when `networkState === NETWORK_IDLE`.
 	 * - Any other tag — resolves immediately with the element.
 	 *
-	 * Rejects synchronously with `"Element is required for media loading"` when `element` is null.
+	 * Rejects immediately with `"Element is required for media loading"` when `element` is null.
 	 */
 	loadMedia: (
 		element: HTMLElement | null,

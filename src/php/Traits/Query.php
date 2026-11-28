@@ -299,8 +299,9 @@ trait Query {
 	}
 
 	/**
-	 * Restores the original $_GET['orderby'] value
-	 * just in case it's used somewhere else.
+	 * Restores $_GET['orderby'] to the value returned by fix_query_hicpo_before(),
+	 * just in case it's used somewhere else. That value is an empty string when
+	 * none was set, so the key stays present afterwards.
 	 * Call right after \WP_Query.
 	 *
 	 * @since 1.0.0

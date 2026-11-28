@@ -77,24 +77,19 @@ trait Strings {
 	 * @return string The converted string in camel case.
 	 */
 	public static function convert_kebab_case_to_camel( $string ) {
-		// Handle empty strings or non-string inputs
 		if ( empty( $string ) || ! is_string( $string ) ) {
 			return '';
 		}
 
-		// If string doesn't contain hyphens, consider it's already in camelCase format
-		// and should be converted to lowercase
+		// No hyphens means nothing to join: just lowercase it (a camelCase input is flattened, not preserved)
 		if ( strpos( $string, '-' ) === false ) {
 			return strtolower( $string );
 		}
 
-		// Trim any leading or trailing hyphens
 		$string = trim( $string, '-' );
 
-		// Replace consecutive hyphens with a single hyphen
 		$string = preg_replace( '/-+/', '-', $string );
 
-		// If the string is empty after trimming, return empty string
 		if ( empty( $string ) ) {
 			return '';
 		}

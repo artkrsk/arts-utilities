@@ -123,14 +123,10 @@ describe("JSONParse", () => {
 		});
 
 		it("should attempt to handle missing commas between properties", () => {
-			// Note: The current implementation doesn't fix all missing comma cases
-			// We're testing the actual behavior rather than the expected perfect behavior
-
-			// JSONParse will return an empty object for invalid JSON, which is the expected behavior
+			// convertToStandardJSON only inserts commas after `}` / `]`, not between string values, so this stays invalid
 			const relaxed = '{name:"John""age":30}';
 			const parsed = JSONParse(relaxed);
 
-			// The function should not throw and should return an empty object for invalid input
 			expect(parsed).toEqual({});
 		});
 	});

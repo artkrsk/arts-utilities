@@ -2,13 +2,11 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { DOMService } from "../../../src/ts/core/dom/DOMService";
 
 describe("DOMService", () => {
-	// Setup DOM elements for testing
 	let rootElement: HTMLElement;
 	let childElement: HTMLElement;
 	let innerChildElement: HTMLElement;
 
 	beforeEach(() => {
-		// Create test DOM structure
 		document.body.innerHTML = "";
 
 		rootElement = document.createElement("div");

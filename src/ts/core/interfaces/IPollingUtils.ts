@@ -24,7 +24,7 @@ export interface IPollingUtils {
 	/**
 	 * Resolves with `window[variable]` once it becomes defined.
 	 * Rejects with an `Error` whose message includes the variable name and timeout when the timeout elapses first.
-	 * Resolves synchronously (on the next microtask) when the variable is already defined at call time.
+	 * Resolves on the next microtask, without polling, when the variable is already defined at call time.
 	 */
 	waitForVariable: (
 		variable: string,

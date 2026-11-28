@@ -171,7 +171,6 @@ trait Kit {
 	 * @return string The URL to the Elementor Site Settings editor or an empty string if not available.
 	 */
 	public static function get_elementor_editor_site_settings_url( $tab_id = '' ) {
-		// Check if Elementor is active
 		if ( ! class_exists( '\Elementor\Plugin' ) || ! class_exists( '\Elementor\Utils' ) ) {
 			return '';
 		}

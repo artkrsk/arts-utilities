@@ -40,7 +40,7 @@ export const attachResponsiveResize: IResponsiveResize = (
 			// Fine pointer (desktop): height changes are real layout events.
 			window.addEventListener("resize", handleHeightChange, false);
 		} else {
-			// Coarse pointer (touch): the soft keyboard fires resize with height changes — drop the listener.
+			// Coarse pointer (touch): ignore height-only changes — drop the listener.
 			window.removeEventListener("resize", handleHeightChange, false);
 		}
 

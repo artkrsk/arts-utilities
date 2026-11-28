@@ -11,7 +11,6 @@ const mockWindow = {
 	innerHeight: 768,
 };
 
-// Mock getBoundingClientRect
 const createMockRect = (
 	top: number,
 	left: number,
@@ -29,7 +28,6 @@ const createMockRect = (
 	toJSON: () => ({}),
 });
 
-// Mock getComputedStyle
 const createMockComputedStyle = (visibility: string, opacity: string) => ({
 	getPropertyValue: vi.fn((property: string) => {
 		if (property === "visibility") return visibility;
@@ -40,7 +38,6 @@ const createMockComputedStyle = (visibility: string, opacity: string) => ({
 
 describe("VisibilityUtils", () => {
 	beforeEach(() => {
-		// Mock window dimensions
 		Object.defineProperty(window, "innerWidth", {
 			writable: true,
 			value: mockWindow.innerWidth,
@@ -51,7 +48,6 @@ describe("VisibilityUtils", () => {
 			value: mockWindow.innerHeight,
 		});
 
-		// Mock getComputedStyle
 		vi.spyOn(window, "getComputedStyle");
 	});
 
@@ -582,7 +578,7 @@ describe("VisibilityUtils", () => {
 			});
 			expect(result).toBe(true);
 
-			// Test with values that should fail without rounding but pass with rounding
+			// Values outside the tolerance both with and without rounding
 			const mockElement2 = {
 				getBoundingClientRect: vi.fn(() => ({
 					width: 1018.2, // Will round to 1018, |1018 - 1024| = 6 > 5 (tolerance)

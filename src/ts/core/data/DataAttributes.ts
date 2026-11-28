@@ -23,7 +23,7 @@ export const parseAttribute: IParseAttribute = (
 			idx: number,
 			fullPath: string[],
 		) => {
-			// Defensive: if a separator pattern somehow leaves `data` in the path, skip it.
+			// Skip a segment literally named `data`: `data-data-foo` maps to `foo`.
 			if (part === "data") {
 				return obj;
 			}

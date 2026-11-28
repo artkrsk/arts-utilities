@@ -60,7 +60,6 @@ describe("preventKeyboard", () => {
 	});
 
 	it("should work with real KeyboardEvent objects", () => {
-		// Test with Space key
 		const spaceEvent = new KeyboardEvent("keydown", { keyCode: 32 } as any);
 		const preventDefaultSpy = vi.spyOn(spaceEvent, "preventDefault");
 
@@ -70,7 +69,6 @@ describe("preventKeyboard", () => {
 	});
 
 	it("should work with real KeyboardEvent for non-navigation key", () => {
-		// Test with Enter key
 		const enterEvent = new KeyboardEvent("keydown", { keyCode: 13 } as any);
 		const preventDefaultSpy = vi.spyOn(enterEvent, "preventDefault");
 
@@ -124,7 +122,6 @@ describe("preventKeyboard", () => {
 		preventKeyboard(mockEvent);
 		expect(mockEvent.preventDefault).not.toHaveBeenCalled();
 
-		// Reset mock
 		mockEvent.preventDefault.mockClear();
 
 		// Test just above the range
@@ -139,7 +136,6 @@ describe("preventKeyboard", () => {
 		let mockDiv: HTMLDivElement;
 
 		beforeEach(() => {
-			// Create mock DOM elements
 			mockInput = document.createElement("input");
 			mockTextarea = document.createElement("textarea");
 			mockDiv = document.createElement("div");
@@ -250,7 +246,7 @@ describe("preventKeyboard", () => {
 		});
 
 		it("should handle elements with uppercase tag names", () => {
-			// Simulate element with uppercase tagName (some browsers might do this)
+			// Plain-object stand-in: HTML elements report an uppercase tagName, which isInputField lowercases
 			const mockElement = {
 				tagName: "INPUT",
 				type: "text",

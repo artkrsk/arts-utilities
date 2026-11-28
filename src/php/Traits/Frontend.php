@@ -25,15 +25,15 @@ trait Frontend {
 	 *
 	 *     @type string       $handle    Name of the script. Should be unique.
 	 *     @type string|false $src       Full URL of the script, or path of the script relative to the WordPress root directory.
-	 *                                   If source is set to false, script is an alias of other scripts it depends on.
+	 *                                   Required: the method returns without registering anything when it is empty or false.
 	 *     @type string[]     $deps      Optional. An array of registered script handles this script depends on. Default empty array.
 	 *     @type array        $files     Optional. 'component' type only. An array of files this script depends on. Default empty array.
 	 *     @type string|bool  $ver       Optional. String specifying script version number, if it has one, which is added to the URL
 	 *                                   as a query string for cache busting purposes. If version is set to false, a version
 	 *                                   number is automatically added equal to current installed WordPress version.
 	 *                                   If set to null, no version is added.
-	 *     @type array|bool   $args      Optional. An array of additional script loading strategies. Default empty array.
-	 *                                   Otherwise, it may be a boolean in which case it determines whether the script is printed in the footer. Default false.
+	 *     @type array|bool   $args      Optional. An array of additional script loading strategies.
+	 *                                   Otherwise, it may be a boolean in which case it determines whether the script is printed in the footer. Default true.
 	 *                                   @type string $strategy Optional. If provided, may be either 'defer' or 'async'.
 	 *                                   @type bool   $in_footer Optional. Whether to print the script in the footer. Default 'false'.
 	 * }
@@ -140,7 +140,7 @@ trait Frontend {
 		$script_args = ( is_array( $script_args_value ) || is_bool( $script_args_value ) ) ? $script_args_value : true;
 
 		if ( $type === 'component' ) {
-			// WordPress 6.9+ requires array for $args in wp_register_script_module()
+			// Normalize $args to the array form wp_register_script_module() accepts
 			$script_module_args = $args['args'];
 			if ( ! is_array( $script_module_args ) ) {
 				$script_module_args = $script_module_args ? array( 'in_footer' => true ) : array();
@@ -184,7 +184,7 @@ trait Frontend {
 	 *   Arguments for enqueuing the stylesheet.
 	 *
 	 *   @type string $handle Name of the stylesheet. Should be unique.
-	 *   @type string $src    Full URL of the stylesheet, or path of the stylesheet relative to the WordPress root directory. If source is set to false, stylesheet is an alias of other stylesheets it depends on.
+	 *   @type string $src    Full URL of the stylesheet, or path of the stylesheet relative to the WordPress root directory. Required: the method returns without registering anything when it is empty or false.
 	 *   @type array  $deps   Optional. An array of registered stylesheet handles this stylesheet depends on. Default empty array.
 	 *   @type string $ver    Optional. String specifying stylesheet version number, if it has one, which is added to the URL as a query string for cache busting purposes. If version is set to false, a version number is automatically added equal to current installed WordPress version. If set to null, no version is added.
 	 *   @type string $media  Optional. The media for which this stylesheet has been defined. Default 'all'. Accepts media types like 'all', 'print' and 'screen', or media queries like '(orientation: portrait)' and '(max-width: 640px)'.

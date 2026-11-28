@@ -44,7 +44,6 @@ trait Document {
 			return $fallback_value;
 		}
 
-		// Get the page settings manager
 		$page_settings_manager = \Elementor\Core\Settings\Manager::get_settings_managers( 'page' );
 
 		// Ensure we have a Manager object, not an array or null
@@ -52,14 +51,12 @@ trait Document {
 			return $fallback_value;
 		}
 
-		// Get the settings model for current post
 		$page_settings_model = $page_settings_manager->get_model( $post_id );
 
 		if ( ! $page_settings_model ) {
 			return $fallback_value;
 		}
 
-		// Retrieve the settings we added before
 		return $page_settings_model->get_settings( $option_name );
 	}
 
@@ -273,7 +270,6 @@ trait Document {
 			return $fallback_value;
 		}
 
-		// Get the page settings manager
 		$page_settings_manager = \Elementor\Core\Settings\Manager::get_settings_managers( 'page' );
 
 		// Ensure we have a Manager object, not an array or null
@@ -281,7 +277,6 @@ trait Document {
 			return $fallback_value;
 		}
 
-		// Get the settings model for current post
 		$page_settings_model = $page_settings_manager->get_model( $post_id );
 
 		if ( ! $page_settings_model ) {
