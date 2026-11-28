@@ -10,7 +10,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Blog Trait
  *
  * Provides utility methods for working with blog-related functionality
- * including pagination and pingback handling.
+ * including pagination, pingback handling and post-count markup in category
+ * and archive lists.
  *
  * @package Arts\Utilities\Traits
  * @since 1.0.0
@@ -100,8 +101,8 @@ trait Blog {
 	 *
 	 * This method can be used as a callback for the 'get_archives_link' filter
 	 * to wrap archive post counts in span elements for better styling control.
-	 * Only processes list format - dropdown options are skipped as they don't
-	 * support inner HTML elements.
+	 * Skips the 'option' (dropdown) format, as options don't support inner HTML
+	 * elements.
 	 *
 	 * @since 1.0.16
 	 *

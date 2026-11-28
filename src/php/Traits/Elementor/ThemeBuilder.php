@@ -21,7 +21,8 @@ trait ThemeBuilder {
 	 *
 	 * This method determines the appropriate theme builder location ID based on the current
 	 * page context. Identifies the location type (archive, single, etc.). If a matching
-	 * location is found, it retrieves the corresponding document ID.
+	 * location is found, it retrieves the corresponding document ID. On a singular page
+	 * that is not a `single` location, it returns the current post ID instead.
 	 *
 	 * @since 1.0.0
 	 *

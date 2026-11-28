@@ -31,7 +31,7 @@ trait Controls {
 	 * @param string               $size_control_suffix   The suffix for the size control. Default is 'size'.
 	 * @param string               $custom_dimension_suffix The suffix for the custom dimension control. Default is 'custom_dimension'.
 	 *
-	 * @return mixed The thumbnail size settings or 'full' if no custom size is set.
+	 * @return mixed The thumbnail size settings, 'full' if no custom size is set, or false if the image ID is empty or the BFI thumb library is missing.
 	 */
 	public static function get_settings_thumbnail_size( $settings = array(), $image_id = '', $group_control_prefix = 'image', $size_control_suffix = 'size', $custom_dimension_suffix = 'custom_dimension' ) {
 		if ( empty( $image_id ) ) {
@@ -67,7 +67,7 @@ trait Controls {
 			$custom_width  = is_array( $dimensions ) && array_key_exists( 'width', $dimensions ) ? $dimensions['width'] : 0;
 			$custom_height = is_array( $dimensions ) && array_key_exists( 'height', $dimensions ) ? $dimensions['height'] : 0;
 
-			// Convert to floats or set them to null if zero.
+			// A zero or missing dimension stays null.
 			$float_width  = null;
 			$float_height = null;
 

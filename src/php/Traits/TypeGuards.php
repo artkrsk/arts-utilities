@@ -42,9 +42,9 @@ trait TypeGuards {
 	 * @since 1.1.11
 	 *
 	 * @param mixed  $value   The value to validate.
-	 * @param string $default Default value if not a string. Default empty string.
+	 * @param string $default Default value if neither a string nor an int/float. Default empty string.
 	 *
-	 * @return string The validated string or default.
+	 * @return string The string, the int or float cast to string, or the default.
 	 */
 	public static function get_string_value( $value, $default = '' ) {
 		if ( is_string( $value ) ) {

@@ -4,7 +4,6 @@ import { Logger, LoggerClass } from "../../../src/ts/core/logger/Logger";
 
 describe("Logger", () => {
 	beforeEach(() => {
-		// Spy on console methods
 		vi.spyOn(console, "error").mockImplementation(() => {});
 		vi.spyOn(console, "warn").mockImplementation(() => {});
 		vi.spyOn(console, "info").mockImplementation(() => {});

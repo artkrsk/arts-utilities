@@ -26,10 +26,9 @@ export interface IResponsiveResizeCleanup {
  *
  * - Width changes are tracked unconditionally via `window.resize`.
  * - Height changes are tracked via `window.resize` only while `(hover: hover) and (pointer: fine)` matches.
- *   This skips spurious mobile callbacks caused by the soft keyboard.
  * - The pointer-type listener swaps the height listener in/out when the device's hover/pointer capabilities change.
  *
- * `callback` only fires when the relevant dimension actually changes from the last seen value.
+ * Apart from the optional immediate call, `callback` only fires when the relevant dimension actually changes from the last seen value.
  */
 export interface IResponsiveResize {
 	(

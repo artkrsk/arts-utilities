@@ -7,7 +7,6 @@ describe("pageLock", () => {
 	let originalWindow: any;
 
 	beforeEach(() => {
-		// Mock window object
 		global.window = {
 			addEventListener: vi.fn(),
 			removeEventListener: vi.fn(),

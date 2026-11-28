@@ -10,7 +10,6 @@ describe("DataAttributes", () => {
 	let mockElement: HTMLElement;
 
 	beforeEach(() => {
-		// Create a mock HTML element with various data attributes
 		mockElement = document.createElement("div");
 	});
 

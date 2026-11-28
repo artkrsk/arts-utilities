@@ -22,13 +22,10 @@ describe("ElementorSettingsHandler", () => {
 	let mockRemoveEventListener: any;
 
 	beforeEach(() => {
-		// Reset all mocks
 		vi.clearAllMocks();
 
-		// Mock callback function
 		mockCallback = vi.fn().mockResolvedValue(undefined);
 
-		// Mock options object
 		mockOptions = {
 			setting1: "elementor_key1",
 			setting2: {
@@ -53,7 +50,6 @@ describe("ElementorSettingsHandler", () => {
 		]);
 		vi.mocked(convertSettings).mockReturnValue({ converted: "settings" });
 
-		// Create handler instance
 		handler = new ElementorSettingsHandler(mockCallback, mockOptions);
 	});
 

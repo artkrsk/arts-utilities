@@ -1,21 +1,17 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { attachResponsiveResize } from "../../../src/ts/core/events/ResizeUtils";
 
-// Mock window.matchMedia
 const mockMatchMedia = vi.fn();
 
 describe("ResizeUtils", () => {
 	beforeEach(() => {
-		// Reset mocks
 		vi.clearAllMocks();
 
-		// Mock window.matchMedia
 		Object.defineProperty(window, "matchMedia", {
 			writable: true,
 			value: mockMatchMedia,
 		});
 
-		// Mock window dimensions
 		Object.defineProperty(window, "innerWidth", {
 			writable: true,
 			value: 1024,
@@ -26,7 +22,6 @@ describe("ResizeUtils", () => {
 			value: 768,
 		});
 
-		// Mock addEventListener and removeEventListener
 		vi.spyOn(window, "addEventListener");
 		vi.spyOn(window, "removeEventListener");
 	});
@@ -70,19 +65,16 @@ describe("ResizeUtils", () => {
 
 			const result = attachResponsiveResize(mockCallback, true);
 
-			// Should call matchMedia with correct query
 			expect(mockMatchMedia).toHaveBeenCalledWith(
 				"(hover: hover) and (pointer: fine)",
 			);
 
-			// Should add width resize listener
 			expect(window.addEventListener).toHaveBeenCalledWith(
 				"resize",
 				expect.any(Function),
 				false,
 			);
 
-			// Should add media query listener
 			expect(mockMediaQueryList.addEventListener).toHaveBeenCalledWith(
 				"change",
 				expect.any(Function),
@@ -106,7 +98,6 @@ describe("ResizeUtils", () => {
 
 			attachResponsiveResize(mockCallback, false);
 
-			// Should not call callback immediately
 			expect(mockCallback).not.toHaveBeenCalled();
 		});
 
@@ -123,7 +114,6 @@ describe("ResizeUtils", () => {
 
 			const result = attachResponsiveResize(mockCallback);
 
-			// Should use legacy addListener
 			expect(mockMediaQueryList.addListener).toHaveBeenCalledWith(
 				expect.any(Function),
 			);
@@ -143,17 +133,14 @@ describe("ResizeUtils", () => {
 
 			const { clear } = attachResponsiveResize(mockCallback);
 
-			// Call clear
 			clear();
 
-			// Should remove window resize listeners
 			expect(window.removeEventListener).toHaveBeenCalledWith(
 				"resize",
 				expect.any(Function),
 				false,
 			);
 
-			// Should remove media query listener
 			expect(mockMediaQueryList.removeEventListener).toHaveBeenCalledWith(
 				"change",
 				expect.any(Function),
@@ -173,10 +160,8 @@ describe("ResizeUtils", () => {
 
 			const { clear } = attachResponsiveResize(mockCallback);
 
-			// Call clear
 			clear();
 
-			// Should use legacy removeListener
 			expect(mockMediaQueryList.removeListener).toHaveBeenCalledWith(
 				expect.any(Function),
 			);
@@ -192,7 +177,6 @@ describe("ResizeUtils", () => {
 
 			mockMatchMedia.mockReturnValue(mockMediaQueryList);
 
-			// Setup
 			attachResponsiveResize(mockCallback);
 			mockCallback.mockClear();
 
@@ -223,7 +207,6 @@ describe("ResizeUtils", () => {
 
 			mockMatchMedia.mockReturnValue(mockMediaQueryList);
 
-			// Setup
 			attachResponsiveResize(mockCallback);
 			mockCallback.mockClear();
 
@@ -248,7 +231,6 @@ describe("ResizeUtils", () => {
 
 			mockMatchMedia.mockReturnValue(mockMediaQueryList);
 
-			// Setup
 			attachResponsiveResize(mockCallback);
 
 			// Get the media query change handler
@@ -297,7 +279,6 @@ describe("ResizeUtils", () => {
 
 			mockMatchMedia.mockReturnValue(mockMediaQueryList);
 
-			// Setup
 			attachResponsiveResize(mockCallback);
 
 			// Get the media query change handler
@@ -333,7 +314,6 @@ describe("ResizeUtils", () => {
 
 			mockMatchMedia.mockReturnValue(mockMediaQueryList);
 
-			// Setup
 			attachResponsiveResize(mockCallback);
 
 			// Get the media query change handler
@@ -363,7 +343,6 @@ describe("ResizeUtils", () => {
 
 			mockMatchMedia.mockReturnValue(mockMediaQueryList);
 
-			// Setup
 			attachResponsiveResize(mockCallback);
 			mockCallback.mockClear();
 
@@ -377,7 +356,6 @@ describe("ResizeUtils", () => {
 			// So the callback is NOT called during normal media query changes
 			mediaChangeHandler({ matches: false });
 
-			// The callback should NOT be called during normal media query changes
 			expect(mockCallback).not.toHaveBeenCalled();
 		});
 
@@ -394,7 +372,6 @@ describe("ResizeUtils", () => {
 			// Setup with immediateCall=true to verify the runCallback logic works
 			attachResponsiveResize(mockCallback, true);
 
-			// The callback should be called once during setup with immediateCall=true
 			expect(mockCallback).toHaveBeenCalledTimes(1);
 		});
 	});

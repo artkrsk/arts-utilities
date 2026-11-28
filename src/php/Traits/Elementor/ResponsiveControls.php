@@ -134,7 +134,6 @@ trait ResponsiveControls {
 					}
 				} else {
 					if ( $config['direction'] === 'min' ) {
-						// $min_width = $elementor_breakpoints->get_device_min_breakpoint( $breakpoint );
 						$queries[] = 'not (min-width: ' . self::get_string_value( $config['value'] ) . 'px)';
 					}
 				}

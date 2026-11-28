@@ -63,7 +63,7 @@ describe("MediaTypeDetection", () => {
 			// Test the fallback path when URL constructor throws
 			expect(getMediaType("?invalid-url-with-only-query")).toBeNull();
 			expect(getMediaType("#invalid-url-with-only-fragment")).toBeNull();
-			// Test when urlWithoutQuery is undefined (edge case)
+			// Test when nothing is left after trimming the query (empty string falls back to the original URL)
 			expect(getMediaType("???")).toBeNull();
 		});
 

@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * URL Trait
  *
  * Provides utility methods for working with URLs, including
- * referer checking and license URL generation.
+ * referer checking, license URL generation and directory URL resolution.
  *
  * @package Arts\Utilities\Traits
  * @since 1.0.0
@@ -87,7 +87,6 @@ trait URL {
 	 * @return string URL to the directory containing the file.
 	 */
 	public static function get_directory_url( $file = __FILE__ ) {
-		// Get the absolute path to the current file
 		$current_file_path = wp_normalize_path( $file );
 
 		// Get the absolute path and URI of the theme
@@ -101,9 +100,7 @@ trait URL {
 
 		// We're in a theme - calculate the relative path
 		if ( strpos( $current_file_path, $theme_directory ) !== false ) {
-			// Get path relative to theme
 			$relative_path = str_replace( $theme_directory, '', dirname( $current_file_path ) );
-			// Build URL
 			return trailingslashit( $theme_uri . $relative_path );
 		}
 

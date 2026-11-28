@@ -69,8 +69,6 @@ export const loadMedia = async (
 			imgElement.addEventListener("load", handleLoad);
 			imgElement.addEventListener("error", handleError);
 
-			// An incomplete image with a src may be mid-fetch — force the load event to fire
-			// for both already-cached and pending cases by re-assigning `src`.
 			if (imgElement.src && !imgElement.complete) {
 				const originalSrc = imgElement.src;
 				imgElement.src = "";
@@ -107,8 +105,6 @@ export const loadMedia = async (
 				videoElement.setAttribute("preload", "auto");
 			}
 
-			// `preload="none"` (or any state that hasn't started fetching) leaves the network idle —
-			// nudge it so `loadeddata` actually fires.
 			if (videoElement.networkState === HTMLMediaElement.NETWORK_IDLE) {
 				videoElement.load();
 			}

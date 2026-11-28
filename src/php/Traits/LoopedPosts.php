@@ -29,7 +29,7 @@ trait LoopedPosts {
 	 *   @type int    $post_id        The ID of the post. Default is the ID of the current post in global $post.
 	 *   @type string $post_type      The post type to retrieve the previous and next posts from. Default is the post type of the current post.
 	 *   @type bool   $in_same_term   Whether the previous and next posts should be in the same term as the current post. Default is false.
-	 *   @type string $excluded_terms Comma-separated list of term IDs to exclude from the previous and next posts. Default is empty.
+	 *   @type string $excluded_terms Accepted but not applied: the query ignores it. Default is empty.
 	 *   @type string $taxonomy       The taxonomy to use for retrieving the previous and next posts. Default is 'category'.
 	 * }
 	 *

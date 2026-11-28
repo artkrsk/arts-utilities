@@ -142,7 +142,6 @@ describe("ElementUtils", () => {
 		});
 
 		it("should handle circular prototype chains gracefully", () => {
-			// Test that the function doesn't crash with complex prototype chains
 			const obj1 = {
 				constructor: { name: "Test1" },
 			};

@@ -3,7 +3,7 @@
  */
 export interface IElementVisibilityOptions {
 	/**
-	 * When `true`, any overlap with the viewport counts. When `false`, the element must be entirely within the viewport.
+	 * When `true`, the element counts when a top or bottom edge and a left or right edge lie inside the viewport; an element spanning past both viewport edges on an axis does not. When `false`, the element must be entirely within the viewport.
 	 *
 	 * @default true
 	 */

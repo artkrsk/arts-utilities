@@ -49,7 +49,7 @@ function extractFromObject(obj: any, keys: string[]): void {
  *
  * - String mapping → direct setting lookup.
  * - Object with `value`:
- *   - When the looked-up value matches `{ size, unit }` (Elementor dimension),
+ *   - When the looked-up value matches `{ size, unit }` (an Elementor slider value),
  *     returns `size` by default, or `` `${size}${unit}` `` when `return_size === false`.
  *   - Otherwise returns the raw value.
  * - Object without `value` → recurses, building a nested object whose keys mirror the mapping.
@@ -98,7 +98,7 @@ export const processComplexValue = (
  *
  * Mapping rules per key:
  * - `string` — direct lookup; skipped when the setting is `undefined`.
- * - `{ condition: <key> }` — when the referenced setting is falsy, the output key is set to `false` and processing stops.
+ * - `{ condition: <key> }` — when the referenced setting is falsy, the output key is set to `false` and that key's processing stops; otherwise a sibling `value` is resolved as below.
  * - `{ value: <key>, return_size?: true }` — looks up the value; if `return_size === true` and the value is a `{ size, unit }`
  *   dimension, only the `size` number is written.
  * - `{ value: <TValueMapping object> }` — delegated to `processComplexValue`.

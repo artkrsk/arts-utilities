@@ -183,7 +183,7 @@ describe("Intersection", () => {
 			const mockElement = document.createElement("div");
 			const mockCallback = vi.fn();
 
-			// Mock IntersectionObserver to return null (failed creation)
+			// Mock IntersectionObserver to throw (failed creation leaves instance null)
 			global.IntersectionObserver = vi.fn().mockImplementation(() => {
 				throw new Error("IntersectionObserver not supported");
 			});

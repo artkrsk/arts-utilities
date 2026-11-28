@@ -57,7 +57,7 @@ trait Markup {
 	 *  @type array  $dependencies Component dependencies. Default empty array.
 	 *  @type bool   $hasAnimation Whether the component has animation. Default false.
 	 * }
-	 * @param array<int, string>|string $exclude_names Names to exclude from adding to attributes. Default empty array.
+	 * @param array<int, string>|string $exclude_names Names to exclude from adding to attributes. Default array( 'PSWP' ).
 	 *
 	 * @return array<string, mixed> Modified attributes.
 	 */
@@ -71,7 +71,6 @@ trait Markup {
 
 		$args = wp_parse_args( $args, $defaults );
 
-		// Ensure $exclude_names is an array
 		if ( ! is_array( $exclude_names ) ) {
 			$exclude_names = (array) $exclude_names;
 		}
@@ -127,8 +126,6 @@ trait Markup {
 	 * @return string|null The HTML attributes string if $echo is false, otherwise null.
 	 */
 	public static function print_attributes( $attributes = array(), $echo = true ) {
-		// Check if the provided attributes array is valid and non-empty
-		// This ensures that we have attributes to process and print
 		if ( ! is_array( $attributes ) || empty( $attributes ) ) {
 			return '';
 		}
@@ -137,7 +134,6 @@ trait Markup {
 		$attribute_pairs = array();
 
 		foreach ( $attributes as $key => $val ) {
-			// No need to print an empty array
 			if ( is_array( $val ) && empty( $val ) ) {
 				continue;
 			}
@@ -145,14 +141,12 @@ trait Markup {
 			// We remove duplicates, filter out empty values, and then convert the array to a space-separated string.
 			// Usually we prepare a class set in this way
 			if ( is_array( $val ) ) {
-				// Cast all values to strings, remove duplicates, and filter empty values
 				$string_values = array_filter( $val, 'is_scalar' );
 				/** @var array<scalar> $string_values */
 				$string_values = array_map( 'strval', $string_values );
 				$string_values = array_unique( $string_values );
 				$string_values = array_filter( $string_values );
 
-				// Convert the array to a space-separated string
 				$val = implode( ' ', $string_values );
 			}
 
@@ -194,21 +188,18 @@ trait Markup {
 	 * @return array<string, mixed> Modified attributes with added classes.
 	 */
 	public static function add_classes_to_attributes( array $attributes, $classes ): array {
-		// Normalize classes to array
 		if ( is_string( $classes ) ) {
 			$classes = explode( ' ', trim( $classes ) );
 		} elseif ( ! is_array( $classes ) ) {
 			$classes = array();
 		}
 
-		// Filter out empty strings
 		$classes = array_filter( $classes, fn( $class ) => $class !== '' );
 
 		if ( empty( $classes ) ) {
 			return $attributes;
 		}
 
-		// Handle existing class attribute
 		$existing_classes = array();
 		if ( isset( $attributes['class'] ) ) {
 			if ( is_string( $attributes['class'] ) ) {
@@ -216,11 +207,9 @@ trait Markup {
 			} elseif ( is_array( $attributes['class'] ) ) {
 				$existing_classes = $attributes['class'];
 			}
-			// Filter out empty strings from existing classes
 			$existing_classes = array_filter( $existing_classes, fn( $class ) => $class !== '' );
 		}
 
-		// Merge and assign
 		$attributes['class'] = array_merge( $existing_classes, $classes );
 
 		return $attributes;
@@ -411,7 +400,6 @@ trait Markup {
 		$link_data  = wp_parse_args( $link_data, $defaults );
 		$attributes = array();
 
-		// Validate URL
 		if ( ! is_string( $link_data['url'] ) || empty( trim( $link_data['url'] ) ) ) {
 			return $attributes;
 		}
@@ -419,13 +407,11 @@ trait Markup {
 		$url                = trim( $link_data['url'] );
 		$attributes['href'] = $url;
 
-		// Handle external links
 		if ( is_bool( $link_data['is_external'] ) && $link_data['is_external'] ) {
 			$attributes['target'] = '_blank';
 			$attributes['rel']    = 'noopener';
 		}
 
-		// Handle nofollow
 		if ( is_bool( $link_data['nofollow'] ) && $link_data['nofollow'] ) {
 			if ( isset( $attributes['rel'] ) ) {
 				$attributes['rel'] .= ' nofollow';
@@ -451,20 +437,16 @@ trait Markup {
 	 * @return array<string, mixed> Modified attributes array with link attributes added.
 	 */
 	public static function add_link_attributes( $attributes = array(), $link_data = array() ) {
-		// Validate attributes parameter
 		if ( ! is_array( $attributes ) ) {
 			$attributes = array();
 		}
 
-		// Get link attributes
 		$link_attributes = self::get_link_attributes( $link_data );
 
-		// If no valid link attributes, return original
 		if ( empty( $link_attributes ) ) {
 			return $attributes;
 		}
 
-		// Merge with existing attributes
 		return array_merge( $attributes, $link_attributes );
 	}
 
@@ -493,7 +475,6 @@ trait Markup {
 			}
 		}
 
-		// Check if we have a valid link
 		$has_valid_link = isset( $attributes['href'] ) &&
 							is_string( $attributes['href'] ) &&
 							! empty( trim( $attributes['href'] ) );
@@ -543,7 +524,6 @@ trait Markup {
 	 * @filter `arts/utilities/markup/allows_html_tags` Allows filtering the list of allowed HTML tags.
 	 */
 	public static function get_valid_html_tag( $tag ) {
-		// Handle non-string input gracefully
 		if ( ! is_string( $tag ) ) {
 			return 'div';
 		}
@@ -590,28 +570,22 @@ trait Markup {
 	 * @return string Modified attributes with added classes.
 	 */
 	public static function add_root_html_classes( $attributes, $classes ) {
-		// Convert to array if string provided
 		if ( ! is_array( $classes ) ) {
 			$classes = array( $classes );
 		}
 
-		// Filter out empty values
 		$classes = array_filter( $classes );
 
 		if ( empty( $classes ) ) {
 			return $attributes;
 		}
 
-		// Join classes with spaces
 		$class_string = esc_attr( implode( ' ', $classes ) );
 
-		// Check if class attribute already exists
 		if ( strpos( $attributes, 'class=' ) !== false ) {
-			// Add our classes to existing class attribute
 			$result     = preg_replace( '/class="([^"]*)"/', 'class="$1 ' . $class_string . '"', $attributes );
 			$attributes = is_string( $result ) ? $result : $attributes;
 		} else {
-			// Add new class attribute
 			$attributes .= ' class="' . $class_string . '"';
 		}
 

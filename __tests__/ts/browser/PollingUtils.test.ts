@@ -1,20 +1,16 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { waitForVariable } from "../../../src/ts/core/browser/PollingUtils";
 
-// Mock window object
 const mockWindow = {} as any;
 
 describe("PollingUtils", () => {
 	beforeEach(() => {
-		// Clear window object before each test
 		Object.keys(mockWindow).forEach((key) => {
 			delete mockWindow[key];
 		});
 
-		// Mock global window
 		global.window = mockWindow;
 
-		// Reset timers
 		vi.useFakeTimers();
 	});
 
@@ -35,13 +31,11 @@ describe("PollingUtils", () => {
 		it("should wait and resolve when variable becomes available", async () => {
 			const testValue = "test-value";
 
-			// Start waiting for variable
 			const promise = waitForVariable("DelayedVariable");
 
 			// Advance timers to trigger first check
 			vi.advanceTimersByTime(20);
 
-			// Set the variable
 			mockWindow.DelayedVariable = testValue;
 
 			// Advance timers to trigger the check that finds the variable
@@ -140,22 +134,18 @@ describe("PollingUtils", () => {
 			vi.advanceTimersByTime(100);
 			await expect(undefinedPromise).rejects.toThrow();
 
-			// Should resolve for null
 			mockWindow.NullVar = null;
 			const nullResult = await waitForVariable("NullVar");
 			expect(nullResult).toBeNull();
 
-			// Should resolve for false
 			mockWindow.FalseVar = false;
 			const falseResult = await waitForVariable("FalseVar");
 			expect(falseResult).toBe(false);
 
-			// Should resolve for 0
 			mockWindow.ZeroVar = 0;
 			const zeroResult = await waitForVariable("ZeroVar");
 			expect(zeroResult).toBe(0);
 
-			// Should resolve for empty string
 			mockWindow.EmptyStringVar = "";
 			const emptyStringResult = await waitForVariable("EmptyStringVar");
 			expect(emptyStringResult).toBe("");

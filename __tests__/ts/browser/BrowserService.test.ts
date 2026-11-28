@@ -1,7 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { BrowserService } from "../../../src/ts/core/browser/BrowserService";
 
-// Mock objects for testing
 const createMockWindow = () => ({
 	matchMedia: vi.fn(),
 	innerWidth: 1024,
@@ -21,16 +20,13 @@ describe("BrowserService", () => {
 	let mockWindow: ReturnType<typeof createMockWindow>;
 
 	beforeEach(() => {
-		// Create fresh mock for each test
 		mockWindow = createMockWindow();
 		mockWindow.self = mockWindow;
 		mockWindow.top = mockWindow;
 
-		// Mock global window and document
 		global.window = mockWindow as any;
 		vi.stubGlobal("document", mockDocument);
 
-		// Reset all mocks
 		vi.clearAllMocks();
 	});
 
@@ -186,7 +182,7 @@ describe("BrowserService", () => {
 		});
 
 		it("should return true when accessing window.top throws an error (cross-origin)", () => {
-			// Simulate cross-origin iframe where accessing window.top throws
+			// Simulate window.top access throwing, which makes isInIframe fall into its catch branch and return true
 			Object.defineProperty(mockWindow, "top", {
 				get() {
 					throw new Error("Blocked by CORS policy");
@@ -198,7 +194,6 @@ describe("BrowserService", () => {
 		});
 
 		it("should handle different iframe scenarios", () => {
-			// Create a fresh mock window for iframe test
 			const iframeMockWindow = createMockWindow();
 			iframeMockWindow.self = iframeMockWindow;
 			iframeMockWindow.top = { iframe: "parent" } as any;
@@ -207,7 +202,6 @@ describe("BrowserService", () => {
 			const result = BrowserService.isInIframe();
 			expect(result).toBe(true);
 
-			// Reset for normal window test
 			const normalMockWindow = createMockWindow();
 			normalMockWindow.self = normalMockWindow;
 			normalMockWindow.top = normalMockWindow;
@@ -220,7 +214,6 @@ describe("BrowserService", () => {
 
 	describe("error handling edge cases", () => {
 		it("should handle complete window object absence", () => {
-			// Temporarily remove window object
 			const originalWindow = global.window;
 			global.window = undefined as any;
 
@@ -229,12 +222,10 @@ describe("BrowserService", () => {
 			expect(BrowserService.getViewportHeight()).toBe(0);
 			expect(BrowserService.isInIframe()).toBe(true); // Error case defaults to true
 
-			// Restore window
 			global.window = originalWindow;
 		});
 
 		it("should handle partial window object", () => {
-			// Temporarily set partial window object
 			const originalWindow = global.window;
 			const originalDocument = global.document;
 
@@ -246,7 +237,6 @@ describe("BrowserService", () => {
 			expect(BrowserService.getViewportHeight()).toBe(0);
 			expect(BrowserService.isInIframe()).toBe(false); // No error thrown, so returns false
 
-			// Restore originals
 			global.window = originalWindow;
 			vi.stubGlobal("document", originalDocument);
 		});

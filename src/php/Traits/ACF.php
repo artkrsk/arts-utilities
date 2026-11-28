@@ -201,7 +201,7 @@ trait ACF {
 	 *
 	 * @param string   $selector     The field name or field key.
 	 * @param int|false $post_id      Optional. The post ID where the value is saved. Defaults to the current post.
-	 * @param bool     $default      Optional. Default value if field is empty. Defaults to false.
+	 * @param bool     $default      Optional. Value returned when ACF is not active. Defaults to false.
 	 * @param bool     $format_value Optional. Whether to apply formatting logic. Defaults to true.
 	 * @param bool     $escape_html  Optional. Whether to escape HTML. Defaults to false.
 	 *

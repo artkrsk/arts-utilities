@@ -200,7 +200,7 @@ describe("Resize", () => {
 
 			const resizeCallback = vi.fn();
 
-			// This should trigger the catch block in createResizeObserver (lines 112-113)
+			// This should trigger the catch block in createResizeObserver
 			const instance = new Resize({
 				elements: [document.createElement("div")],
 				callbackResize: resizeCallback,

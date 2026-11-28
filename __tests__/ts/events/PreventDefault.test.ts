@@ -31,7 +31,6 @@ describe("preventDefault", () => {
 	});
 
 	it("should work with different event types", () => {
-		// Test with click event
 		const clickEvent = new MouseEvent("click", {
 			bubbles: true,
 			cancelable: true,

@@ -35,7 +35,7 @@ class BrowserServiceClass {
 		try {
 			return window.self !== window.top;
 		} catch (_error) {
-			// Cross-origin access to window.top throws; we are definitively framed.
+			// Defensive: reading `window.top` is not expected to throw, but if it does we assume we are framed.
 			return true;
 		}
 	}

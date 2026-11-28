@@ -9,8 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Conditions Trait
  *
- * Provides utility methods for checking various WordPress conditional states.
- * Includes methods to check for archive pages and other common conditions.
+ * Provides a utility method for checking a WordPress conditional state.
  *
  * @package Arts\Utilities\Traits
  * @since 1.0.0

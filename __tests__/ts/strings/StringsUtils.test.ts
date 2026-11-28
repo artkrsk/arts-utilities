@@ -257,7 +257,7 @@ describe("StringsUtils", () => {
 			const result6 = parseColorString("#fffffffff"); // 9 digits
 			expect(result6).toBeNull();
 
-			// Invalid hex lengths (not 3, 6, or 8 characters) - covers lines 245-246
+			// Invalid hex lengths (not 3, 6, or 8 characters)
 			expect(parseColorString("#ab")).toBeNull(); // 2 characters
 			expect(parseColorString("#abcd")).toBeNull(); // 4 characters
 			expect(parseColorString("#abcde")).toBeNull(); // 5 characters
@@ -297,7 +297,6 @@ describe("StringsUtils", () => {
 			mockQuerySelector = vi.fn();
 			mockConsoleWarn = vi.spyOn(console, "warn").mockImplementation(() => {});
 
-			// Mock document.querySelector
 			vi.stubGlobal("document", {
 				querySelector: mockQuerySelector,
 			});
@@ -398,7 +397,6 @@ describe("StringsUtils", () => {
 		const originalLocation = global.window?.location;
 
 		beforeEach(() => {
-			// Mock window.location
 			global.window = {
 				location: {
 					origin: "https://example.com",
@@ -500,13 +498,11 @@ describe("StringsUtils", () => {
 
 	describe("parseColorString - edge cases", () => {
 		it("should return null for invalid 8-digit hex format", () => {
-			// Test the specific uncovered lines 245-246 in parseColorString
 			const result = parseColorString("#12345G7H"); // Invalid hex characters
 			expect(result).toBeNull();
 		});
 
 		it("should handle malformed 8-digit hex colors", () => {
-			// Test edge case that would hit the else branch on lines 245-246
 			const result = parseColorString("#1234567"); // 7 digits instead of 8
 			expect(result).toBeNull();
 		});

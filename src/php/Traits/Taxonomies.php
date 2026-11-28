@@ -127,7 +127,7 @@ trait Taxonomies {
 	 * @since 1.0.0
 	 *
 	 * @param list<int>  $terms    Array of term IDs.
-	 * @param string     $operator Optional. The logical relationship between each inner taxonomy array when there is more than one. Default 'IN'.
+	 * @param string     $operator Optional. Operator set on every generated taxonomy clause. Default 'IN'.
 	 *
 	 * @return list<array{taxonomy: string, field: string, terms: list<int>, operator: string}> The tax query array.
 	 */
@@ -235,10 +235,8 @@ trait Taxonomies {
 
 		if ( ! empty( $terms ) && ! is_wp_error( $terms ) ) {
 			foreach ( $terms as $term ) {
-				// Get term children
 				$children = self::get_taxonomy_hierarchy( $taxonomy, $term->term_id );
 
-				// Add term with its children to result
 				$result[] = array(
 					'term_id'  => $term->term_id,
 					'name'     => $term->name,

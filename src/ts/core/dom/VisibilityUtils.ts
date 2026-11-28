@@ -31,8 +31,8 @@ export const elementIsVisibleInViewport = (
 };
 
 /**
- * CSS-level visibility check. Returns false for `visibility: hidden` or `opacity: 0`.
- * Does NOT consider `display: none` (zero-sized elements still report `visibility: visible`).
+ * CSS-level visibility check. True only when computed `visibility` is `visible` and `opacity` is above 0.
+ * Does NOT check `display: none` or element size.
  */
 export const elementIsVisible = (element: Element | null): boolean => {
 	if (!element) {

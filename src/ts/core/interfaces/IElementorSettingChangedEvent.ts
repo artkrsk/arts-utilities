@@ -10,7 +10,7 @@ import type {
  */
 export interface IElementorSettingChangedEvent extends CustomEvent {
 	detail: {
-		/** Snapshot of all current settings on the element when the event fired. */
+		/** Snapshot of all current page settings when the event fired. */
 		settings: TElementorSettings;
 		/** Key of the setting that changed. */
 		setting: TElementorSetting;

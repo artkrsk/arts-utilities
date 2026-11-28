@@ -12,7 +12,7 @@ const NAVIGATION_KEYS = new Set([
 	"ArrowDown",
 ]);
 
-// Keep numeric keyCodes for browsers/devices that don't expose `event.key` (e.g. some IMEs, very old WebViews).
+// Keep numeric keyCodes for browsers/devices that don't expose `event.key` (e.g. very old WebViews).
 const LEGACY_KEY_CODES = new Set([32, 33, 34, 35, 36, 37, 38, 39, 40]);
 
 const isInputField = (element: Element | null): boolean => {

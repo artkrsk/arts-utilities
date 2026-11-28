@@ -1,6 +1,6 @@
 /**
  * Browser/viewport probes that swallow exceptions and degrade to safe defaults
- * (`false` or `0`) so callers can use them in environments where `window` access may throw.
+ * (`false` or `0`, `true` for `isInIframe`) so callers can use them in environments where `window` access may throw.
  */
 export interface IBrowserService {
 	/** Returns `false` for malformed queries rather than throwing. */
@@ -14,7 +14,7 @@ export interface IBrowserService {
 
 	/**
 	 * Returns `true` when `window.self !== window.top`.
-	 * Also returns `true` when reading `window.top` throws (cross-origin frame).
+	 * Also returns `true` if reading `window.top` unexpectedly throws, assuming the page is framed.
 	 */
 	isInIframe: () => boolean;
 }

@@ -29,8 +29,8 @@ export interface IPageLockOptions {
 
 /**
  * Locks page scrolling and (optionally) keyboard navigation by attaching window-level event listeners.
- * Calling with `false` removes every listener it could have registered, so it is safe to call unlock
- * even when the active options differ from the original lock call.
+ * Calling with `false` removes the wheel, touchmove and touchstart listeners whichever `allowNestedScroll` was used to lock,
+ * and the keydown listener unless `lockKeyboard` is `false`, so unlock with the same `lockKeyboard` as the lock call.
  */
 export interface IPageLock {
 	/**
