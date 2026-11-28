@@ -95,9 +95,12 @@ trait LoopedPosts {
 	 */
 	private static function get_query_args( $args ) {
 		$query_args = array(
-			'post_type'      => $args['post_type'],
-			'posts_per_page' => -1,
-			'no_found_rows'  => true,
+			'post_type'              => $args['post_type'],
+			'posts_per_page'         => -1,
+			'no_found_rows'          => true,
+			// Two of these posts are kept: don't load the meta and terms of them all
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
 		);
 
 		if ( $args['in_same_term'] ) {
